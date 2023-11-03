@@ -8,11 +8,11 @@ public abstract class Effect {
     private Trigger trigger;
     private TargetSelector targetSelector;
 
-    public boolean canTrigger() {
+    public boolean canActivate() {
         return this.trigger.canActivate();
     }
 
-    public boolean isTriggered() {
+    public boolean isActivated() {
         return this.trigger.isActivated();
     }
 
@@ -20,6 +20,10 @@ public abstract class Effect {
 
     public EffectSource getSource() {
         return this.source;
+    }
+
+    public void chooseTarget() {
+        this.targetSelector.chooseTarget();
     }
 
     public Effect setSource(EffectSource source) {
