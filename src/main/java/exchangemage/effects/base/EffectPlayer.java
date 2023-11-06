@@ -44,23 +44,25 @@ public class EffectPlayer {
      * <br><br>
      * The stages are:
      * <ul>
-     *     <li>{@link #ACTIVATION} - if the conditions of a persistent effect's trigger depend on
-     *     the initial, unmodified version of the effect being resolved and do not modify the effect
-     *     itself (e.g. <i>Whenever an effect with a damage of 1 is played, give the target bleed
-     *     3</i>) the persistent effect's activation should be resolved in this stage.</li>
-     *     <li>{@link #MODIFICATION} - if the conditions of a persistent effect's trigger depend on
-     *     the initial, unmodified version of the effect being resolved and modify the effect
-     *     itself (e.g. <i>Whenever an effect with a damage of 1 is played, increase its damage by
-     *     1</i>) the persistent effect's activation should be resolved in this stage.</li>
-     *     <li>{@link #RESOLUTION} - if the conditions of a persistent effect's trigger depend
-     *     on the modified version of the effect being resolved and/or their activation may act as
-     *     a final intervention in the resolution process (e.g. <i>Whenever an effect would deal
-     *     2 or more damage to this entity, reduce the damage to 1</i>) the persistent effect's
-     *     activation should be resolved in this stage.</li>
-     *     <li>{@link #RESPONSE} - if the conditions of a persistent effect's trigger depend on the
-     *     final version of the effect being resolved and do not modify the effect itself (e.g.
-     *     <i>Whenever you deal 3 or more damage to an entity, heal 1</i>) the persistent effect's
-     *     activation should be resolved in this stage.</li>
+     *     <li>{@link #ACTIVATION} - if the conditions of a persistent effect's activation trigger
+     *     depend on the initial, unmodified version of the effect being resolved and do not
+     *     modify the effect itself (e.g. <i>Whenever an effect with a damage of 1 is played,
+     *     give the target bleed 3</i>) the persistent effect's activation should be resolved in
+     *     this stage.</li>
+     *     <li>{@link #MODIFICATION} - if the conditions of a persistent effect's activation
+     *     trigger depend on the initial, unmodified version of the effect being resolved and
+     *     modify the effect itself (e.g. <i>Whenever an effect with a damage of 1 is played,
+     *     increase its damage by 1</i>) the persistent effect's activation should be resolved in
+     *     this stage.</li>
+     *     <li>{@link #RESOLUTION} - if the conditions of a persistent effect's activation trigger
+     *     depend on the modified version of the effect being resolved and/or their activation
+     *     may act as a final intervention in the resolution process (e.g. <i>Whenever an effect
+     *     would deal 2 or more damage to this entity, reduce the damage to 1</i>) the persistent
+     *     effect's activation should be resolved in this stage.</li>
+     *     <li>{@link #RESPONSE} - if the conditions of a persistent effect's activation trigger
+     *     depend on the final version of the effect being resolved and do not modify the effect
+     *     itself (e.g. <i>Whenever you deal 3 or more damage to an entity, heal 1</i>) the
+     *     persistent effect's activation should be resolved in this stage.</li>
      * </ul>
      *
      * @see Effect
@@ -117,7 +119,7 @@ public class EffectPlayer {
          * @see PersistentEffect
          */
         public static PersistentEffect[] sortPersistentEffects(PersistentEffect[] effects) {
-            Arrays.sort(effects, Comparator.comparing(PersistentEffect::getTriggerStage));
+            Arrays.sort(effects, Comparator.comparing(PersistentEffect::getActivationStage));
             return effects;
         }
     }
@@ -195,8 +197,7 @@ public class EffectPlayer {
         );
 
         for (PersistentEffect effect : persistentEffects)
-            if (effect.isActivated())
-                effect.execute();
+            enqueueEffect(effect, true);
     }
 
     /**

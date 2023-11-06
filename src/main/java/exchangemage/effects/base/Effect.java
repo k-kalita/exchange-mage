@@ -37,19 +37,16 @@ public abstract class Effect {
     private TargetSelector targetSelector;
 
     /**
-     * Constructs an {@link Effect} with the given {@link EffectSource}, {@link Trigger}s and
-     * {@link TargetSelector}.
+     * Constructs an {@link Effect} with the given {@link Trigger}s and {@link TargetSelector}.
      *
-     * @param source source of the effect
      * @param activationTrigger activation trigger of the effect
      * @param evaluationTrigger evaluation trigger of the effect
      * @param targetSelector target selector of the effect
      */
-    public Effect(EffectSource source,
-                  Trigger activationTrigger,
+    public Effect(Trigger activationTrigger,
                   Trigger evaluationTrigger,
                   TargetSelector targetSelector) {
-        this.source = source;
+        this.source = null;
         this.activationTrigger = activationTrigger;
         this.evaluationTrigger = evaluationTrigger;
         this.targetSelector = targetSelector;
