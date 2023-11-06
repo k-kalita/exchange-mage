@@ -9,6 +9,8 @@ import java.util.Comparator;
 
 import exchangemage.encounters.Scene;
 import exchangemage.cards.Card;
+import exchangemage.effects.triggers.Trigger;
+import exchangemage.effects.triggers.Condition;
 
 /**
  * EffectPlayer is responsible for resolving effects of played cards as well as triggering
@@ -36,9 +38,9 @@ public class EffectPlayer {
     private final Set<Effect> effectsPlayed;
 
     /**
-     * EffectResolutionStage is an enum representing the stage of the resolution process of an
-     * effect and is used to define the order in which the activation of persistent effects is
-     * resolved.
+     * EffectResolutionStage is an enum representing the stages of the resolution process of an
+     * {@link Effect} and is used to define the order in which the activation of
+     * {@link PersistentEffect}s is resolved.
      * <br><br>
      * The stages are:
      * <ul>
@@ -66,10 +68,47 @@ public class EffectPlayer {
      * @see EffectPlayer
      */
     public enum EffectResolutionStage {
-        ACTIVATION, MODIFICATION, RESOLUTION, RESPONSE;
+        /**
+         * The initial stage of the resolution process. Used for resolving the activation of
+         * {@link PersistentEffect}s which do not modify the {@link Effect} being resolved and
+         * whose {@link Trigger} {@link Condition}s depend on its initial, unmodified version.
+         *
+         * @see Effect
+         * @see PersistentEffect
+         */
+        ACTIVATION,
+        /**
+         * The second stage of the resolution process. Used for resolving the activation of
+         * {@link PersistentEffect}s which modify the {@link Effect} being resolved and whose
+         * {@link Trigger} {@link Condition}s depend on its initial, unmodified version.
+         *
+         * @see Effect
+         * @see PersistentEffect
+         */
+        MODIFICATION,
+        /**
+         * The third stage of the resolution process. Used for resolving the activation of
+         * {@link PersistentEffect}s whose {@link Trigger} {@link Condition}s depend on the
+         * final version of the {@link Effect} being resolved and/or whose activation may act as
+         * a final intervention in the resolution process.
+         *
+         * @see Effect
+         * @see PersistentEffect
+         */
+        RESOLUTION,
+        /**
+         * The final stage of the resolution process. Used for resolving the activation of
+         * {@link PersistentEffect}s which do not modify the {@link Effect} being resolved and
+         * whose {@link Trigger} {@link Condition}s depend on its final version, acting as a
+         * response to the resolution of the effect.
+         *
+         * @see Effect
+         * @see PersistentEffect
+         */
+        RESPONSE;
 
         /**
-         * Sorts an array of persistent effects by their trigger stage in ascending order as
+         * Sorts an array of {@link PersistentEffect}s by their trigger stage in ascending order as
          * defined by the {@link EffectResolutionStage} enum.
          *
          * @param effects the array of persistent effects to sort.
@@ -84,9 +123,10 @@ public class EffectPlayer {
     }
 
     /**
-     * Creates a new EffectPlayer for the given Scene.
+     * Creates a new {@link EffectPlayer} for the given {@link Scene}.
      *
      * @param scene the Scene to create the EffectPlayer for.
+     *              
      * @throws IllegalArgumentException if the given Scene is null.
      *
      * @see Scene
@@ -102,29 +142,31 @@ public class EffectPlayer {
     }
 
     /**
-     * Returns the current effect being resolved (or null if no effect is being resolved).
+     * Returns the current {@link Effect} being resolved (or null if no effect is being resolved).
      *
      * @return the current effect being resolved.
      *
      * @see Effect
      */
-    public Effect getCurrentEffect() {
-        return this.currentEffect;
-    }
+    public Effect getCurrentEffect() { return this.currentEffect; }
 
     /**
-     * Enqueues the given effect into the resolution queue if it can be activated and if requested
-     * immediately chooses a target for it.
+     * Enqueues the given {@link Effect} into the resolution queue if it can be activated and if
+     * requested immediately chooses a target for it.
      *
      * @param effect the effect to enqueue.
      * @param chooseTargetImmediately whether to immediately choose a target for the effect.
+     *
      * @throws IllegalArgumentException if the given effect is null.
+     *
+     * @see Effect
+     * @see exchangemage.effects.targeting.TargetSelector
      */
     public void enqueueEffect(Effect effect, boolean chooseTargetImmediately) {
         if (effect == null)
             throw new IllegalArgumentException("Effect to enqueue cannot be null.");
 
-        if (effect.canActivate()) {
+        if (effect.isActivated()) {
             if (chooseTargetImmediately)
                 effect.chooseTarget();
             this.resolutionQueue.add(effect);
@@ -132,9 +174,9 @@ public class EffectPlayer {
     }
 
     /**
-     * Resolves the current dequeued effect and the activation of persistent effects. Calls on the
-     * {@link Effect#chooseTarget()} method of the current effect in the case it was not called upon
-     * enqueueing the effect.
+     * Resolves the current, dequeued {@link Effect} and the activation of
+     * {@link PersistentEffect}s. Calls on the {@link Effect#chooseTarget()} method of the current
+     * effect in the case it was not called upon enqueueing the effect.
      *
      * @throws IllegalStateException if there is no effect to resolve.
      *
@@ -153,15 +195,15 @@ public class EffectPlayer {
         );
 
         for (PersistentEffect effect : persistentEffects)
-            if (effect.canActivate())
+            if (effect.isActivated())
                 effect.execute();
     }
 
     /**
-     * Resolves all currently enqueued effects (along with any persistent effects activated in the
-     * process).
+     * Resolves all currently enqueued {@link Effect}s (along with any persistent effects activated
+     * in the process).
      *
-     * @return this EffectPlayer.
+     * @return this {@link EffectPlayer}
      *
      * @see Effect
      * @see PersistentEffect
@@ -170,7 +212,7 @@ public class EffectPlayer {
         while (!this.resolutionQueue.isEmpty()) {
             Effect effect = this.resolutionQueue.poll();
 
-            if (!effect.isActivated())
+            if (!effect.canEvaluate())
                 continue;
 
             this.currentEffect = effect;
@@ -183,11 +225,14 @@ public class EffectPlayer {
     }
 
     /**
-     * Enqueues all effects of the given card, immediately choosing targets for them and resolves
-     * the resolution queue.
+     * Enqueues all {@link Effect}s of the given {@link Card}, immediately choosing targets for
+     * them and resolves the resolution queue.
      *
      * @param card the card to play.
      * @throws IllegalArgumentException if the given card is null.
+     *
+     * @see Effect
+     * @see Card
      */
     public void playCard(Card card) {
         if (card == null)
