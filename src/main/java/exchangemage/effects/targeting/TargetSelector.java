@@ -8,4 +8,12 @@ public class TargetSelector {
     public boolean hasTarget() {
         return false;
     }
+
+    public void setTarget(Targetable target) {
+
+    }
+
+    public Targetable getTarget() {
+        return null;
+    }
 }

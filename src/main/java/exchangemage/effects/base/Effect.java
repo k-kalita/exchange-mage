@@ -1,6 +1,7 @@
 package exchangemage.effects.base;
 
 import exchangemage.effects.triggers.Trigger;
+import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetSelector;
 
 /**
@@ -21,7 +22,7 @@ import exchangemage.effects.targeting.TargetSelector;
  *     <li>{@link AlertEffect} - used to represent an information about a particular event
  *     which does not have any effect on its own but might be used trigger certain persistent
  *     effects (e.g. end/start of combat/an actor's turn).</li>
- *     <li>{@link EffectDeployer} - a wrapper affect used to deploy another effect/set of
+ *     <li>{@link EffectDeployer} - a wrapper effect used to deploy another effect/set of
  *     effects (e.g. an effect used to add a persistent effect to the scene/actors or assign
  *     the same target to an underlying set of effects).</li>
  * </ul>
@@ -30,7 +31,7 @@ import exchangemage.effects.targeting.TargetSelector;
  * @see Trigger
  * @see TargetSelector
  */
-public abstract class Effect {
+public abstract class Effect implements EffectSource, Targetable {
     private EffectSource source;
     private Trigger activationTrigger;
     private Trigger evaluationTrigger;
@@ -127,10 +128,15 @@ public abstract class Effect {
      * @param source the source of the effect
      * @return this effect
      *
+     * @throws IllegalArgumentException if the given source is <code>null</code>
+     *
      * @see EffectSource
      * @see Effect
      */
     public Effect setSource(EffectSource source) {
+        if (source == null)
+            throw new IllegalArgumentException("Cannot set null effect source.");
+
         this.source = source;
         return this;
     }
@@ -204,6 +210,35 @@ public abstract class Effect {
      */
     public Effect setTargetSelector(TargetSelector targetSelector) {
         this.targetSelector = targetSelector;
+        return this;
+    }
+
+    /**
+     * Returns the target of the {@link Effect} from its {@link TargetSelector}.
+     *
+     * @return the target of the effect
+     *
+     * @see Targetable
+     * @see TargetSelector
+     */
+    public Targetable getTarget() { return this.targetSelector.getTarget(); }
+
+    /**
+     * Sets the target of the {@link Effect} in its {@link TargetSelector}.
+     * <br><br>
+     * This method should only be called by effect wrappers and decorators. To choose a target
+     * for the effect, use the {@link Effect#chooseTarget()} method.
+     *
+     * @param target the target to set
+     * @return this effect
+     *
+     * @throws IllegalArgumentException if the given target is <code>null</code>
+     */
+    public Effect setTarget(Targetable target) {
+        if (target == null)
+            throw new IllegalArgumentException("Cannot set null effect target.");
+
+        this.targetSelector.setTarget(target);
         return this;
     }
 }
