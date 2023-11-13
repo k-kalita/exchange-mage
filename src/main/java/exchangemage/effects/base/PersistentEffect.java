@@ -51,7 +51,7 @@ public class PersistentEffect extends Effect {
     public EffectPlayer.EffectResolutionStage getActivationStage() { return activationStage; }
 
     /**
-     * Calls the {@link EffectPlayer#enqueueEffect(Effect, boolean)} method of the
+     * Calls the {@link EffectPlayer#enqueueEffect(Effect)} method of the
      * {@link EffectPlayer} for each of its stored {@link Effect}s. This will result in all the
      * effects whose activation {@link Trigger}s are activated being enqueued into the resolution
      * queue.
@@ -64,6 +64,6 @@ public class PersistentEffect extends Effect {
         EffectPlayer effectPlayer = Game.getGame().getScene().getEffectPlayer();
 
         for (Effect effect : effects)
-            effectPlayer.enqueueEffect(effect, true);
+            effectPlayer.enqueueEffect(effect);
     }
 }

@@ -98,6 +98,17 @@ public abstract class Effect {
      */
     public void chooseTarget() { this.targetSelector.chooseTarget(); }
 
+    /**
+     * Checks if the {@link TargetSelector} of the {@link Effect} has a target by calling its
+     * {@link TargetSelector#hasTarget()} method.
+     *
+     * @return <code>true</code> if the target selector of the effect has a target,
+     * <code>false</code> otherwise
+     *
+     * @see TargetSelector
+     */
+    public boolean hasTarget() { return this.targetSelector.hasTarget(); }
+
     // --------------------------------- getters and setters ---------------------------------- //
 
     /**

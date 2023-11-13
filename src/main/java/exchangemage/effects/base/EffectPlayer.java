@@ -21,7 +21,7 @@ import exchangemage.effects.triggers.Condition;
  * <ul>
  *     <li>{@link #playCard(Card)} which allows for resolution of all effects of a card (along
  *     with any persistent effects triggered in the process).</li>
- *     <li>{@link #enqueueEffect(Effect, boolean)} which enqueues an effect into the resolution
+ *     <li>{@link #enqueueEffect(Effect)} which enqueues an effect into the resolution
  *     queue.</li>
  *     <li>{@link #resolveQueue()} which resolves all currently enqueued effects (along with any
  *     persistent effects triggered in the process).</li>
@@ -153,34 +153,32 @@ public class EffectPlayer {
     public Effect getCurrentEffect() { return this.currentEffect; }
 
     /**
-     * Enqueues the given {@link Effect} into the resolution queue if it can be activated and if
-     * requested immediately chooses a target for it.
+     * Enqueues the given {@link Effect} into the resolution queue if it can be activated and
+     * calls on its {@link Effect#chooseTarget()} method.
      *
      * @param effect the effect to enqueue.
-     * @param chooseTargetImmediately whether to immediately choose a target for the effect.
      *
      * @throws IllegalArgumentException if the given effect is null.
      *
      * @see Effect
      * @see exchangemage.effects.targeting.TargetSelector
      */
-    public void enqueueEffect(Effect effect, boolean chooseTargetImmediately) {
+    public void enqueueEffect(Effect effect) {
         if (effect == null)
             throw new IllegalArgumentException("Effect to enqueue cannot be null.");
 
         if (effect.isActivated()) {
-            if (chooseTargetImmediately)
-                effect.chooseTarget();
+            effect.chooseTarget();
             this.resolutionQueue.add(effect);
         }
     }
 
     /**
      * Resolves the current, dequeued {@link Effect} and the activation of
-     * {@link PersistentEffect}s. Calls on the {@link Effect#chooseTarget()} method of the current
-     * effect in the case it was not called upon enqueueing the effect.
+     * {@link PersistentEffect}s which could be triggered by it.
      *
-     * @throws IllegalStateException if there is no effect to resolve.
+     * @throws IllegalStateException if there is no effect to resolve or the effect to resolve
+     * has no target.
      *
      * @see Effect
      * @see PersistentEffect
@@ -189,15 +187,15 @@ public class EffectPlayer {
     private void resolveEffect() {
         if (this.currentEffect == null)
             throw new IllegalStateException("No effect to resolve.");
-
-        this.currentEffect.chooseTarget();
+        if (!this.currentEffect.hasTarget())
+            throw new IllegalStateException("Effect to resolve has no target.");
 
         PersistentEffect[] persistentEffects = EffectResolutionStage.sortPersistentEffects(
                 this.scene.getEffects()
         );
 
         for (PersistentEffect effect : persistentEffects)
-            enqueueEffect(effect, true);
+            enqueueEffect(effect);
     }
 
     /**
@@ -240,7 +238,7 @@ public class EffectPlayer {
             throw new IllegalArgumentException("Card to play cannot be null.");
 
         for (Effect effect : card.getEffects())
-            this.enqueueEffect(effect, true);
+            this.enqueueEffect(effect);
 
         this.resolveQueue();
     }
