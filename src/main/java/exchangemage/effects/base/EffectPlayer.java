@@ -37,6 +37,7 @@ public class EffectPlayer {
     private final Queue<Effect> resolutionQueue;
     private final Set<Effect> effectsPlayed;
 
+
     /**
      * EffectResolutionStage is an enum representing the stages of the resolution process of an
      * {@link Effect} and is used to define the order in which the activation of
@@ -168,8 +169,8 @@ public class EffectPlayer {
             throw new IllegalArgumentException("Effect to enqueue cannot be null.");
 
         if (effect.isActivated()) {
-            effect.chooseTarget();
-            this.resolutionQueue.add(effect);
+            if (effect.chooseTarget())
+                this.resolutionQueue.add(effect);
         }
     }
 

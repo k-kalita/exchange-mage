@@ -15,14 +15,18 @@ public abstract class TargetSelector {
     private Targetable target;
 
     /**
-     * Chooses a target for the {@link Effect}. This method is called by the {@link EffectPlayer}
-     * when the effect is enqueued.
+     * Chooses a target for this selector's {@link Effect}. This method is called when the effect
+     * is enqueued. The return value of this method indicates whether an appropriate target could
+     * have been selected.
+     *
+     * @return <code>true</code> if a target has been successfully selected, <code>false</code>
+     * otherwise.
      *
      * @see Effect
      * @see EffectPlayer
      * @see Targetable
      */
-    public abstract void chooseTarget();
+    public abstract boolean chooseTarget();
 
     /**
      * Returns whether a target has been selected.

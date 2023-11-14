@@ -92,12 +92,18 @@ public abstract class Effect implements EffectSource, Targetable {
 
     /**
      * Calls the {@link TargetSelector#chooseTarget()} method of the {@link TargetSelector} to
-     * choose a target for the {@link Effect}.
+     * choose a target for the {@link Effect}. This method is called by the {@link EffectPlayer}
+     * when the effect is enqueued. The return value of this method indicates whether an appropriate
+     * target could have been selected.
+     *
+     * @return <code>true</code> if a target has been successfully selected, <code>false</code>
+     * otherwise.
      *
      * @see TargetSelector
      * @see Effect
+     * @see EffectPlayer
      */
-    public void chooseTarget() { this.targetSelector.chooseTarget(); }
+    public boolean chooseTarget() { return this.targetSelector.chooseTarget(); }
 
     /**
      * Checks if the {@link TargetSelector} of the {@link Effect} has a target by calling its
