@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.encounters.Scene;
 import exchangemage.cards.Card;
 import exchangemage.effects.triggers.Trigger;
@@ -22,7 +23,7 @@ import exchangemage.effects.triggers.Condition;
  *     <li>{@link #playCard(Card)} which allows for resolution of all effects of a card (along
  *     with any persistent effects triggered in the process).</li>
  *     <li>{@link #enqueueEffect(Effect)} which enqueues an effect into the resolution
- *     queue.</li>
+ *     queue and chooses its target with the help of the {@link TargetingManager}.</li>
  *     <li>{@link #resolveQueue()} which resolves all currently enqueued effects (along with any
  *     persistent effects triggered in the process).</li>
  * </ul>
@@ -30,12 +31,14 @@ import exchangemage.effects.triggers.Condition;
  * @see Effect
  * @see PersistentEffect
  * @see EffectResolutionStage
+ * @see TargetingManager
  */
 public class EffectPlayer {
     private final Scene scene;
-    private Effect currentEffect;
-    private final Queue<Effect> resolutionQueue;
-    private final Set<Effect> effectsPlayed;
+    private Effect currentEffect = null;
+    private final TargetingManager targetingManager = new TargetingManager();
+    private final Queue<Effect> resolutionQueue = new LinkedList<>();
+    private final Set<Effect> effectsPlayed = new HashSet<>();
 
 
     /**
@@ -139,9 +142,6 @@ public class EffectPlayer {
             throw new IllegalArgumentException("EffectPlayer cannot be created with null Scene.");
 
         this.scene = scene;
-        this.currentEffect = null;
-        this.resolutionQueue = new LinkedList<>();
-        this.effectsPlayed = new HashSet<>();
     }
 
     /**
@@ -155,21 +155,23 @@ public class EffectPlayer {
 
     /**
      * Enqueues the given {@link Effect} into the resolution queue if it can be activated and
-     * calls on its {@link Effect#chooseTarget()} method.
+     * chooses its target with the help of the {@link TargetingManager}. If no target can be chosen
+     * for the effect, it is not enqueued.
      *
      * @param effect the effect to enqueue.
      *
      * @throws IllegalArgumentException if the given effect is null.
      *
      * @see Effect
-     * @see exchangemage.effects.targeting.TargetSelector
+     * @see TargetingManager
      */
     public void enqueueEffect(Effect effect) {
         if (effect == null)
             throw new IllegalArgumentException("Effect to enqueue cannot be null.");
 
         if (effect.isActivated()) {
-            if (effect.chooseTarget())
+            targetingManager.setActiveTargetSelector(effect.getTargetSelector());
+            if (targetingManager.chooseTarget())
                 this.resolutionQueue.add(effect);
         }
     }
