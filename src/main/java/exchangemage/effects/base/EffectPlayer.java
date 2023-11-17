@@ -1,8 +1,6 @@
 package exchangemage.effects.base;
 
 import java.util.Queue;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -34,11 +32,23 @@ import exchangemage.effects.triggers.Condition;
  * @see TargetingManager
  */
 public class EffectPlayer {
+    /**
+     * The {@link Scene} this {@link EffectPlayer} is associated with.
+     */
     private final Scene scene;
+    /**
+     * The {@link Effect} currently being resolved (or null if no effect is being resolved).
+     */
     private Effect currentEffect = null;
+    /**
+     * The {@link TargetingManager} used to manage the process of choosing a target for
+     * {@link Effect}s enqueued into the resolution queue.
+     */
     private final TargetingManager targetingManager = new TargetingManager();
+    /**
+     * The queue of {@link Effect}s to be resolved.
+     */
     private final Queue<Effect> resolutionQueue = new LinkedList<>();
-    private final Set<Effect> effectsPlayed = new HashSet<>();
 
 
     /**
@@ -170,8 +180,7 @@ public class EffectPlayer {
             throw new IllegalArgumentException("Effect to enqueue cannot be null.");
 
         if (effect.isActivated()) {
-            targetingManager.setActiveTargetSelector(effect.getTargetSelector());
-            if (targetingManager.chooseTarget())
+            if (targetingManager.setActiveEffect(effect).chooseTarget())
                 this.resolutionQueue.add(effect);
         }
     }
@@ -219,7 +228,6 @@ public class EffectPlayer {
 
             this.currentEffect = effect;
             this.resolveEffect();
-            this.effectsPlayed.add(effect);
         }
 
         this.currentEffect = null;
