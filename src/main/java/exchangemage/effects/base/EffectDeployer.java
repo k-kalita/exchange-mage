@@ -1,5 +1,7 @@
 package exchangemage.effects.base;
 
+import java.util.Set;
+
 import exchangemage.effects.targeting.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
@@ -36,44 +38,15 @@ public abstract class EffectDeployer extends Effect {
     public abstract Effect[] getEffects();
 
     /**
-     * Calls the {@link TargetSelector#chooseTarget()} method of the {@link TargetSelector} to
-     * choose a target for the {@link Effect}. Then sets the same target for all the
-     * {@link Effect}(s) this {@link EffectDeployer} is a wrapper for.
+     * Concrete implementations of the {@link EffectDeployer} base class should override this
+     * method to handle the process of choosing a target(s) for the underlying {@link Effect}(s).
      *
-     * @see TargetSelector
-     * @see Targetable
+     * @param activeTargetables the set of active targetables to choose the target from
+     * @return <code>true</code> if the target choosing process was successful, <code>false</code>
+     * otherwise
      */
     @Override
-    public void chooseTarget() {
-        super.chooseTarget();
-
-        for (Effect effect : this.getEffects())
-            effect.setTarget(this.getTarget());
-    }
-
-    /**
-     * Sets the target of the {@link EffectDeployer} in its {@link TargetSelector}, then calls
-     * the {@link Effect#setTarget(Targetable)} method of all the {@link Effect}(s) this
-     * EffectDeployer is a wrapper for.
-     * <br><br>
-     * This method should only be called by effect wrappers and decorators. To choose a target for
-     * the effect, use the {@link Effect#chooseTarget()} method.
-     *
-     * @param target the target to set
-     * @return this effect
-     *
-     * @see Targetable
-     * @see TargetSelector
-     */
-    @Override
-    public Effect setTarget(Targetable target) {
-        super.setTarget(target);
-
-        for (Effect effect : this.getEffects())
-            effect.setTarget(target);
-
-        return this;
-    }
+    public abstract boolean chooseTarget(Set<Targetable> activeTargetables);
 
     /**
      * Sets the source of the {@link EffectDeployer} and all the {@link Effect}(s) this
