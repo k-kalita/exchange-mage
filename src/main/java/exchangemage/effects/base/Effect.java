@@ -1,5 +1,9 @@
 package exchangemage.effects.base;
 
+import java.util.Set;
+import java.util.HashSet;
+
+import exchangemage.base.Observer;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetSelector;
@@ -32,10 +36,29 @@ import exchangemage.effects.targeting.TargetSelector;
  * @see TargetSelector
  */
 public abstract class Effect implements EffectSource, Targetable {
+    /**
+     * The {@link EffectSource} of the {@link Effect}. Indicates the origin of the effect (e.g. the
+     * card it was played from or the {@link PersistentEffect} that packaged it).
+     */
     private EffectSource source;
+    /**
+     * The activation {@link Trigger} of the {@link Effect}. Indicates the conditions under which
+     * this effect can be enqueued into the resolution queue of the {@link EffectPlayer}.
+     */
     private Trigger activationTrigger;
+    /**
+     * The evaluation {@link Trigger} of the {@link Effect}. Indicates the conditions under which
+     * this effect can be resolved from the resolution queue of the {@link EffectPlayer}.
+     */
     private Trigger evaluationTrigger;
+    /**
+     * The {@link TargetSelector} of the {@link Effect}. Used to choose the target of the effect.
+     */
     private TargetSelector targetSelector;
+    /**
+     * A set of {@link Observer}s of the {@link Effect}.
+     */
+    private final Set<Observer> observers;
 
     /**
      * Constructs an {@link Effect} with the given {@link Trigger}s and {@link TargetSelector}.
@@ -48,6 +71,7 @@ public abstract class Effect implements EffectSource, Targetable {
                   Trigger evaluationTrigger,
                   TargetSelector targetSelector) {
         this.source = null;
+        this.observers = new HashSet<>();
         this.activationTrigger = activationTrigger;
         this.evaluationTrigger = evaluationTrigger;
         this.targetSelector = targetSelector;
@@ -91,21 +115,6 @@ public abstract class Effect implements EffectSource, Targetable {
     public abstract void execute();
 
     /**
-     * Calls the {@link TargetSelector#chooseTarget()} method of the {@link TargetSelector} to
-     * choose a target for the {@link Effect}. This method is called by the {@link EffectPlayer}
-     * when the effect is enqueued. The return value of this method indicates whether an appropriate
-     * target could have been selected.
-     *
-     * @return <code>true</code> if a target has been successfully selected, <code>false</code>
-     * otherwise.
-     *
-     * @see TargetSelector
-     * @see Effect
-     * @see EffectPlayer
-     */
-    public boolean chooseTarget() { return this.targetSelector.chooseTarget(); }
-
-    /**
      * Checks if the {@link TargetSelector} of the {@link Effect} has a target by calling its
      * {@link TargetSelector#hasTarget()} method.
      *
@@ -115,6 +124,23 @@ public abstract class Effect implements EffectSource, Targetable {
      * @see TargetSelector
      */
     public boolean hasTarget() { return this.targetSelector.hasTarget(); }
+
+    /**
+     * Calls the {@link TargetSelector#chooseTarget} method of this {@link Effect}'s
+     * {@link TargetSelector} to choose a target. Return value indicates whether it was possible to
+     * select a valid target.
+     *
+     * @param activeTargetables the set of active targetables to choose the target from
+     * @return <code>true</code> if a target has been successfully selected, <code>false</code>
+     * otherwise
+     *
+     * @see TargetSelector
+     * @see Targetable
+     * @see Effect
+     */
+    public boolean chooseTarget(Set<Targetable> activeTargetables) {
+        return this.targetSelector.chooseTarget(activeTargetables);
+    }
 
     // --------------------------------- getters and setters ---------------------------------- //
 
@@ -229,22 +255,23 @@ public abstract class Effect implements EffectSource, Targetable {
      */
     public Targetable getTarget() { return this.targetSelector.getTarget(); }
 
-    /**
-     * Sets the target of the {@link Effect} in its {@link TargetSelector}.
-     * <br><br>
-     * This method should only be called by effect wrappers and decorators. To choose a target
-     * for the effect, use the {@link Effect#chooseTarget()} method.
-     *
-     * @param target the target to set
-     * @return this effect
-     *
-     * @throws IllegalArgumentException if the given target is <code>null</code>
-     */
-    public Effect setTarget(Targetable target) {
-        if (target == null)
-            throw new IllegalArgumentException("Cannot set null effect target.");
+    // --------------------------------- observable methods ----------------------------------- //
 
-        this.targetSelector.setTarget(target);
-        return this;
+    @Override
+    public void addObserver(Observer observer) {
+        validateObserver(observer);
+        this.observers.add(observer);
     }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        validateObserver(observer);
+        if (!this.observers.contains(observer))
+            throw new IllegalArgumentException("Cannot remove observer that has not been added.");
+
+        this.observers.remove(observer);
+    }
+
+    @Override
+    public Set<Observer> getObservers() { return this.observers; }
 }

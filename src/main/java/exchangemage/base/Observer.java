@@ -16,10 +16,11 @@ public interface Observer {
     /**
      * Method called by {@link Observable} objects to notify this {@link Observer} of an event.
      *
+     * @param publisher the {@link Observable} object that called this method
      * @param event the event to notify this observer of
      *
      * @see Observable
      * @see Observable.Event
      */
-    public void update(Observable.Event event);
+    public void update(Observable publisher, Observable.Event event);
 }

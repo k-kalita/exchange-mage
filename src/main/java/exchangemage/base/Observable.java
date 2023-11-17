@@ -1,5 +1,7 @@
 package exchangemage.base;
 
+import java.util.Set;
+
 /**
  * An interface for objects that can be observed by {@link Observer}s. Used to decouple the visual
  * representation of the game from the game logic. All elements of the game which possess a visual
@@ -21,7 +23,7 @@ public interface Observable {
      * @see Observable
      * @see Observer
      */
-    public interface Event {}
+    interface Event {}
 
     /**
      * Adds an {@link Observer} to this {@link Observable} object. The observer can then be notified
@@ -31,7 +33,7 @@ public interface Observable {
      *
      * @see Observer
      */
-    public void addObserver(Observer observer);
+    void addObserver(Observer observer);
 
     /**
      * Removes an {@link Observer} from this {@link Observable} object. The observer will no longer
@@ -41,7 +43,16 @@ public interface Observable {
      *
      * @see Observer
      */
-    public void removeObserver(Observer observer);
+    void removeObserver(Observer observer);
+
+    /**
+     * Returns a set of all {@link Observer}s of this {@link Observable} object.
+     *
+     * @return a set of all observers of this object
+     *
+     * @see Observer
+     */
+    Set<Observer> getObservers();
 
     /**
      * Basic validation for an {@link Observer} object. Should be called before adding an
@@ -51,7 +62,7 @@ public interface Observable {
      *
      * @throws IllegalArgumentException if the observer is null
      */
-    public default void validateObserver(Observer observer) {
+    default void validateObserver(Observer observer) {
         if (observer == null) throw new IllegalArgumentException("Observer cannot be null");
     }
 
@@ -63,5 +74,7 @@ public interface Observable {
      * @see Observer
      * @see Observable.Event
      */
-    public void notifyObservers(Event event);
+    default void notifyObservers(Event event) {
+        getObservers().forEach(observer -> observer.update(this, event));
+    }
 }

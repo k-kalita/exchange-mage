@@ -64,9 +64,7 @@ public interface Targetable extends Observable {
      * @see Observer
      * @see Effect
      */
-    public default void activate() {
-        notifyObservers(TargetableEvent.ACTIVATED);
-    }
+    public default void activate() { notifyObservers(TargetableEvent.ACTIVATED); }
 
     /**
      * Notifies all {@link Observer}s of this {@link Targetable} object that the object has been
@@ -76,9 +74,7 @@ public interface Targetable extends Observable {
      * @see Observer
      * @see Effect
      */
-    public default void deactivate() {
-        notifyObservers(TargetableEvent.DEACTIVATED);
-    }
+    public default void deactivate() { notifyObservers(TargetableEvent.DEACTIVATED); }
 
     /**
      * Notifies all {@link Observer}s of this {@link Targetable} object that the object has been
@@ -87,9 +83,7 @@ public interface Targetable extends Observable {
      * @see Observer
      * @see Effect
      */
-    public default void select() {
-        notifyObservers(TargetableEvent.SELECTED);
-    }
+    public default void select() { notifyObservers(TargetableEvent.SELECTED); }
 
     /**
      * Notifies all {@link Observer}s of this {@link Targetable} object that the object has been
@@ -98,7 +92,5 @@ public interface Targetable extends Observable {
      * @see Observer
      * @see Effect
      */
-    public default void deselect() {
-        notifyObservers(TargetableEvent.DESELECTED);
-    }
+    public default void deselect() { notifyObservers(TargetableEvent.DESELECTED); }
 }
