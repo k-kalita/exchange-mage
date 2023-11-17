@@ -20,7 +20,7 @@ import exchangemage.effects.triggers.ConstValueTrigger;
  * @see EffectPlayer.EffectResolutionStage
  */
 public class PersistentEffect extends Effect {
-    private Effect[] effects;
+    private final Effect[] effects;
     private final EffectPlayer.EffectResolutionStage activationStage;
 
     /**

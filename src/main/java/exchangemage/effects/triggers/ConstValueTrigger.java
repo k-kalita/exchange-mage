@@ -18,9 +18,7 @@ public class ConstValueTrigger implements Trigger {
      *
      * @param value value of the trigger
      */
-    public ConstValueTrigger(boolean value) {
-        this.value = value;
-    }
+    public ConstValueTrigger(boolean value) { this.value = value; }
 
     /**
      * Returns the value of the {@link ConstValueTrigger}
