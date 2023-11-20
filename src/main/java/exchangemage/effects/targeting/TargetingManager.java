@@ -49,7 +49,8 @@ public class TargetingManager {
      * method {@link TargetSelector#getActiveTargetables} is called to create a set of active
      * targetables (targetables which can potentially be selected by the active selector) and the
      * {@link Targetable#notifyObservers} method is called on each of them (if the forbidden
-     * targetables set is not empty, the active targetables set is filtered to exclude them).
+     * targetables set is not empty, the active targetables set is filtered to exclude them). If the
+     * effect already has a target the set of active targetables is not created.
      *
      * @param effect the effect to set as the active effect.
      * @return this {@link TargetingManager}
@@ -68,6 +69,10 @@ public class TargetingManager {
             throw new IllegalStateException("Cannot set active effect while another is active.");
 
         this.activeEffect = effect;
+
+        if (this.activeEffect.hasTarget())
+            return this;
+
         this.activeTargetables.addAll(effect.getTargetSelector().getActiveTargetables());
         this.activeTargetables.removeAll(forbiddenTargetables);
         this.activeTargetables.forEach(
@@ -78,12 +83,13 @@ public class TargetingManager {
     }
 
     /**
-     * Calls the {@link TargetSelector#chooseTarget} method of the active effect's
-     * {@link TargetSelector} to choose a target from the set of active {@link Targetable}s. Then
-     * clears the active effect and the set of active targetables.
+     * Calls the {@link TargetSelector#chooseTarget} method of the active {@link Effect}'s
+     * {@link TargetSelector} to choose a target from the set of active {@link Targetable}s.
+     * Then clears the active effect and the set of active targetables. If the effect already has
+     * a target it is not chosen again.
      *
-     * @return <code>true</code> if a target has been successfully selected, <code>false</code>
-     * otherwise.
+     * @return <code>true</code> if a target has been successfully selected (or the effect
+     * already had a target), <code>false</code> otherwise.
      *
      * @throws IllegalStateException if there is no active effect.
      *
@@ -97,7 +103,8 @@ public class TargetingManager {
                     "Cannot choose target while no target selector is active."
             );
 
-        boolean result = this.activeEffect.chooseTarget(this.activeTargetables);
+        boolean result = this.activeEffect.hasTarget() ||
+                this.activeEffect.chooseTarget(this.activeTargetables);
         clearActiveEffect();
         return result;
     }

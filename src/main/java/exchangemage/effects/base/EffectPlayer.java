@@ -1,9 +1,6 @@
 package exchangemage.effects.base;
 
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.encounters.Scene;
@@ -20,8 +17,8 @@ import exchangemage.effects.triggers.Condition;
  * <ul>
  *     <li>{@link #playCard(Card)} which allows for resolution of all effects of a card (along
  *     with any persistent effects triggered in the process).</li>
- *     <li>{@link #enqueueEffect(Effect)} which enqueues an effect into the resolution
- *     queue and chooses its target with the help of the {@link TargetingManager}.</li>
+ *     <li>{@link #evaluateEffect(Effect)} which evaluates whether an effect is activated (and if
+ *     it is - handles the resolution in accordance with its {@link Effect.ResolutionMode}).</li>
  *     <li>{@link #resolveQueue()} which resolves all currently enqueued effects (along with any
  *     persistent effects triggered in the process).</li>
  * </ul>
@@ -124,16 +121,16 @@ public class EffectPlayer {
         RESPONSE;
 
         /**
-         * Sorts an array of {@link PersistentEffect}s by their trigger stage in ascending order as
-         * defined by the {@link EffectResolutionStage} enum.
+         * Sorts a list of {@link PersistentEffect}s by their trigger stage in ascending order (as
+         * defined by the {@link EffectResolutionStage} enum).
          *
-         * @param effects the array of persistent effects to sort.
-         * @return the sorted array of persistent effects.
+         * @param effects the list of persistent effects to sort.
+         * @return the sorted list of persistent effects.
          *
          * @see PersistentEffect
          */
-        public static PersistentEffect[] sortPersistentEffects(PersistentEffect[] effects) {
-            Arrays.sort(effects, Comparator.comparing(PersistentEffect::getActivationStage));
+        public static List<PersistentEffect> sortPersistentEffects(List<PersistentEffect> effects) {
+            effects.sort(Comparator.comparing(PersistentEffect::getActivationStage));
             return effects;
         }
     }
@@ -142,7 +139,6 @@ public class EffectPlayer {
      * Creates a new {@link EffectPlayer} for the given {@link Scene}.
      *
      * @param scene the Scene to create the EffectPlayer for.
-     *              
      * @throws IllegalArgumentException if the given Scene is null.
      *
      * @see Scene
@@ -155,6 +151,21 @@ public class EffectPlayer {
     }
 
     /**
+     * Returns the {@link EffectPlayer} of the current {@link Scene} in the game.
+     *
+     * @return the EffectPlayer of the current Scene.
+     * @throws IllegalStateException if no Scene could be retrieved.
+     *
+     * @see EffectPlayer
+     * @see Scene
+     */
+    public static EffectPlayer getEffectPlayer() {
+        if (Scene.getScene() == null)
+            throw new IllegalStateException("Cannot retrieve current Scene.");
+        return Scene.getScene().getEffectPlayer();
+    }
+
+    /**
      * Returns the current {@link Effect} being resolved (or null if no effect is being resolved).
      *
      * @return the current effect being resolved.
@@ -164,50 +175,114 @@ public class EffectPlayer {
     public Effect getCurrentEffect() { return this.currentEffect; }
 
     /**
-     * Enqueues the given {@link Effect} into the resolution queue if it can be activated and
-     * chooses its target with the help of the {@link TargetingManager}. If no target can be chosen
-     * for the effect, it is not enqueued.
+     * Returns whether there is an {@link Effect} currently being resolved by the
+     * {@link EffectPlayer}.
      *
-     * @param effect the effect to enqueue.
-     *
-     * @throws IllegalArgumentException if the given effect is null.
+     * @return <code>true</code> if there is an effect currently being resolved, <code>false</code>
+     * otherwise.
      *
      * @see Effect
-     * @see TargetingManager
      */
-    public void enqueueEffect(Effect effect) {
-        if (effect == null)
-            throw new IllegalArgumentException("Effect to enqueue cannot be null.");
+    public boolean effectInResolution() { return this.currentEffect != null; }
 
-        if (effect.isActivated()) {
-            if (targetingManager.setActiveEffect(effect).chooseTarget())
-                this.resolutionQueue.add(effect);
+    /**
+     * Evaluates whether given {@link Effect} has a valid target and if it is activated. If so,
+     * handles the resolution in accordance with the effect's {@link Effect.ResolutionMode}.
+     *
+     * @param effect the effect to evaluate.
+     * @throws IllegalArgumentException if the given effect is null.
+     * @throws IllegalStateException if the resolution mode of the effect is not recognized.
+     *
+     * @see Effect
+     * @see Trigger
+     * @see TargetingManager
+     * @see Effect.ResolutionMode
+     */
+    public void evaluateEffect(Effect effect) {
+        if (effect == null)
+            throw new IllegalArgumentException("Effect to evaluate cannot be null.");
+        if (!this.targetingManager.setActiveEffect(effect).chooseTarget())
+            return;
+        if (!effect.isActivated())
+            return;
+
+        switch (effect.getResolutionMode()) {
+            case ENQUEUE -> enqueueEffect(effect);
+            case IMMEDIATE -> resolveEffectImmediately(effect);
+            default -> throw new IllegalStateException(
+                    "Effect resolution mode not recognized: " + effect.getResolutionMode()
+            );
         }
     }
 
     /**
-     * Resolves the current, dequeued {@link Effect} and the activation of
-     * {@link PersistentEffect}s which could be triggered by it.
+     * Enqueues given {@link Effect} into the resolution queue.
      *
-     * @throws IllegalStateException if there is no effect to resolve or the effect to resolve
-     * has no target.
+     * @param effect the effect to enqueue.
+     * @throws IllegalArgumentException if the effect is null.
+     * @throws IllegalStateException if the effect has no target.
+     *
+     * @see Effect
+     * @see TargetingManager
+     */
+    private void enqueueEffect(Effect effect) {
+        if (effect == null)
+            throw new IllegalArgumentException("Effect to enqueue cannot be null.");
+        if (!effect.hasTarget())
+            throw new IllegalStateException("Cannot enqueue effect with no target.");
+
+        this.resolutionQueue.add(effect);
+    }
+
+    /**
+     * Resolves given {@link Effect} (if it can be resolved) and evaluates the activation of
+     * {@link PersistentEffect}s present in the scene.
+     *
+     * @param effect the effect to resolve
+     * @throws IllegalArgumentException if the given effect is null.
+     * @throws IllegalStateException if there is already an effect being resolved or if the given
+     * effect has no target.
      *
      * @see Effect
      * @see PersistentEffect
      * @see EffectResolutionStage
      */
-    private void resolveEffect() {
-        if (this.currentEffect == null)
-            throw new IllegalStateException("No effect to resolve.");
-        if (!this.currentEffect.hasTarget())
+    private void resolveEffect(Effect effect) {
+        if (effect == null)
+            throw new IllegalArgumentException("Effect to resolve cannot be null.");
+        if (effectInResolution())
+            throw new IllegalStateException("There is already an effect being resolved.");
+        if (!effect.hasTarget())
             throw new IllegalStateException("Effect to resolve has no target.");
+        if (!effect.canResolve())
+            return;
 
-        PersistentEffect[] persistentEffects = EffectResolutionStage.sortPersistentEffects(
-                this.scene.getEffects()
-        );
+        this.currentEffect = effect;
+        EffectResolutionStage
+                .sortPersistentEffects(this.scene.getEffects())
+                .forEach(this::evaluateEffect);
+        effect.execute();
+        this.currentEffect = null;
+    }
 
-        for (PersistentEffect effect : persistentEffects)
-            enqueueEffect(effect);
+    /**
+     * Resolves given {@link Effect} immediately, regardless of whether there is another effect
+     * being resolved or not. If a resolution of another effect is interrupted by this method, it
+     * is resumed after this effect is resolved.
+     * <br><br>
+     * This method is used to resolve effects with the {@link Effect.ResolutionMode#IMMEDIATE}
+     * resolution mode.
+     *
+     * @param effect the effect to resolve.
+     *
+     * @see Effect
+     * @see Effect.ResolutionMode
+     */
+    private void resolveEffectImmediately(Effect effect) {
+        Effect currentEffect = this.currentEffect;
+        this.currentEffect = null;
+        evaluateEffect(effect);
+        this.currentEffect = currentEffect;
     }
 
     /**
@@ -220,23 +295,14 @@ public class EffectPlayer {
      * @see PersistentEffect
      */
     public EffectPlayer resolveQueue() {
-        while (!this.resolutionQueue.isEmpty()) {
-            Effect effect = this.resolutionQueue.poll();
-
-            if (!effect.canEvaluate())
-                continue;
-
-            this.currentEffect = effect;
-            this.resolveEffect();
-        }
-
-        this.currentEffect = null;
+        while (!this.resolutionQueue.isEmpty())
+            resolveEffect(this.resolutionQueue.poll());
         return this;
     }
 
     /**
-     * Enqueues all {@link Effect}s of the given {@link Card}, immediately choosing targets for
-     * them and resolves the resolution queue.
+     * Calls the {@link #evaluateEffect} method on all {@link Effect}s of the given {@link Card}
+     * to determine their targets and activation. Then resolves all enqueued effects.
      *
      * @param card the card to play.
      * @throws IllegalArgumentException if the given card is null.
@@ -249,7 +315,7 @@ public class EffectPlayer {
             throw new IllegalArgumentException("Card to play cannot be null.");
 
         for (Effect effect : card.getEffects())
-            this.enqueueEffect(effect);
+            this.evaluateEffect(effect);
 
         this.resolveQueue();
     }
