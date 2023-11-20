@@ -5,8 +5,8 @@ import exchangemage.effects.base.PersistentEffect;
 /**
  * A {@link Trigger} which always returns a given value independent of the state of the game.
  * <br><br>
- * Used for utility purposes - e.g. as evaluation trigger for {@link PersistentEffect}s which
- * should always be evaluated if they have been activated.
+ * Used for utility purposes - e.g. as resolution trigger for {@link PersistentEffect}s which
+ * should always be resolved if they have been activated.
  *
  * @see Trigger
  */
@@ -26,7 +26,5 @@ public class ConstValueTrigger implements Trigger {
      * @return the value of the trigger
      */
     @Override
-    public boolean isActivated() {
-        return value;
-    }
+    public boolean isActivated() { return value; }
 }
