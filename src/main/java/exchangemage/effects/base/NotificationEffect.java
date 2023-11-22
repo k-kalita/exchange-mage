@@ -1,9 +1,12 @@
 package exchangemage.effects.base;
 
 import exchangemage.base.Notification;
+import exchangemage.base.Observable;
 import exchangemage.encounters.Scene;
 import exchangemage.effects.triggers.ConstValueTrigger;
 import exchangemage.effects.targeting.SceneSelector;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Effect} used to alert {@link PersistentEffect}s in the {@link Scene} of certain
@@ -11,7 +14,7 @@ import exchangemage.effects.targeting.SceneSelector;
  * enemy's death</i>).
  * <br><br>
  * {@link EffectSource}s which are responsible for reporting such events should implement their own
- * {@link Notification}s to represent the events related PersistentEffects might be interested in.
+ * {@link Notification}s to represent the events related persistent effects might be interested in.
  *
  * @see Effect
  * @see PersistentEffect
@@ -29,9 +32,8 @@ public class NotificationEffect extends Effect {
      * this {@link Effect} is alerting of.
      *
      * @param notification the notification used to represent the event this effect is alerting of
-     * @param source object reporting the event
-     * @throws IllegalArgumentException if the notification or source are null
-     *
+     * @param source       object reporting the event
+     * @throws NullPointerException if the notification or source are null
      * @see Notification
      * @see EffectSource
      * @see Effect
@@ -44,14 +46,14 @@ public class NotificationEffect extends Effect {
                 ResolutionMode.IMMEDIATE
         );
 
-        if (notification == null)
-            throw new IllegalArgumentException(
-                    "Cannot create notification effect with null notification."
-            );
-        if (source == null)
-            throw new IllegalArgumentException(
-                    "Cannot create notification effect with null source."
-            );
+        Objects.requireNonNull(
+                notification,
+                "Cannot create notification effect with null notification."
+        );
+        Objects.requireNonNull(
+                source,
+                "Cannot create notification effect with null source."
+        );
 
         this.notification = notification;
         setSource(source);
@@ -60,9 +62,8 @@ public class NotificationEffect extends Effect {
     /**
      * This method does not have any effect.
      * <br><br>
-     * {@link NotificationEffect}s are used solely to
-     * alert {@link PersistentEffect}s in the scene of certain events which could potentially
-     * activate them.
+     * {@link NotificationEffect}s are used solely to alert {@link PersistentEffect}s in the
+     * {@link Scene} of certain events which could potentially activate them.
      *
      * @see PersistentEffect
      */
@@ -74,8 +75,7 @@ public class NotificationEffect extends Effect {
      * is alerting of.
      *
      * @return this effect's notification
-     *
      * @see Notification
      */
-    public Notification getNotification() { return notification; }
+    public Notification getNotification() {return notification;}
 }

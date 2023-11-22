@@ -1,19 +1,27 @@
 package exchangemage.effects.base;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 
+import exchangemage.encounters.Scene;
+import exchangemage.actors.Actor;
+import exchangemage.cards.Card;
+import exchangemage.cards.Deck;
 import exchangemage.base.Observer;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetSelector;
 
 /**
- * Base class for all effects in the game. Effects represent all atomic actions that affect scenes,
- * actors and their decks, as well as alerts used to trigger {@link PersistentEffect}s.
+ * Base class for all effects in the game. Effects represent all isolated, indivisible actions that
+ * affect {@link Scene}s, {@link Actor}s, their {@link Deck}s, etc. and can in combination and/or
+ * with use of decorators make up more complex interactions. Crucially, a list of effects is used
+ * to represent the rules and impacts of all {@link Card}s in the game.
  * <br><br>
- * All effects possess a {@link Trigger} component used to determine whether the effect should be
- * activated and a {@link TargetSelector} component used to determine the target of the effect.
+ * All effects possess {@link Trigger} components used to determine whether the effect should be
+ * activated and resolved by the {@link EffectPlayer}, a {@link TargetSelector} component used to
+ * determine the target of the effect.
  * <br><br>
  * The most important types of effects (which all other effects extend) are:
  * <ul>
@@ -31,7 +39,7 @@ import exchangemage.effects.targeting.TargetSelector;
  *     the same target to an underlying set of effects).</li>
  * </ul>
  *
- * @see PersistentEffect
+ * @see EffectPlayer
  * @see Trigger
  * @see TargetSelector
  */
@@ -42,13 +50,13 @@ public abstract class Effect implements EffectSource, Targetable {
      */
     private EffectSource source;
     /**
-     * The activation {@link Trigger} of the {@link Effect}. Represents the conditions under which
-     * this effect can be enqueued into the resolution queue of the {@link EffectPlayer}.
+     * The activation {@link Trigger} of the {@link Effect}. Represents the conditions which must
+     * be met for this effect to be enqueued into the resolution queue of the {@link EffectPlayer}.
      */
     private final Trigger activationTrigger;
     /**
      * The resolution {@link Trigger} of the {@link Effect}. Represents the conditions under which
-     * this effect can be resolved from the resolution queue of the {@link EffectPlayer}.
+     * must be met for this effect to be resolved by the {@link EffectPlayer}.
      */
     private final Trigger resolutionTrigger;
     /**
@@ -103,13 +111,26 @@ public abstract class Effect implements EffectSource, Targetable {
      *
      * @param activationTrigger activation trigger of the effect
      * @param resolutionTrigger resolution trigger of the effect
-     * @param targetSelector target selector of the effect
-     * @param resolutionMode resolution mode of the effect
+     * @param targetSelector    target selector of the effect
+     * @param resolutionMode    resolution mode of the effect
+     * @throws NullPointerException if any of the provided parameters are <code>null</code>
+     * @see Trigger
+     * @see TargetSelector
+     * @see ResolutionMode
      */
     public Effect(Trigger activationTrigger,
                   Trigger resolutionTrigger,
                   TargetSelector targetSelector,
                   ResolutionMode resolutionMode) {
+        Objects.requireNonNull(activationTrigger,
+                               "Cannot create effect with null activation trigger.");
+        Objects.requireNonNull(resolutionTrigger,
+                               "Cannot create effect with null resolution trigger.");
+        Objects.requireNonNull(targetSelector,
+                               "Cannot create effect with null target selector.");
+        Objects.requireNonNull(resolutionMode,
+                               "Cannot create effect with null resolution mode.");
+
         this.source = null;
         this.observers = new HashSet<>();
         this.activationTrigger = activationTrigger;
@@ -125,12 +146,11 @@ public abstract class Effect implements EffectSource, Targetable {
      *
      * @return <code>true</code> if the activation trigger of the effect is activated,
      * <code>false</code> otherwise
-     *
      * @see Trigger
      * @see Effect
      * @see EffectPlayer
      */
-    public boolean isActivated() { return this.activationTrigger.isActivated(); }
+    public boolean isActivated() {return this.activationTrigger.isActivated();}
 
     /**
      * Checks if the resolution {@link Trigger} of the {@link Effect} is activated. This method
@@ -139,12 +159,11 @@ public abstract class Effect implements EffectSource, Targetable {
      *
      * @return <code>true</code> if the resolution trigger of the effect is activated,
      * <code>false</code> otherwise
-     *
      * @see Trigger
      * @see Effect
      * @see EffectPlayer
      */
-    public boolean canResolve() { return this.resolutionTrigger.isActivated(); }
+    public boolean canResolve() {return this.resolutionTrigger.isActivated();}
 
     /**
      * Executes the {@link Effect}. This method is called by the {@link EffectPlayer} at the end
@@ -161,10 +180,9 @@ public abstract class Effect implements EffectSource, Targetable {
      *
      * @return <code>true</code> if the target selector of the effect has a target,
      * <code>false</code> otherwise
-     *
      * @see TargetSelector
      */
-    public boolean hasTarget() { return this.targetSelector.hasTarget(); }
+    public boolean hasTarget() {return this.targetSelector.hasTarget();}
 
     /**
      * Calls the {@link TargetSelector#chooseTarget} method of this {@link Effect}'s
@@ -174,7 +192,6 @@ public abstract class Effect implements EffectSource, Targetable {
      * @param activeTargetables the set of active targetables to choose the target from
      * @return <code>true</code> if a target has been successfully selected, <code>false</code>
      * otherwise
-     *
      * @see TargetSelector
      * @see Targetable
      * @see Effect
@@ -189,91 +206,79 @@ public abstract class Effect implements EffectSource, Targetable {
      * Returns the {@link EffectSource} of the {@link Effect}.
      *
      * @return the source of the effect
-     *
      * @see EffectSource
      * @see Effect
      */
-    public EffectSource getSource() { return this.source; }
+    public EffectSource getSource() {return this.source;}
 
     /**
      * Sets the {@link EffectSource} of the {@link Effect}.
      *
      * @param source the source of the effect
-     * @return this effect
-     *
-     * @throws IllegalArgumentException if the given source is <code>null</code>
-     *
+     * @throws NullPointerException if the given source is <code>null</code>
      * @see EffectSource
      * @see Effect
      */
-    public Effect setSource(EffectSource source) {
-        if (source == null)
-            throw new IllegalArgumentException("Cannot set null effect source.");
-
+    public void setSource(EffectSource source) {
+        Objects.requireNonNull(source, "Cannot set null source of effect.");
         this.source = source;
-        return this;
     }
 
     /**
      * Returns the activation {@link Trigger} of the {@link Effect}.
      *
      * @return the activation trigger of the effect
-     *
      * @see Trigger
      * @see Effect
      */
-    public Trigger getActivationTrigger() { return this.activationTrigger; }
+    public Trigger getActivationTrigger() {return this.activationTrigger;}
 
     /**
      * Returns the resolution {@link Trigger} of the {@link Effect}.
      *
      * @return the resolution trigger of the effect
-     *
      * @see Trigger
      * @see Effect
      */
-    public Trigger getResolutionTrigger() { return this.resolutionTrigger; }
+    public Trigger getResolutionTrigger() {return this.resolutionTrigger;}
 
     /**
      * Returns the {@link TargetSelector} of the {@link Effect}.
      *
      * @return the target selector of the effect
-     *
      * @see TargetSelector
      * @see Effect
      */
-    public TargetSelector getTargetSelector() { return this.targetSelector; }
+    public TargetSelector getTargetSelector() {return this.targetSelector;}
 
     /**
      * Returns the target of the {@link Effect} from its {@link TargetSelector}.
      *
      * @return the target of the effect
-     *
      * @see Targetable
      * @see TargetSelector
      */
-    public Targetable getTarget() { return this.targetSelector.getTarget(); }
+    public Targetable getTarget() {return this.targetSelector.getTarget();}
 
     /**
      * Returns the {@link ResolutionMode} of the {@link Effect}.
      *
      * @return the resolution mode of the effect
-     *
      * @see ResolutionMode
      */
-    public ResolutionMode getResolutionMode() { return this.resolutionMode; }
+    public ResolutionMode getResolutionMode() {return this.resolutionMode;}
 
     // --------------------------------- observable methods ----------------------------------- //
 
     @Override
     public void addObserver(Observer observer) {
-        validateObserver(observer);
+        Objects.requireNonNull(observer, "Cannot add null observer.");
         this.observers.add(observer);
     }
 
     @Override
     public void removeObserver(Observer observer) {
-        validateObserver(observer);
+        Objects.requireNonNull(observer, "Cannot remove null observer.");
         if (!this.observers.contains(observer))
             throw new IllegalArgumentException("Cannot remove observer that has not been added.");
 
@@ -281,5 +286,5 @@ public abstract class Effect implements EffectSource, Targetable {
     }
 
     @Override
-    public Set<Observer> getObservers() { return this.observers; }
+    public Set<Observer> getObservers() {return this.observers;}
 }

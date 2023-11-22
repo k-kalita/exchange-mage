@@ -1,11 +1,13 @@
 package exchangemage.cards;
 
+import java.util.List;
+
 import exchangemage.effects.base.Effect;
 
 public class Card {
-    private Effect[] effects;
+    private List<Effect> effects;
 
-    public Effect[] getEffects() {
+    public List<Effect> getEffects() {
         return this.effects;
     }
 }

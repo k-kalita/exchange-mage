@@ -22,7 +22,6 @@ public abstract class EffectDeployer extends Effect {
      * @param activationTrigger activation trigger of the effect
      * @param resolutionTrigger resolution trigger of the effect
      * @param targetSelector    target selector of the effect
-     *
      * @see Effect
      * @see Trigger
      * @see TargetSelector
@@ -37,8 +36,7 @@ public abstract class EffectDeployer extends Effect {
     /**
      * Returns the {@link Effect}(s) this {@link EffectDeployer} is a wrapper for.
      *
-     * @return a list of effects stored by this deployer.
-     *
+     * @return a list of effects stored by this deployer
      * @see Effect
      */
     public abstract List<Effect> getEffects();
@@ -50,7 +48,6 @@ public abstract class EffectDeployer extends Effect {
      * @param activeTargetables the set of active targetables to choose the target from
      * @return <code>true</code> if the target choosing process was successful, <code>false</code>
      * otherwise
-     *
      * @see Targetable
      * @see Effect
      */
@@ -62,18 +59,12 @@ public abstract class EffectDeployer extends Effect {
      * is a wrapper for to the given {@link EffectSource} object.
      *
      * @param source the source of the effect
-     * @return this effect
-     *
      * @see Effect
      * @see EffectSource
      */
     @Override
-    public Effect setSource(EffectSource source) {
+    public void setSource(EffectSource source) {
         super.setSource(source);
-
-        for (Effect effect : this.getEffects())
-            effect.setSource(source);
-
-        return this;
+        getEffects().forEach(effect -> effect.setSource(source));
     }
 }
