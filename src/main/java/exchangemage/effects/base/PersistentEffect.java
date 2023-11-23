@@ -1,25 +1,27 @@
 package exchangemage.effects.base;
 
 import exchangemage.effects.targeting.TargetSelector;
+import exchangemage.effects.targeting.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
-import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.effects.triggers.Trigger;
-import exchangemage.effects.triggers.ConstValueTrigger;
+import exchangemage.encounters.Scene;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
- * An {@link Effect} which represents a persistent environmental/actor-specific power or status,
- * storing within it effects which can be activated by external occurrences (e.g. effects which
- * activate each time an enemy takes damage or when a specific type of card is played).
+ * An {@link EffectDeployer} used to represent a persistent environmental/actor-specific
+ * power/status/modifier, storing within it effects which can be triggered by external
+ * occurrences (e.g. effects which activate each time an enemy takes damage or when a specific
+ * type of card is played).
  * <br><br>
- * Persistent effects can be activated during the resolution of other effects. The order in which
+ * Persistent effects can be triggered during the resolution of other effects. The order in which
  * they are activated is determined by their assigned {@link EffectPlayer.EffectResolutionStage}.
  * Upon execution, a persistent effect will call the {@link EffectPlayer#evaluateEffect} method
- * of the {@link EffectPlayer} to evaluate the resolution of all its stored effects.
+ * of the {@link EffectPlayer} on each of its stored effects.
  *
  * @see Effect
  * @see EffectPlayer
@@ -27,22 +29,23 @@ import java.util.Set;
  */
 public class PersistentEffect extends EffectDeployer {
     /**
-     * {@link Effect}s which will be deployed upon the activation of the {@link PersistentEffect}.
+     * {@link Effect}s which will be deployed upon the resolution of the {@link PersistentEffect}.
      */
     private final List<Effect> effects;
+
     /**
      * The activation stage of the {@link PersistentEffect}. Dictates the stage of the
-     * {@link Effect} resolution process in which the persistent effect can be activated.
+     * {@link Effect} resolution process in which the persistent effect can be triggered.
      */
     private final EffectPlayer.EffectResolutionStage activationStage;
 
     /**
-     * Constructs a {@link PersistentEffect} with given stored {@link Effect}s, activation stage,
-     * {@link Trigger}s, and {@link TargetSelector}.
+     * Constructs a {@link PersistentEffect} with given stored {@link Effect}s, activation stage and
+     * {@link Trigger}.
      *
      * @param effects         effects stored within the PersistentEffect
      * @param activationStage activation stage of the persistent effect
-     * @param targetSelector  target selector of the persistent effect
+     * @param trigger         trigger of the persistent effect
      * @throws NullPointerException     if the effects list is null
      * @throws IllegalArgumentException if the effects list is empty
      * @see Effect
@@ -52,14 +55,10 @@ public class PersistentEffect extends EffectDeployer {
      */
     public PersistentEffect(List<Effect> effects,
                             EffectPlayer.EffectResolutionStage activationStage,
-                            Trigger activationTrigger,
-                            TargetSelector targetSelector) {
-        super(
-                activationTrigger,
-                new ConstValueTrigger(true),
-                targetSelector,
-                ResolutionMode.IMMEDIATE
-        );
+                            Trigger trigger) {
+        super(trigger,
+              new SceneSelector(),
+              ResolutionMode.IMMEDIATE);
 
         Objects.requireNonNull(effects,
                                "Cannot create persistent effect with null effects list.");
@@ -70,22 +69,22 @@ public class PersistentEffect extends EffectDeployer {
             );
 
         this.effects = new ArrayList<>(effects);
+        this.effects.forEach(effect -> effect.setSource(this));
         this.activationStage = activationStage;
     }
 
     /**
-     * Sets given {@link EffectSource} as the source of the {@link PersistentEffect}. And sets the
+     * Sets given {@link EffectSource} as the source of the {@link PersistentEffect}. Sets the
      * persistent effect as the source of all the stored {@link Effect}s.
      *
      * @param source the source of the effect
      * @throws NullPointerException if the source is null
-     *
      * @see EffectSource
      */
     @Override
     public void setSource(EffectSource source) {
         Objects.requireNonNull(source, "Cannot set null source for persistent effect.");
-        super.setSource(source);
+        this.source = source;
         effects.forEach(effect -> effect.setSource(this));
     }
 
@@ -99,15 +98,17 @@ public class PersistentEffect extends EffectDeployer {
     public EffectPlayer.EffectResolutionStage getActivationStage() {return activationStage;}
 
     /**
-     * Calls the {@link EffectPlayer#evaluateEffect} method of the {@link EffectPlayer} for each
-     * of its stored {@link Effect}s.
+     * Calls the {@link EffectPlayer#evaluateEffect} method for all of its stored {@link Effect}s
+     * which managed to find a target when the {@link PersistentEffect#selectTarget} method was
+     * called.
      *
      * @see EffectPlayer
      * @see PersistentEffect
      */
     @Override
     public void execute() {
-        getEffects().forEach(effect -> EffectPlayer.getEffectPlayer().evaluateEffect(effect));
+        getEffects().stream().filter(Effect::hasTarget)
+                .forEach(effect -> EffectPlayer.getEffectPlayer().evaluateEffect(effect));
     }
 
     /**
@@ -120,22 +121,25 @@ public class PersistentEffect extends EffectDeployer {
     public List<Effect> getEffects() {return this.effects;}
 
     /**
-     * Chooses a target for the {@link PersistentEffect} and, immediately after, for all the
-     * {@link Effect}s stored within it.
+     * Select the current {@link Scene} as the target for the {@link PersistentEffect} (All
+     * persistent effects use the {@link SceneSelector} as their {@link TargetSelector}) and
+     * immediately after, for all the {@link Effect}s stored within it.
      *
      * @param activeTargetables the set of active targetables to choose the target from
-     * @return <code>true</code> if the target choosing process was successful, <code>false</code>
-     * otherwise
+     * @return <code>true</code> if at least one of the stored effects successfully found a target,
+     * <code>false</code> otherwise
      * @see Targetable
      * @see Effect
      */
     @Override
-    public boolean chooseTarget(Set<Targetable> activeTargetables) {
-        boolean result = getTargetSelector().chooseTarget(activeTargetables);
-        if (!result) return false;
-        getEffects().forEach(
-                effect -> EffectPlayer.getTargetingManager().setActiveEffect(effect).chooseTarget()
+    public boolean selectTarget(Set<Targetable> activeTargetables) {
+        if (!getTargetSelector().selectTarget(activeTargetables))
+            return false;
+
+        Stream<Boolean> results = getEffects().stream().map(
+                effect -> EffectPlayer.getTargetingManager().setActiveEffect(effect).selectTarget()
         );
-        return true;
+
+        return results.anyMatch(Boolean::booleanValue);
     }
 }

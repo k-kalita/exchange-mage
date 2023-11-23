@@ -49,7 +49,7 @@ public abstract class Effect implements EffectSource, Targetable {
      * The {@link EffectSource} of the {@link Effect}. Indicates the origin of the effect (e.g. the
      * card it was played from or the {@link PersistentEffect} that deployed it).
      */
-    private EffectSource source;
+    protected EffectSource source;
 
     /**
      * The {@link Trigger} of the {@link Effect}. Represents the conditions which must be met for
