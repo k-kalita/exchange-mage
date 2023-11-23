@@ -1,7 +1,6 @@
 package exchangemage.effects.base;
 
 import exchangemage.base.Notification;
-import exchangemage.base.Observable;
 import exchangemage.encounters.Scene;
 import exchangemage.effects.triggers.ConstValueTrigger;
 import exchangemage.effects.targeting.SceneSelector;
@@ -10,7 +9,7 @@ import java.util.Objects;
 
 /**
  * A simple {@link Effect} used to alert {@link PersistentEffect}s in the {@link Scene} of certain
- * events which could potentially activate them (e.g. <i> the start of a new turn</i> or <i>an
+ * events which could potentially trigger them (e.g. <i> the start of a new turn</i> or <i>an
  * enemy's death</i>).
  * <br><br>
  * {@link EffectSource}s which are responsible for reporting such events should implement their own
@@ -39,12 +38,9 @@ public class NotificationEffect extends Effect {
      * @see Effect
      */
     public NotificationEffect(Notification notification, EffectSource source) {
-        super(
-                new ConstValueTrigger(true),
-                new ConstValueTrigger(true),
-                new SceneSelector(),
-                ResolutionMode.IMMEDIATE
-        );
+        super(new ConstValueTrigger(true),
+              new SceneSelector(),
+              ResolutionMode.IMMEDIATE);
 
         Objects.requireNonNull(
                 notification,

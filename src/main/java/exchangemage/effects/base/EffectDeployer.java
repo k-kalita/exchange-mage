@@ -8,29 +8,28 @@ import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 
 /**
- * An abstract base class for {@link Effect}s used to deploy another effect/set of effects. (e.g.
- * an effect used to add a persistent effect to the scene/actors or assign the same target
+ * An abstract base class for all {@link Effect}s used to deploy another effect/set of effects.
+ * (e.g. an effect used to add a persistent effect to the scene/actors or assign the same target
  * to an underlying set of effects).
  *
  * @see Effect
  */
 public abstract class EffectDeployer extends Effect {
     /**
-     * Constructs an {@link EffectDeployer} with given {@link Trigger}s, {@link TargetSelector} and
+     * Constructs an {@link EffectDeployer} with given {@link Trigger}, {@link TargetSelector} and
      * {@link ResolutionMode}.
      *
-     * @param activationTrigger activation trigger of the effect
-     * @param resolutionTrigger resolution trigger of the effect
+     * @param trigger           trigger of the effect
      * @param targetSelector    target selector of the effect
-     * @see Effect
+     * @param resolutionMode    resolution mode of the effect
      * @see Trigger
      * @see TargetSelector
+     * @see ResolutionMode
      */
-    public EffectDeployer(Trigger activationTrigger,
-                          Trigger resolutionTrigger,
+    public EffectDeployer(Trigger trigger,
                           TargetSelector targetSelector,
                           ResolutionMode resolutionMode) {
-        super(activationTrigger, resolutionTrigger, targetSelector, resolutionMode);
+        super(trigger, targetSelector, resolutionMode);
     }
 
     /**
@@ -52,19 +51,17 @@ public abstract class EffectDeployer extends Effect {
      * @see Effect
      */
     @Override
-    public abstract boolean chooseTarget(Set<Targetable> activeTargetables);
+    public abstract boolean selectTarget(Set<Targetable> activeTargetables);
 
     /**
-     * Sets the source of the {@link EffectDeployer} and all the {@link Effect}(s) this deployer
-     * is a wrapper for to the given {@link EffectSource} object.
+     * Concrete implementations of the {@link EffectDeployer} base class should override this
+     * method to handle the logic of setting a source for themselves and the underlying
+     * {@link Effect}(s) they package.
      *
      * @param source the source of the effect
      * @see Effect
      * @see EffectSource
      */
     @Override
-    public void setSource(EffectSource source) {
-        super.setSource(source);
-        getEffects().forEach(effect -> effect.setSource(source));
-    }
+    public abstract void setSource(EffectSource source);
 }

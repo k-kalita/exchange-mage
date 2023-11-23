@@ -8,7 +8,8 @@ import exchangemage.effects.triggers.Condition;
  * An interface for objects which represent possible sources of an {@link Effect} (e.g. a
  * {@link Card} or a {@link PersistentEffect}). Effect sources may be referenced in the
  * {@link Condition}s of persistent effects' activation {@link Trigger}s (e.g. a persistent effect
- * may be activated only if the source of the effect is a {@link Card} played by the player).
+ * may be activated only if the source of the triggering effect is a {@link Card} played by the
+ * player).
  *
  * @see Effect
  * @see PersistentEffect

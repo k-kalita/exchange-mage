@@ -63,7 +63,7 @@ public class ConstantTargetSelector extends TargetSelector {
      * @see Targetable
      */
     @Override
-    public boolean chooseTarget(Set<Targetable> activeTargetables) {
+    public boolean selectTarget(Set<Targetable> activeTargetables) {
         if (activeTargetables.contains(this.targetGetter.getTarget())) {
             this.target = this.targetGetter.getTarget();
             return true;

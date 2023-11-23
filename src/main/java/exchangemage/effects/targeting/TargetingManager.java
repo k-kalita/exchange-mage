@@ -14,14 +14,14 @@ import exchangemage.effects.base.EffectPlayer;
  *     selected as the target for a given {@link Effect} even if they are returned by that effect's
  *     {@link TargetSelector}'s {@link TargetSelector#getActiveTargetables} method),</li>
  *     <li>calling the {@link TargetSelector#getActiveTargetables} and
- *     {@link TargetSelector#chooseTarget} methods of the active effect's selector to create a set
+ *     {@link TargetSelector#selectTarget} methods of the active effect's selector to create a set
  *     of active targetables and choose a target from it.</li>
  *     <li>calling the {@link Targetable#notifyObservers} method of targetables when they become
  *     active or inactive.</li>
  * </ul>
  * TargetingManager's methods are called by the {@link EffectPlayer} in the process of enqueuing
  * an effect. If the target cannot be chosen (indicated by the return value of the
- * {@link #chooseTarget} method), the effect is not enqueued.
+ * {@link #selectTarget} method), the effect is not enqueued.
  *
  * @see Effect
  * @see EffectPlayer
@@ -83,7 +83,7 @@ public class TargetingManager {
     }
 
     /**
-     * Calls the {@link TargetSelector#chooseTarget} method of the active {@link Effect}'s
+     * Calls the {@link TargetSelector#selectTarget} method of the active {@link Effect}'s
      * {@link TargetSelector} to choose a target from the set of active {@link Targetable}s.
      * Then clears the active effect and the set of active targetables. If the effect already has
      * a target it is not chosen again.
@@ -97,14 +97,14 @@ public class TargetingManager {
      * @see TargetSelector
      * @see Targetable
      */
-    public boolean chooseTarget() {
+    public boolean selectTarget() {
         if (this.activeEffect == null)
             throw new IllegalStateException(
                     "Cannot choose target while no target selector is active."
             );
 
         boolean result = this.activeEffect.hasTarget() ||
-                this.activeEffect.chooseTarget(this.activeTargetables);
+                this.activeEffect.selectTarget(this.activeTargetables);
         clearActiveEffect();
         return result;
     }
