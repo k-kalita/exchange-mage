@@ -16,7 +16,7 @@ import exchangemage.effects.base.EffectPlayer;
  *     the {@link #getActiveTargetables} method).</li>
  * </ul>
  * TargetSelector methods are called by the {@link TargetingManager} in the process of selecting
- * a target for an effect being enqueued into the resolution queue of the {@link EffectPlayer}.
+ * a target for an effect being evaluated by the {@link EffectPlayer}.
  *
  * @see Effect
  * @see EffectPlayer
@@ -31,13 +31,14 @@ public abstract class TargetSelector {
     protected Targetable target;
 
     /**
-     * An exception thrown when an invalid target is set for a {@link TargetSelector}.
+     * An exception thrown when an attempt is made to set an invalid target for a
+     * {@link TargetSelector} or to select a target from an invalid set of {@link Targetable}s.
      *
      * @see TargetSelector
      * @see Targetable
      */
     public static class InvalidTargetException extends IllegalArgumentException {
-        public InvalidTargetException(String message) { super(message); }
+        public InvalidTargetException(String message) {super(message);}
     }
 
     /**
@@ -49,7 +50,6 @@ public abstract class TargetSelector {
      *
      * @return a set of all {@link Targetable} objects that can potentially be selected as an
      * effect's target by this selector.
-     *
      * @see Targetable
      * @see TargetingManager
      * @see Effect
@@ -64,7 +64,6 @@ public abstract class TargetSelector {
      * @param activeTargetables the set of active targetables to choose from.
      * @return <code>true</code> if a target has been successfully selected, <code>false</code>
      * otherwise.
-     *
      * @see Targetable
      * @see TargetingManager
      * @see Effect
@@ -80,28 +79,23 @@ public abstract class TargetSelector {
      * provide their own validation logic.
      *
      * @param target the target to validate.
-     *
      * @throws InvalidTargetException if the given target is null.
      */
-    protected void validateTarget(Targetable target) {
-        if (target == null) throw new InvalidTargetException("Cannot set null target.");
-    }
+    protected abstract void validateTarget(Targetable target);
 
     /**
      * Returns whether this {@link TargetSelector} has a selected target.
      *
      * @return <code>true</code> if a target has been selected, <code>false</code> otherwise.
-     *
      * @see Targetable
      */
-    public boolean hasTarget() { return target != null; }
+    public boolean hasTarget() {return target != null;}
 
     /**
-     * Sets the this {@link TargetSelector}'s target to the given {@link Targetable} object if it
+     * Sets this {@link TargetSelector}'s target to the given {@link Targetable} object if it
      * is valid (checked by the {@link #validateTarget} method).
      *
      * @param target the target to set.
-     *
      * @see Targetable
      */
     public void setTarget(Targetable target) {
@@ -113,9 +107,7 @@ public abstract class TargetSelector {
      * Returns the selected target.
      *
      * @return the target selected by this {@link TargetSelector}.
-     *
      * @throws IllegalStateException if no target has been selected.
-     *
      * @see Targetable
      */
     public Targetable getTarget() {

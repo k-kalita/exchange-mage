@@ -1,5 +1,6 @@
 package exchangemage.effects.targeting;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -11,7 +12,7 @@ import exchangemage.effects.base.EffectPlayer;
  * an {@link Effect}. It is responsible for:
  * <ul>
  *     <li>maintaining a set of forbidden {@link Targetable}s (targetables that cannot be
- *     selected as the target for a given {@link Effect} even if they are returned by that effect's
+ *     selected as the target for a given effect even if they are returned by that effect's
  *     {@link TargetSelector}'s {@link TargetSelector#getActiveTargetables} method),</li>
  *     <li>calling the {@link TargetSelector#getActiveTargetables} and
  *     {@link TargetSelector#selectTarget} methods of the active effect's selector to create a set
@@ -19,9 +20,9 @@ import exchangemage.effects.base.EffectPlayer;
  *     <li>calling the {@link Targetable#notifyObservers} method of targetables when they become
  *     active or inactive.</li>
  * </ul>
- * TargetingManager's methods are called by the {@link EffectPlayer} in the process of enqueuing
+ * TargetingManager's methods are called by the {@link EffectPlayer} in the process of evaluating
  * an effect. If the target cannot be chosen (indicated by the return value of the
- * {@link #selectTarget} method), the effect is not enqueued.
+ * {@link #selectTarget} method), the effect is not resolved.
  *
  * @see Effect
  * @see EffectPlayer
@@ -34,11 +35,13 @@ public class TargetingManager {
      * {@link TargetSelector}.
      */
     private final Set<Targetable> activeTargetables = new HashSet<>();
+
     /**
      * A set of {@link Targetable}s that cannot be selected as the target by the active
      * {@link TargetSelector}.
      */
     private final Set<Targetable> forbiddenTargetables = new HashSet<>();
+
     /**
      * The active {@link Effect}.
      */
@@ -49,22 +52,21 @@ public class TargetingManager {
      * method {@link TargetSelector#getActiveTargetables} is called to create a set of active
      * targetables (targetables which can potentially be selected by the active selector) and the
      * {@link Targetable#notifyObservers} method is called on each of them (if the forbidden
-     * targetables set is not empty, the active targetables set is filtered to exclude them). If the
-     * effect already has a target the set of active targetables is not created.
+     * targetables set is not empty, the active targetables set is filtered to exclude them).
+     * <br><br>
+     * If the effect already has a target the set of active targetables is not created.
      *
      * @param effect the effect to set as the active effect.
      * @return this {@link TargetingManager}
-     *
-     * @throws IllegalArgumentException if the given effect is null.
+     * @throws NullPointerException  if the given effect is null.
      * @throws IllegalStateException if there is already an active effect.
-     *
      * @see Effect
      * @see TargetSelector
      * @see Targetable
      */
     public TargetingManager setActiveEffect(Effect effect) {
-        if (effect == null)
-            throw new IllegalArgumentException("Cannot set null active effect.");
+        Objects.requireNonNull(effect, "Cannot set null active effect.");
+
         if (this.activeEffect != null)
             throw new IllegalStateException("Cannot set active effect while another is active.");
 
@@ -85,23 +87,20 @@ public class TargetingManager {
     /**
      * Calls the {@link TargetSelector#selectTarget} method of the active {@link Effect}'s
      * {@link TargetSelector} to choose a target from the set of active {@link Targetable}s.
-     * Then clears the active effect and the set of active targetables. If the effect already has
-     * a target it is not chosen again.
+     * Then clears the active effect and the set of active targetables.
+     * <br><br>
+     * If the effect already has a target it is not chosen again.
      *
      * @return <code>true</code> if a target has been successfully selected (or the effect
      * already had a target), <code>false</code> otherwise.
-     *
-     * @throws IllegalStateException if there is no active effect.
-     *
+     * @throws NullPointerException if there is no active effect.
      * @see Effect
      * @see TargetSelector
      * @see Targetable
      */
     public boolean selectTarget() {
-        if (this.activeEffect == null)
-            throw new IllegalStateException(
-                    "Cannot choose target while no target selector is active."
-            );
+        Objects.requireNonNull(this.activeEffect,
+                               "Cannot select target while no effect is active.");
 
         boolean result = this.activeEffect.hasTarget() ||
                 this.activeEffect.selectTarget(this.activeTargetables);
@@ -115,19 +114,15 @@ public class TargetingManager {
      * {@link Effect}'s {@link TargetSelector}.
      *
      * @param targetable the targetable to add to the set of forbidden targetables.
-     *
-     * @throws IllegalArgumentException if the given targetable is null.
+     * @throws NullPointerException  if the given targetable is null.
      * @throws IllegalStateException if there is an active effect.
-     *
      * @see Effect
      * @see Targetable
      * @see TargetSelector
      */
     public void addForbiddenTargetable(Targetable targetable) {
-        if (targetable == null)
-            throw new IllegalArgumentException(
-                    "Cannot add null targetable to forbidden targetables."
-            );
+        Objects.requireNonNull(targetable,
+                               "Cannot add null targetable to forbidden targetables.");
         if (this.activeEffect != null)
             throw new IllegalStateException(
                     "Cannot add forbidden targetable while an effect is active."
@@ -141,7 +136,7 @@ public class TargetingManager {
      *
      * @see Targetable
      */
-    public void clearForbiddenTargetables() { this.forbiddenTargetables.clear(); }
+    public void clearForbiddenTargetables() {this.forbiddenTargetables.clear();}
 
     /**
      * Clears the set of active {@link Targetable}s and calls the {@link Targetable#notifyObservers}
@@ -159,16 +154,13 @@ public class TargetingManager {
     /**
      * Clears the active {@link Effect} and the set of active {@link Targetable}s.
      *
-     * @throws IllegalStateException if there is no active effect.
-     *
+     * @throws NullPointerException if there is no active effect.
      * @see Effect
      * @see Targetable
      */
     private void clearActiveEffect() {
-        if (this.activeEffect == null)
-            throw new IllegalStateException(
-                    "Cannot reset target selector while no target selector is active."
-            );
+        Objects.requireNonNull(this.activeEffect,
+                               "Cannot clear active effect while no effect is active.");
 
         clearActiveTargetables();
         this.activeEffect = null;

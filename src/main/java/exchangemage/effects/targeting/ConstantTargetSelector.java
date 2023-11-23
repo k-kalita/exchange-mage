@@ -3,6 +3,7 @@ package exchangemage.effects.targeting;
 import exchangemage.effects.base.Effect;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -20,20 +21,20 @@ public class ConstantTargetSelector extends TargetSelector {
     private final TargetGetter targetGetter;
 
     /**
-     * Creates a new {@link ConstantTargetSelector} with the given {@link TargetGetter}.
+     * Creates a new {@link ConstantTargetSelector} with given {@link TargetGetter}.
      *
      * @param targetGetter implementation of the {@link TargetGetter} functional interface used to
      *                     return this {@link TargetSelector}'s target.
-     *
+     * @throws NullPointerException if the given target getter is <code>null</code>.
      * @see TargetGetter
      * @see TargetSelector
      * @see Targetable
      */
     public ConstantTargetSelector(TargetGetter targetGetter) {
-        if (targetGetter == null)
-            throw new IllegalArgumentException(
-                    "Target getter of constant target selector cannot be null."
-            );
+        Objects.requireNonNull(
+                targetGetter,
+                "Target getter of constant target selector cannot be null."
+        );
         this.targetGetter = targetGetter;
     }
 
@@ -42,13 +43,12 @@ public class ConstantTargetSelector extends TargetSelector {
      * {@link TargetGetter#getTarget()} method of the {@link TargetGetter} implementation.
      *
      * @return a set containing a single {@link Targetable} object returned by the TargetGetter
-     *
      * @see TargetGetter
      * @see Targetable
      */
     @Override
     public Set<Targetable> getActiveTargetables() {
-        return new HashSet<>() {{ add(targetGetter.getTarget()); }};
+        return new HashSet<>() {{add(targetGetter.getTarget());}};
     }
 
     /**
@@ -58,16 +58,26 @@ public class ConstantTargetSelector extends TargetSelector {
      * @param activeTargetables the set of active targetables to choose from.
      * @return <code>true</code> if the target choosing process was successful, <code>false</code>
      * otherwise
-     *
+     * @throws NullPointerException   if the given set of active targetables is <code>null</code>.
+     * @throws InvalidTargetException if the given set of active targetables contains more than one
+     *                                targetable.
      * @see TargetGetter
      * @see Targetable
      */
     @Override
     public boolean selectTarget(Set<Targetable> activeTargetables) {
+        Objects.requireNonNull(activeTargetables, "Active targetables cannot be null.");
+
+        if (activeTargetables.size() > 1)
+            throw new InvalidTargetException(
+                    "Invalid number of active targetables for constant target selector."
+            );
+
         if (activeTargetables.contains(this.targetGetter.getTarget())) {
             this.target = this.targetGetter.getTarget();
             return true;
         }
+
         return false;
     }
 
@@ -77,10 +87,8 @@ public class ConstantTargetSelector extends TargetSelector {
      * {@link TargetGetter}.
      *
      * @param target the target to validate.
-     *
      * @throws InvalidTargetException if the given target does not match the target returned by
-     * the TargetGetter.
-     *
+     *                                the TargetGetter.
      * @see TargetGetter
      * @see Targetable
      */

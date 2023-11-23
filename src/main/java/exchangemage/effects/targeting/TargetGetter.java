@@ -9,10 +9,13 @@ package exchangemage.effects.targeting;
 @FunctionalInterface
 public interface TargetGetter {
     /**
-     * Returns a {@link Targetable} object. Used to select a target by
-     * {@link ConstantTargetSelector}s.
+     * Returns a {@link Targetable} object. Used by @link ConstantTargetSelector}s to select
+     * their target.
      *
      * @return a {@link Targetable} object.
+     *
+     * @see Targetable
+     * @see ConstantTargetSelector
      */
     public Targetable getTarget();
 }

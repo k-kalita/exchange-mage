@@ -21,7 +21,5 @@ public class SceneSelector extends ConstantTargetSelector {
      * @see Scene
      * @see ConstantTargetSelector
      */
-    public SceneSelector() {
-        super(Scene::getScene);
-    }
+    public SceneSelector() {super(Scene::getScene);}
 }
