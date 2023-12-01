@@ -1,5 +1,6 @@
 package exchangemage.effects.targeting;
 
+import exchangemage.base.GameState;
 import exchangemage.encounters.Scene;
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.PersistentEffect;
@@ -21,5 +22,5 @@ public class SceneSelector extends ConstantTargetSelector {
      * @see Scene
      * @see ConstantTargetSelector
      */
-    public SceneSelector() {super(Scene::getScene);}
+    public SceneSelector() {super(GameState::getScene);}
 }

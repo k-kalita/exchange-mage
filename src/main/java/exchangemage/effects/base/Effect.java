@@ -139,6 +139,8 @@ public abstract class Effect implements EffectSource, Targetable {
         this.resolutionMode = resolutionMode;
     }
 
+    // ------------------------------- evaluation & resolution -------------------------------- //
+
     /**
      * Checks if the {@link Trigger} of the {@link Effect} is activated. This method is used by the
      * {@link EffectPlayer} to determine whether an effect should be resolved.
@@ -219,6 +221,14 @@ public abstract class Effect implements EffectSource, Targetable {
     public Trigger getTrigger() {return this.trigger;}
 
     /**
+     * Returns the {@link ResolutionMode} of the {@link Effect}.
+     *
+     * @return the resolution mode of the effect
+     * @see ResolutionMode
+     */
+    public ResolutionMode getResolutionMode() {return this.resolutionMode;}
+
+    /**
      * Returns the {@link TargetSelector} of the {@link Effect}.
      *
      * @return the target selector of the effect
@@ -234,14 +244,6 @@ public abstract class Effect implements EffectSource, Targetable {
      * @see TargetSelector
      */
     public Targetable getTarget() {return this.targetSelector.getTarget();}
-
-    /**
-     * Returns the {@link ResolutionMode} of the {@link Effect}.
-     *
-     * @return the resolution mode of the effect
-     * @see ResolutionMode
-     */
-    public ResolutionMode getResolutionMode() {return this.resolutionMode;}
 
     // --------------------------------- observable methods ----------------------------------- //
 

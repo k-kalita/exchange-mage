@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * A simple {@link Effect} used to alert {@link PersistentEffect}s in the {@link Scene} of certain
- * events which could potentially trigger them (e.g. <i> the start of a new turn</i> or <i>an
+ * events which could potentially trigger them (e.g. <i>the start of a new turn</i> or <i>an
  * enemy's death</i>).
  * <br><br>
  * {@link EffectSource}s which are responsible for reporting such events should implement their own

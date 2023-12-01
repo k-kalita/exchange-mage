@@ -1,5 +1,6 @@
 package exchangemage.effects.base;
 
+import exchangemage.base.GameState;
 import exchangemage.effects.targeting.TargetSelector;
 import exchangemage.effects.targeting.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
@@ -108,7 +109,7 @@ public class PersistentEffect extends EffectDeployer {
     @Override
     public void execute() {
         getEffects().stream().filter(Effect::hasTarget)
-                .forEach(effect -> EffectPlayer.getEffectPlayer().evaluateEffect(effect));
+                .forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
     }
 
     /**
@@ -137,7 +138,7 @@ public class PersistentEffect extends EffectDeployer {
             return false;
 
         Stream<Boolean> results = getEffects().stream().map(
-                effect -> EffectPlayer.getTargetingManager().setActiveEffect(effect).selectTarget()
+                effect -> GameState.getTargetingManager().setActiveEffect(effect).selectTarget()
         );
 
         return results.anyMatch(Boolean::booleanValue);

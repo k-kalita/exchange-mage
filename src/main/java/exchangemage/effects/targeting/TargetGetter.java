@@ -17,5 +17,5 @@ public interface TargetGetter {
      * @see Targetable
      * @see ConstantTargetSelector
      */
-    public Targetable getTarget();
+    Targetable getTarget();
 }

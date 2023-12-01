@@ -242,7 +242,7 @@ public class EffectPlayer {
 
         this.currentEffect = effect;
         EffectResolutionStage
-                .sortPersistentEffects(this.scene.getEffects())
+                .sortPersistentEffects(new ArrayList<>(this.scene.getPersistentEffects()))
                 .forEach(this::evaluateEffect);
         effect.execute();
         this.currentEffect = null;
@@ -303,27 +303,14 @@ public class EffectPlayer {
     // ------------------------------------ getters ------------------------------------------- //
 
     /**
-     * Returns the {@link EffectPlayer} of the current {@link Scene} in the game.
-     *
-     * @return the EffectPlayer of the current Scene
-     * @throws NullPointerException if no Scene could be retrieved
-     * @see EffectPlayer
-     * @see Scene
-     */
-    public static EffectPlayer getEffectPlayer() {
-        Objects.requireNonNull(Scene.getScene(), "Cannot retrieve current Scene.");
-        return Scene.getScene().getEffectPlayer();
-    }
-
-    /**
      * Returns the {@link TargetingManager} used by the {@link EffectPlayer} of the current
      * {@link Scene} in the game.
      *
      * @return the targeting manager of the current effect player
      * @see TargetingManager
      */
-    public static TargetingManager getTargetingManager() {
-        return EffectPlayer.getEffectPlayer().targetingManager;
+    public TargetingManager getTargetingManager() {
+        return this.targetingManager;
     }
 
     /**
