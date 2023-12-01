@@ -6,6 +6,7 @@ import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -35,6 +36,8 @@ public class EffectPacket extends EffectDeployer {
      * @param trigger        trigger of the effect
      * @param targetSelector target selector of the effect
      * @param resolutionMode resolution mode of the effect
+     * @throws NullPointerException     if the effects list is null
+     * @throws IllegalArgumentException if the effects list is empty
      * @see Effect
      * @see Trigger
      * @see TargetSelector
@@ -45,6 +48,17 @@ public class EffectPacket extends EffectDeployer {
                         TargetSelector targetSelector,
                         ResolutionMode resolutionMode) {
         super(trigger, targetSelector, resolutionMode);
+
+        Objects.requireNonNull(
+                effects,
+                "Cannot create effect packet with null effects list."
+        );
+
+        if (effects.isEmpty())
+            throw new IllegalArgumentException(
+                    "Cannot create effect packet with empty effects list."
+            );
+
         this.effects = effects;
     }
 
