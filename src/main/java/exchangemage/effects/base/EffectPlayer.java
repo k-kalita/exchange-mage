@@ -3,7 +3,7 @@ package exchangemage.effects.base;
 import java.util.*;
 
 import exchangemage.effects.targeting.TargetingManager;
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 import exchangemage.cards.Card;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.triggers.Condition;

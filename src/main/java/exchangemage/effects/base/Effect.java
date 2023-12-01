@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 import exchangemage.actors.Actor;
 import exchangemage.cards.Card;
 import exchangemage.cards.Deck;

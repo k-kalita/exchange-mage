@@ -1,7 +1,7 @@
 package exchangemage.effects.base;
 
 import exchangemage.base.Notification;
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 import exchangemage.effects.triggers.ConstValueTrigger;
 import exchangemage.effects.targeting.SceneSelector;
 

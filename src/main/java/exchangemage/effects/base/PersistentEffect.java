@@ -5,7 +5,7 @@ import exchangemage.effects.targeting.TargetSelector;
 import exchangemage.effects.targeting.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 
 import java.util.ArrayList;
 import java.util.List;

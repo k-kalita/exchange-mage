@@ -1,7 +1,7 @@
 package exchangemage.base;
 
 import exchangemage.actors.Player;
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 
 public class Game {
     private static Game game;

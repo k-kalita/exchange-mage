@@ -7,7 +7,7 @@ import exchangemage.effects.base.PersistentEffect;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.effects.triggers.Condition;
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 
 /**
  * An auxiliary class used as a centralised interface for accessing the most important components of

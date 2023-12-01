@@ -1,7 +1,7 @@
 package exchangemage.effects.targeting;
 
 import exchangemage.base.GameState;
-import exchangemage.encounters.Scene;
+import exchangemage.scenes.Scene;
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.PersistentEffect;
 import exchangemage.effects.base.NotificationEffect;
