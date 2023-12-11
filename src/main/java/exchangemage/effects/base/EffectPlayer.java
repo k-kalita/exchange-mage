@@ -265,7 +265,7 @@ public class EffectPlayer {
         Objects.requireNonNull(effect, "Effect to resolve immediately cannot be null.");
         Effect currentEffect = this.currentEffect;
         this.currentEffect = null;
-        evaluateEffect(effect);
+        resolveEffect(effect);
         this.currentEffect = currentEffect;
     }
 
