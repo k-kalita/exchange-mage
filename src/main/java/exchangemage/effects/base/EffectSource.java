@@ -2,7 +2,7 @@ package exchangemage.effects.base;
 
 import exchangemage.cards.Card;
 import exchangemage.effects.triggers.Trigger;
-import exchangemage.effects.triggers.Condition;
+import exchangemage.effects.triggers.conditions.Condition;
 
 /**
  * An interface for objects which represent possible sources of an {@link Effect} (e.g. a

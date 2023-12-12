@@ -1,4 +1,4 @@
-package exchangemage.effects.triggers;
+package exchangemage.effects.triggers.conditions;
 
 import java.util.Objects;
 import java.util.List;

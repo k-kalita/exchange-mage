@@ -3,6 +3,7 @@ package exchangemage.effects.triggers;
 import java.util.Objects;
 
 import exchangemage.effects.base.Effect;
+import exchangemage.effects.triggers.conditions.Condition;
 
 /**
  * A {@link Trigger} which is activated if and only if a given {@link Condition} is fulfilled.

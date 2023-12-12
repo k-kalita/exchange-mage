@@ -6,7 +6,7 @@ import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.scenes.Scene;
 import exchangemage.cards.Card;
 import exchangemage.effects.triggers.Trigger;
-import exchangemage.effects.triggers.Condition;
+import exchangemage.effects.triggers.conditions.Condition;
 
 /**
  * EffectPlayer is responsible for managing the process of playing {@link Card}s and resolving

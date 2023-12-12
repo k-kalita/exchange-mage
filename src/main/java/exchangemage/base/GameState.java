@@ -6,7 +6,7 @@ import exchangemage.effects.base.EffectPlayer;
 import exchangemage.effects.base.PersistentEffect;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
-import exchangemage.effects.triggers.Condition;
+import exchangemage.effects.triggers.conditions.Condition;
 import exchangemage.scenes.Scene;
 
 /**

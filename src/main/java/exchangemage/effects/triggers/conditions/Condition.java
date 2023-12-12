@@ -1,10 +1,11 @@
-package exchangemage.effects.triggers;
+package exchangemage.effects.triggers.conditions;
 
 import exchangemage.base.GameState;
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.PersistentEffect;
 import exchangemage.actors.Player;
 import exchangemage.actors.Actor;
+import exchangemage.effects.triggers.ConditionalTrigger;
 
 /**
  * Base class for all conditions. Conditions represent statements about the current game state
