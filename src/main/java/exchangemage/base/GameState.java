@@ -63,7 +63,7 @@ public class GameState {
      * @return the current effect or <code>null</code> if no effect is currently being resolved
      * @see Effect
      */
-    public Effect getCurrentEffect() {return getEffectPlayer().getCurrentEffect();}
+    public static Effect getCurrentEffect() {return getEffectPlayer().getCurrentEffect();}
 
     /**
      * Returns the {@link Targetable} currently targeted by the {@link Effect} being resolved
@@ -71,5 +71,5 @@ public class GameState {
      * @return the current target or <code>null</code> if no effect is currently being resolved
      * @see Targetable
      */
-    public Targetable getCurrentTarget() {return getCurrentEffect().getTarget();}
+    public static Targetable getCurrentTarget() {return getCurrentEffect().getTarget();}
 }
