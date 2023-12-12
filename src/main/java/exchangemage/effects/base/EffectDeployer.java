@@ -2,6 +2,8 @@ package exchangemage.effects.base;
 
 import java.util.Set;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import exchangemage.effects.targeting.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
@@ -16,20 +18,39 @@ import exchangemage.effects.triggers.Trigger;
  */
 public abstract class EffectDeployer extends Effect {
     /**
-     * Constructs an {@link EffectDeployer} with given {@link Trigger}, {@link TargetSelector} and
-     * {@link ResolutionMode}.
+     * A list of {@link Effect}s stored by this {@link EffectDeployer}.
+     */
+    protected List<Effect> effects;
+
+    /**
+     * Constructs an {@link EffectDeployer} with given {@link Trigger}, {@link TargetSelector},
+     * {@link ResolutionMode} and list of {@link Effect}s.
      *
-     * @param trigger           trigger of the effect
-     * @param targetSelector    target selector of the effect
-     * @param resolutionMode    resolution mode of the effect
+     * @param effects        effects stored by the deployer
+     * @param trigger        trigger of the effect
+     * @param targetSelector target selector of the effect
+     * @param resolutionMode resolution mode of the effect
+     * @throws NullPointerException     if the effects list is null
+     * @throws IllegalArgumentException if the effects list is empty
+     * @see Effect
      * @see Trigger
      * @see TargetSelector
      * @see ResolutionMode
      */
-    public EffectDeployer(Trigger trigger,
+    public EffectDeployer(List<Effect> effects,
+                          Trigger trigger,
                           TargetSelector targetSelector,
                           ResolutionMode resolutionMode) {
         super(trigger, targetSelector, resolutionMode);
+
+        Objects.requireNonNull(effects,
+                               "Effects list of an EffectDeployer cannot be null.");
+        if (effects.isEmpty())
+            throw new IllegalArgumentException(
+                    "Effects list of an EffectDeployer cannot be empty."
+            );
+
+        this.effects = new ArrayList<>(effects);
     }
 
     /**
@@ -38,7 +59,7 @@ public abstract class EffectDeployer extends Effect {
      * @return a list of effects stored by this deployer
      * @see Effect
      */
-    public abstract List<Effect> getEffects();
+    public List<Effect> getEffects() {return this.effects;}
 
     /**
      * Concrete implementations of the {@link EffectDeployer} base class should override this

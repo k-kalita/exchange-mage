@@ -8,7 +8,6 @@ import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -21,8 +20,6 @@ import java.util.Set;
  * @see EffectDeployer
  */
 public class SequentialEffect extends EffectDeployer {
-    private final List<Effect> effects;
-
     /**
      * Constructs a {@link SequentialEffect} with given {@link Effect}s, {@link Trigger} and
      * {@link ResolutionMode}.
@@ -42,17 +39,7 @@ public class SequentialEffect extends EffectDeployer {
     public SequentialEffect(List<Effect> effects,
                             Trigger trigger,
                             ResolutionMode resolutionMode) {
-        super(trigger, new SceneSelector(), resolutionMode);
-
-        Objects.requireNonNull(
-                effects,
-                "Cannot create sequential effect with null effects list."
-        );
-
-        if (effects.isEmpty())
-            throw new IllegalArgumentException(
-                    "Cannot create sequential effect with empty effects list."
-            );
+        super(effects, trigger, new SceneSelector(), resolutionMode);
 
         effects.forEach(effect -> {
             if (effect.getResolutionMode() != ResolutionMode.IMMEDIATE)
@@ -60,8 +47,6 @@ public class SequentialEffect extends EffectDeployer {
                         "Cannot create sequential effect with non-immediate effects."
                 );
         });
-
-        this.effects = effects;
     }
 
 
@@ -76,15 +61,6 @@ public class SequentialEffect extends EffectDeployer {
     public void execute() {
         this.effects.forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
     }
-
-    /**
-     * Returns the {@link Effect}(s) this {@link SequentialEffect} is a deployer for.
-     *
-     * @return a list of effects stored by this sequential effect
-     * @see Effect
-     */
-    @Override
-    public List<Effect> getEffects() {return this.effects;}
 
     /**
      * Calls on the {@link SceneSelector} of this {@link SequentialEffect} to choose the current

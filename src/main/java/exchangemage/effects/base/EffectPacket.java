@@ -6,11 +6,10 @@ import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 /**
- * An {@link EffectDeployer} implementation used to represent a set of {@link Effect}s which target
+ * An {@link EffectDeployer} implementation used to represent a list of {@link Effect}s which target
  * the same {@link Targetable} (e.g. an effect which deals damage and applies a status effect to
  * the same enemy).
  * <br><br>
@@ -23,11 +22,6 @@ import java.util.Set;
  * @see EffectDeployer
  */
 public class EffectPacket extends EffectDeployer {
-    /**
-     * The {@link Effect}s this {@link EffectPacket} acts as a deployer for.
-     */
-    List<Effect> effects;
-
     /**
      * Constructs an {@link EffectPacket} with given {@link Effect}s, {@link Trigger},
      * {@link TargetSelector} and {@link ResolutionMode}.
@@ -47,19 +41,7 @@ public class EffectPacket extends EffectDeployer {
                         Trigger trigger,
                         TargetSelector targetSelector,
                         ResolutionMode resolutionMode) {
-        super(trigger, targetSelector, resolutionMode);
-
-        Objects.requireNonNull(
-                effects,
-                "Cannot create effect packet with null effects list."
-        );
-
-        if (effects.isEmpty())
-            throw new IllegalArgumentException(
-                    "Cannot create effect packet with empty effects list."
-            );
-
-        this.effects = effects;
+        super(effects, trigger, targetSelector, resolutionMode);
     }
 
     /**
@@ -72,15 +54,6 @@ public class EffectPacket extends EffectDeployer {
     public void execute() {
         this.effects.forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
     }
-
-    /**
-     * Returns the {@link Effect}s this {@link EffectPacket} acts as a deployer for.
-     *
-     * @return the effects stored in this effect packet
-     * @see Effect
-     */
-    @Override
-    public List<Effect> getEffects() {return this.effects;}
 
     /**
      * Selects a target for this {@link EffectPacket} from the given set of active
