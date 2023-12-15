@@ -10,6 +10,7 @@ import java.util.Set;
  * A {@link TargetSelector} which always selects the same target for its {@link Effect}
  * (e.g. always selecting the player as the target of a healing effect).
  *
+ * @param <T> the type of the {@link Targetable} objects selected by this selector.
  * @see TargetSelector
  * @see Effect
  * @see Targetable
