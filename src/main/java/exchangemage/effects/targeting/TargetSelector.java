@@ -1,5 +1,6 @@
 package exchangemage.effects.targeting;
 
+import java.util.Objects;
 import java.util.Set;
 
 import exchangemage.effects.base.Effect;
@@ -18,17 +19,35 @@ import exchangemage.effects.base.EffectPlayer;
  * TargetSelector methods are called by the {@link TargetingManager} in the process of selecting
  * a target for an effect being evaluated by the {@link EffectPlayer}.
  *
+ * @param <T> the type of {@link Targetable} objects which can be selected by a given target
+ * selector
  * @see Effect
  * @see EffectPlayer
  * @see Targetable
  * @see TargetingManager
  */
-public abstract class TargetSelector {
+public abstract class TargetSelector<T extends Targetable> {
     /**
      * The {@link Targetable} object selected by this {@link TargetSelector} as the target for its
      * {@link Effect}.
      */
-    protected Targetable target;
+    protected T target;
+
+    /**
+     * The class of the {@link Targetable} objects selected by this {@link TargetSelector}.
+     */
+    private final Class<T> targetClass;
+
+    /**
+     * Creates a new {@link TargetSelector} with given target class.
+     *
+     * @param targetClass the class of the {@link Targetable} objects selected by this selector.
+     * @throws NullPointerException if the given target class is <code>null</code>.
+     */
+    public TargetSelector(Class<T> targetClass) {
+        Objects.requireNonNull(targetClass, "Target class cannot be null.");
+        this.targetClass = targetClass;
+    }
 
     /**
      * An exception thrown when an attempt is made to set an invalid target for a
@@ -54,7 +73,7 @@ public abstract class TargetSelector {
      * @see TargetingManager
      * @see Effect
      */
-    public abstract Set<Targetable> getActiveTargetables();
+    public abstract Set<T> getActiveTargetables();
 
     /**
      * Chooses a target for this selector's {@link Effect} from the set of active
@@ -81,7 +100,7 @@ public abstract class TargetSelector {
      * @param target the target to validate.
      * @throws InvalidTargetException if the given target is null.
      */
-    protected abstract void validateTarget(Targetable target);
+    protected abstract void validateTarget(T target);
 
     /**
      * Returns whether this {@link TargetSelector} has a selected target.
@@ -99,8 +118,14 @@ public abstract class TargetSelector {
      * @see Targetable
      */
     public void setTarget(Targetable target) {
-        validateTarget(target);
-        this.target = target;
+        if (target == null)
+            throw new InvalidTargetException("Target cannot be null.");
+        if (!targetClass.isInstance(target))
+            throw new InvalidTargetException(
+                    "Target must be of type " + targetClass.getName() + "."
+            );
+        validateTarget(targetClass.cast(target));
+        this.target = targetClass.cast(target);
     }
 
     /**
@@ -110,7 +135,7 @@ public abstract class TargetSelector {
      * @throws IllegalStateException if no target has been selected.
      * @see Targetable
      */
-    public Targetable getTarget() {
+    public T getTarget() {
         if (!this.hasTarget())
             throw new IllegalStateException("No target has been selected.");
         return this.target;

@@ -14,23 +14,26 @@ import java.util.Set;
  * @see Effect
  * @see Targetable
  */
-public class ConstantTargetSelector extends TargetSelector {
+public class ConstantTargetSelector<T extends Targetable> extends TargetSelector<T> {
     /**
      * Functional interface used to return the target of the {@link ConstantTargetSelector}.
      */
-    private final TargetGetter targetGetter;
+    private final TargetGetter<T> targetGetter;
 
     /**
-     * Creates a new {@link ConstantTargetSelector} with given {@link TargetGetter}.
+     * Creates a new {@link ConstantTargetSelector} with given {@link TargetGetter} and target
+     * class.
      *
      * @param targetGetter implementation of the {@link TargetGetter} functional interface used to
      *                     return this {@link TargetSelector}'s target.
+     * @param targetClass  the class of the {@link Targetable} objects selected by this selector.
      * @throws NullPointerException if the given target getter is <code>null</code>.
      * @see TargetGetter
      * @see TargetSelector
      * @see Targetable
      */
-    public ConstantTargetSelector(TargetGetter targetGetter) {
+    public ConstantTargetSelector(TargetGetter<T> targetGetter, Class<T> targetClass) {
+        super(targetClass);
         Objects.requireNonNull(
                 targetGetter,
                 "Target getter of constant target selector cannot be null."
@@ -47,7 +50,7 @@ public class ConstantTargetSelector extends TargetSelector {
      * @see Targetable
      */
     @Override
-    public Set<Targetable> getActiveTargetables() {
+    public Set<T> getActiveTargetables() {
         return new HashSet<>() {{add(targetGetter.getTarget());}};
     }
 
@@ -93,7 +96,7 @@ public class ConstantTargetSelector extends TargetSelector {
      * @see Targetable
      */
     @Override
-    protected void validateTarget(Targetable target) {
+    protected void validateTarget(T target) {
         if (target != this.targetGetter.getTarget())
             throw new InvalidTargetException(
                     "Invalid target for constant target selector. Does not match target getter."

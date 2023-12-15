@@ -39,7 +39,7 @@ public abstract class EffectDeployer extends Effect {
      */
     public EffectDeployer(List<Effect> effects,
                           Trigger trigger,
-                          TargetSelector targetSelector,
+                          TargetSelector<?> targetSelector,
                           ResolutionMode resolutionMode) {
         super(trigger, targetSelector, resolutionMode);
 

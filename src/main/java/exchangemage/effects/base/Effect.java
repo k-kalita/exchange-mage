@@ -66,7 +66,7 @@ public abstract class Effect implements EffectSource, Targetable {
     /**
      * The {@link TargetSelector} of the {@link Effect}. Used to choose the target of the effect.
      */
-    private final TargetSelector targetSelector;
+    private final TargetSelector<?> targetSelector;
 
     /**
      * A set of {@link Observer}s of the {@link Effect}.
@@ -124,7 +124,7 @@ public abstract class Effect implements EffectSource, Targetable {
      * @see ResolutionMode
      */
     public Effect(Trigger trigger,
-                  TargetSelector targetSelector,
+                  TargetSelector<?> targetSelector,
                   ResolutionMode resolutionMode) {
         Objects.requireNonNull(trigger, "Cannot create effect with null trigger.");
         Objects.requireNonNull(targetSelector,
@@ -234,7 +234,7 @@ public abstract class Effect implements EffectSource, Targetable {
      * @return the target selector of the effect
      * @see TargetSelector
      */
-    public TargetSelector getTargetSelector() {return this.targetSelector;}
+    public TargetSelector<?> getTargetSelector() {return this.targetSelector;}
 
     /**
      * Returns the target of the {@link Effect} from its {@link TargetSelector}.

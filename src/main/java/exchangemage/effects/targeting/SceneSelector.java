@@ -15,12 +15,12 @@ import exchangemage.effects.base.NotificationEffect;
  * @see ConstantTargetSelector
  * @see TargetSelector
  */
-public class SceneSelector extends ConstantTargetSelector {
+public class SceneSelector extends ConstantTargetSelector<Scene> {
     /**
      * Creates a new {@link SceneSelector}.
      *
      * @see Scene
      * @see ConstantTargetSelector
      */
-    public SceneSelector() {super(GameState::getScene);}
+    public SceneSelector() {super(GameState::getScene, Scene.class);}
 }
