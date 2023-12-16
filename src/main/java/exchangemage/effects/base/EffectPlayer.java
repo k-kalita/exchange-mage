@@ -48,7 +48,7 @@ public class EffectPlayer {
      * The {@link Effect} currently being resolved (or <code>null</code> if no effect is being
      * resolved).
      */
-    private Effect currentEffect = null;
+    private Effect<?> currentEffect = null;
 
     /**
      * The {@link TargetingManager} used to manage the process of choosing a target for
@@ -59,7 +59,7 @@ public class EffectPlayer {
     /**
      * The queue of {@link Effect}s to be resolved.
      */
-    private final Queue<Effect> resolutionQueue = new LinkedList<>();
+    private final Queue<Effect<?>> resolutionQueue = new LinkedList<>();
 
 
     /**
@@ -185,7 +185,7 @@ public class EffectPlayer {
      * @see TargetingManager
      * @see Effect.ResolutionMode
      */
-    public void evaluateEffect(Effect effect) {
+    public void evaluateEffect(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to evaluate cannot be null.");
 
         if (!effect.isTriggered())
@@ -211,7 +211,7 @@ public class EffectPlayer {
      * @see Effect
      * @see TargetingManager
      */
-    private void enqueueEffect(Effect effect) {
+    private void enqueueEffect(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to enqueue cannot be null.");
 
         if (!effect.hasTarget())
@@ -232,7 +232,7 @@ public class EffectPlayer {
      * @see PersistentEffect
      * @see EffectResolutionStage
      */
-    private void resolveEffect(Effect effect) {
+    private void resolveEffect(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to resolve cannot be null.");
 
         if (effectInResolution())
@@ -261,9 +261,9 @@ public class EffectPlayer {
      * @see Effect
      * @see Effect.ResolutionMode
      */
-    private void resolveEffectImmediately(Effect effect) {
+    private void resolveEffectImmediately(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to resolve immediately cannot be null.");
-        Effect currentEffect = this.currentEffect;
+        Effect<?> currentEffect = this.currentEffect;
         this.currentEffect = null;
         resolveEffect(effect);
         this.currentEffect = currentEffect;
@@ -329,5 +329,5 @@ public class EffectPlayer {
      * @return the current effect being resolved
      * @see Effect
      */
-    public Effect getCurrentEffect() {return this.currentEffect;}
+    public Effect<?> getCurrentEffect() {return this.currentEffect;}
 }

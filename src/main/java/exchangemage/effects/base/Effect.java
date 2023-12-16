@@ -16,8 +16,8 @@ import exchangemage.effects.targeting.TargetSelector;
 /**
  * Base class for all effects in the game. Effects represent all isolated, indivisible actions that
  * affect {@link Scene}s, {@link Actor}s, their {@link Deck}s, etc. and can in combination and/or
- * with use of decorators make up more complex interactions. Crucially, a list of effects is used
- * to represent the rules and impacts of all {@link Card}s in the game.
+ * with the use of decorators make up more complex interactions. Crucially, a list of effects is
+ * used to represent the rules and impacts of all {@link Card}s in the game.
  * <br><br>
  * All effects possess a {@link Trigger} component used to determine whether the effect should be
  * resolved by the {@link EffectPlayer}, a {@link ResolutionMode} dictating to the EffectPlayer
@@ -40,11 +40,12 @@ import exchangemage.effects.targeting.TargetSelector;
  *     effects (e.g. end/start of combat/an actor's turn).</li>
  * </ul>
  *
+ * @param <T> the type of the target chosen by the effect's target selector
  * @see EffectPlayer
  * @see Trigger
  * @see TargetSelector
  */
-public abstract class Effect implements EffectSource, Targetable {
+public abstract class Effect<T extends Targetable> implements EffectSource, Targetable {
     /**
      * The {@link EffectSource} of the {@link Effect}. Indicates the origin of the effect (e.g. the
      * card it was played from or the {@link PersistentEffect} that deployed it).
@@ -66,7 +67,7 @@ public abstract class Effect implements EffectSource, Targetable {
     /**
      * The {@link TargetSelector} of the {@link Effect}. Used to choose the target of the effect.
      */
-    private final TargetSelector<?> targetSelector;
+    private final TargetSelector<T> targetSelector;
 
     /**
      * A set of {@link Observer}s of the {@link Effect}.
@@ -124,7 +125,7 @@ public abstract class Effect implements EffectSource, Targetable {
      * @see ResolutionMode
      */
     public Effect(Trigger trigger,
-                  TargetSelector<?> targetSelector,
+                  TargetSelector<T> targetSelector,
                   ResolutionMode resolutionMode) {
         Objects.requireNonNull(trigger, "Cannot create effect with null trigger.");
         Objects.requireNonNull(targetSelector,
@@ -234,7 +235,7 @@ public abstract class Effect implements EffectSource, Targetable {
      * @return the target selector of the effect
      * @see TargetSelector
      */
-    public TargetSelector<?> getTargetSelector() {return this.targetSelector;}
+    public TargetSelector<T> getTargetSelector() {return this.targetSelector;}
 
     /**
      * Returns the target of the {@link Effect} from its {@link TargetSelector}.
@@ -243,7 +244,7 @@ public abstract class Effect implements EffectSource, Targetable {
      * @see Targetable
      * @see TargetSelector
      */
-    public Targetable getTarget() {return this.targetSelector.getTarget();}
+    public T getTarget() {return this.targetSelector.getTarget();}
 
     // --------------------------------- observable methods ----------------------------------- //
 

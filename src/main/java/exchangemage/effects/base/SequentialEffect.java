@@ -1,14 +1,14 @@
 package exchangemage.effects.base;
 
+import java.util.List;
+import java.util.Set;
+
 import exchangemage.base.GameState;
 import exchangemage.scenes.Scene;
 import exchangemage.effects.targeting.SceneSelector;
 import exchangemage.effects.targeting.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * An {@link EffectDeployer} implementation used to represent a set of {@link Effect}s which resolve
@@ -19,7 +19,7 @@ import java.util.Set;
  * @see Effect
  * @see EffectDeployer
  */
-public class SequentialEffect extends EffectDeployer {
+public class SequentialEffect extends EffectDeployer<Scene> {
     /**
      * Constructs a {@link SequentialEffect} with given {@link Effect}s, {@link Trigger} and
      * {@link ResolutionMode}.
@@ -36,7 +36,7 @@ public class SequentialEffect extends EffectDeployer {
      * @see TargetSelector
      * @see ResolutionMode
      */
-    public SequentialEffect(List<Effect> effects,
+    public SequentialEffect(List<Effect<? extends Targetable>> effects,
                             Trigger trigger,
                             ResolutionMode resolutionMode) {
         super(effects, trigger, new SceneSelector(), resolutionMode);

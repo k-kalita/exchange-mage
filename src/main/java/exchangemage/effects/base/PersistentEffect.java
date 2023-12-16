@@ -27,7 +27,7 @@ import java.util.stream.Stream;
  * @see EffectPlayer
  * @see EffectPlayer.EffectResolutionStage
  */
-public class PersistentEffect extends EffectDeployer {
+public class PersistentEffect extends EffectDeployer<Scene> {
     /**
      * The activation stage of the {@link PersistentEffect}. Dictates the stage of the
      * {@link Effect} resolution process in which the persistent effect can be triggered.
@@ -48,7 +48,7 @@ public class PersistentEffect extends EffectDeployer {
      * @see Trigger
      * @see TargetSelector
      */
-    public PersistentEffect(List<Effect> effects,
+    public PersistentEffect(List<Effect<?>> effects,
                             EffectPlayer.EffectResolutionStage activationStage,
                             Trigger trigger) {
         super(effects,

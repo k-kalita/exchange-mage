@@ -14,13 +14,14 @@ import exchangemage.effects.triggers.Trigger;
  * (e.g. an effect used to add a persistent effect to the scene/actors or assign the same target
  * to an underlying set of effects).
  *
+ * @param <T> the type of target chosen by the deployer's {@link TargetSelector}
  * @see Effect
  */
-public abstract class EffectDeployer extends Effect {
+public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
     /**
      * A list of {@link Effect}s stored by this {@link EffectDeployer}.
      */
-    protected List<Effect> effects;
+    protected List<? extends Effect<? extends Targetable>> effects;
 
     /**
      * Constructs an {@link EffectDeployer} with given {@link Trigger}, {@link TargetSelector},
@@ -37,9 +38,9 @@ public abstract class EffectDeployer extends Effect {
      * @see TargetSelector
      * @see ResolutionMode
      */
-    public EffectDeployer(List<Effect> effects,
+    public EffectDeployer(List<? extends Effect<? extends Targetable>> effects,
                           Trigger trigger,
-                          TargetSelector<?> targetSelector,
+                          TargetSelector<T> targetSelector,
                           ResolutionMode resolutionMode) {
         super(trigger, targetSelector, resolutionMode);
 
@@ -59,7 +60,7 @@ public abstract class EffectDeployer extends Effect {
      * @return a list of effects stored by this deployer
      * @see Effect
      */
-    public List<Effect> getEffects() {return this.effects;}
+    public List<? extends Effect<? extends Targetable>> getEffects() {return this.effects;}
 
     /**
      * Concrete implementations of the {@link EffectDeployer} base class should override this

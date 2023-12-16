@@ -18,7 +18,7 @@ import java.util.Objects;
  * @see Effect
  * @see PersistentEffect
  */
-public class NotificationEffect extends Effect {
+public class NotificationEffect extends Effect<Scene> {
     /**
      * The {@link Notification} used to represent the event this {@link NotificationEffect} is
      * alerting of.

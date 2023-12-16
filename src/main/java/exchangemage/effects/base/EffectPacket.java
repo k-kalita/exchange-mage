@@ -18,10 +18,12 @@ import java.util.Set;
  * potentially triggered effects with the same target (e.g. <i>deal 2 damage to the enemy, if its
  * health is above 50%, deal further 2 damage</i>).
  *
+ * @param <T> the type of target chosen by the deployer's {@link TargetSelector} and the underlying
+ * effects
  * @see Effect
  * @see EffectDeployer
  */
-public class EffectPacket extends EffectDeployer {
+public class EffectPacket<T extends Targetable> extends EffectDeployer<T> {
     /**
      * Constructs an {@link EffectPacket} with given {@link Effect}s, {@link Trigger},
      * {@link TargetSelector} and {@link ResolutionMode}.
@@ -37,9 +39,9 @@ public class EffectPacket extends EffectDeployer {
      * @see TargetSelector
      * @see ResolutionMode
      */
-    public EffectPacket(List<Effect> effects,
+    public EffectPacket(List<Effect<T>> effects,
                         Trigger trigger,
-                        TargetSelector<?> targetSelector,
+                        TargetSelector<T> targetSelector,
                         ResolutionMode resolutionMode) {
         super(effects, trigger, targetSelector, resolutionMode);
     }
