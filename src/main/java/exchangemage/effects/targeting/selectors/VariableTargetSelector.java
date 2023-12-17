@@ -1,6 +1,6 @@
-package exchangemage.effects.targeting;
+package exchangemage.effects.targeting.selectors;
 
-import exchangemage.base.Game;
+import exchangemage.effects.targeting.Targetable;
 
 import java.util.Set;
 

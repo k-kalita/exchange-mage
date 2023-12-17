@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import exchangemage.effects.targeting.TargetSelector;
+import exchangemage.effects.targeting.selectors.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 

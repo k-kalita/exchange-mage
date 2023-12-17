@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.EffectPlayer;
+import exchangemage.effects.targeting.selectors.TargetSelector;
 
 /**
  * Helper class fot the {@link EffectPlayer} used to manage the process of selecting a target for

@@ -5,8 +5,7 @@ import java.util.Set;
 
 import exchangemage.base.GameState;
 import exchangemage.scenes.Scene;
-import exchangemage.effects.targeting.SceneSelector;
-import exchangemage.effects.targeting.TargetSelector;
+import exchangemage.effects.targeting.selectors.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 
@@ -33,7 +32,6 @@ public class SequentialEffect extends EffectDeployer<Scene> {
      *                                  {@link ResolutionMode#IMMEDIATE} or if the effects list is
      *                                  empty
      * @see Trigger
-     * @see TargetSelector
      * @see ResolutionMode
      */
     public SequentialEffect(List<Effect<? extends Targetable>> effects,

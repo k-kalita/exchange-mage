@@ -1,10 +1,12 @@
-package exchangemage.effects.targeting;
+package exchangemage.effects.targeting.selectors;
 
 import java.util.Objects;
 import java.util.Set;
 
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.EffectPlayer;
+import exchangemage.effects.targeting.Targetable;
+import exchangemage.effects.targeting.TargetingManager;
 
 /**
  * An abstract base class for all classes used to select a target for an {@link Effect}. Its two

@@ -3,7 +3,7 @@ package exchangemage.effects.base;
 import exchangemage.base.Notification;
 import exchangemage.scenes.Scene;
 import exchangemage.effects.triggers.ConstValueTrigger;
-import exchangemage.effects.targeting.SceneSelector;
+import exchangemage.effects.targeting.selectors.SceneSelector;
 
 import java.util.Objects;
 

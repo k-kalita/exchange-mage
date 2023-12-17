@@ -1,5 +1,7 @@
 package exchangemage.effects.targeting;
 
+import exchangemage.effects.targeting.selectors.ConstantTargetSelector;
+
 /**
  * A functional interface used to return a {@link Targetable} object.
  *

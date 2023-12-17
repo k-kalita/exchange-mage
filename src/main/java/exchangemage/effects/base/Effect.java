@@ -11,7 +11,7 @@ import exchangemage.cards.Deck;
 import exchangemage.base.Observer;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.targeting.Targetable;
-import exchangemage.effects.targeting.TargetSelector;
+import exchangemage.effects.targeting.selectors.TargetSelector;
 
 /**
  * Base class for all effects in the game. Effects represent all isolated, indivisible actions that

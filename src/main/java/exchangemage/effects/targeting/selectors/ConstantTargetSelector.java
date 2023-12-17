@@ -1,6 +1,8 @@
-package exchangemage.effects.targeting;
+package exchangemage.effects.targeting.selectors;
 
 import exchangemage.effects.base.Effect;
+import exchangemage.effects.targeting.TargetGetter;
+import exchangemage.effects.targeting.Targetable;
 
 import java.util.HashSet;
 import java.util.Objects;

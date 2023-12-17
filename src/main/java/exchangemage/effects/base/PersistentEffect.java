@@ -1,8 +1,8 @@
 package exchangemage.effects.base;
 
 import exchangemage.base.GameState;
-import exchangemage.effects.targeting.TargetSelector;
-import exchangemage.effects.targeting.SceneSelector;
+import exchangemage.effects.targeting.selectors.TargetSelector;
+import exchangemage.effects.targeting.selectors.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.scenes.Scene;
@@ -46,7 +46,6 @@ public class PersistentEffect extends EffectDeployer<Scene> {
      * @see Effect
      * @see EffectPlayer.EffectResolutionStage
      * @see Trigger
-     * @see TargetSelector
      */
     public PersistentEffect(List<Effect<?>> effects,
                             EffectPlayer.EffectResolutionStage activationStage,

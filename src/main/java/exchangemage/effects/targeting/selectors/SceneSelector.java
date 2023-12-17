@@ -1,4 +1,4 @@
-package exchangemage.effects.targeting;
+package exchangemage.effects.targeting.selectors;
 
 import exchangemage.base.GameState;
 import exchangemage.scenes.Scene;
