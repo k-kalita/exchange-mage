@@ -3,6 +3,7 @@ package exchangemage.base;
 import exchangemage.actors.Player;
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.EffectPlayer;
+import exchangemage.effects.base.EffectSource;
 import exchangemage.effects.base.PersistentEffect;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
@@ -63,7 +64,7 @@ public class GameState {
      * @return the current effect or <code>null</code> if no effect is currently being resolved
      * @see Effect
      */
-    public static Effect getCurrentEffect() {return getEffectPlayer().getCurrentEffect();}
+    public static Effect<?> getCurrentEffect() {return getEffectPlayer().getCurrentEffect();}
 
     /**
      * Returns the {@link Targetable} currently targeted by the {@link Effect} being resolved
@@ -72,4 +73,12 @@ public class GameState {
      * @see Targetable
      */
     public static Targetable getCurrentTarget() {return getCurrentEffect().getTarget();}
+
+    /**
+     * Returns the {@link EffectSource} of the {@link Effect} currently being resolved.
+     *
+     * @return the current source or <code>null</code> if no effect is currently being resolved
+     * @see EffectSource
+     */
+    public static EffectSource getCurrentSource() {return getCurrentEffect().getSource();}
 }

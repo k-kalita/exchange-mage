@@ -1,9 +1,9 @@
 package exchangemage.effects.triggers.conditions;
 
-import java.util.Objects;
-
 import exchangemage.base.GameState;
 import exchangemage.effects.base.Effect;
+import exchangemage.effects.base.NotificationEffect;
+import exchangemage.effects.base.PersistentEffect;
 
 /**
  * A {@link SubclassGetter} which returns the current {@link Effect} as the subject for its
@@ -15,7 +15,7 @@ import exchangemage.effects.base.Effect;
  * @see SubjectGetter
  * @see Effect
  */
-public class CurrentEffectGetter<S extends Effect> extends SubclassGetter<Effect, S> {
+public class CurrentEffectGetter<S extends Effect<?>> extends SubclassGetter<Effect<?>, S> {
     /**
      * Creates a new {@link CurrentEffectGetter} with given {@link Effect} subclass.
      *
