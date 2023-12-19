@@ -21,7 +21,7 @@ public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
     /**
      * A list of {@link Effect}s stored by this {@link EffectDeployer}.
      */
-    protected List<? extends Effect<? extends Targetable>> effects;
+    protected List<? extends Effect<?>> effects;
 
     /**
      * Constructs an {@link EffectDeployer} with given {@link Trigger}, {@link TargetSelector},
@@ -38,7 +38,7 @@ public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
      * @see TargetSelector
      * @see ResolutionMode
      */
-    public EffectDeployer(List<? extends Effect<? extends Targetable>> effects,
+    public EffectDeployer(List<? extends Effect<?>> effects,
                           Trigger trigger,
                           TargetSelector<T> targetSelector,
                           ResolutionMode resolutionMode) {
@@ -60,7 +60,7 @@ public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
      * @return a list of effects stored by this deployer
      * @see Effect
      */
-    public List<? extends Effect<? extends Targetable>> getEffects() {return this.effects;}
+    public List<? extends Effect<?>> getEffects() {return this.effects;}
 
     /**
      * Concrete implementations of the {@link EffectDeployer} base class should override this

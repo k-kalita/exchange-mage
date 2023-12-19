@@ -42,13 +42,19 @@ public class EffectPlayer {
      * The {@link Card} whose {@link Effect}s are currently being resolved (or <code>null</code> if
      * no card is being resolved).
      */
-    private Card currentCard = null;
+    private Card cardInResolution = null;
 
     /**
      * The {@link Effect} currently being resolved (or <code>null</code> if no effect is being
      * resolved).
      */
-    private Effect<?> currentEffect = null;
+    private Effect<?> effectInResolution = null;
+
+    /**
+     * The {@link Effect} currently being evaluated (or <code>null</code> if no effect is being
+     * resolved).
+     */
+    private Effect<?> effectInEvaluation = null;
 
     /**
      * The {@link TargetingManager} used to manage the process of choosing a target for
@@ -168,7 +174,17 @@ public class EffectPlayer {
      * otherwise
      * @see Effect
      */
-    public boolean effectInResolution() {return this.currentEffect != null;}
+    public boolean effectInResolution() {return this.effectInResolution != null;}
+
+    /**
+     * Checks whether there is an {@link Effect} currently being evaluated by the
+     * {@link EffectPlayer}.
+     *
+     * @return <code>true</code> if there is an effect currently being evaluated, <code>false</code>
+     * otherwise
+     * @see Effect
+     */
+    public boolean effectInEvaluation() {return this.effectInEvaluation != null;}
 
     // -------------------------------- effect resolution ------------------------------------- //
 
@@ -188,10 +204,15 @@ public class EffectPlayer {
     public void evaluateEffect(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to evaluate cannot be null.");
 
+        if (effectInEvaluation())
+            throw new IllegalStateException("There is already an effect in evaluation.");
+
+        this.effectInEvaluation = effect;
         if (!effect.isTriggered())
             return;
         if (!this.targetingManager.setActiveEffect(effect).selectTarget())
             return;
+        this.effectInEvaluation = null;
 
         switch (effect.getResolutionMode()) {
             case ENQUEUE -> enqueueEffect(effect);
@@ -240,12 +261,12 @@ public class EffectPlayer {
         if (!effect.hasTarget())
             throw new IllegalStateException("Effect to resolve has no target.");
 
-        this.currentEffect = effect;
+        this.effectInResolution = effect;
         EffectResolutionStage
                 .sortPersistentEffects(new ArrayList<>(this.scene.getPersistentEffects()))
                 .forEach(this::evaluateEffect);
         effect.execute();
-        this.currentEffect = null;
+        this.effectInResolution = null;
     }
 
     /**
@@ -263,10 +284,10 @@ public class EffectPlayer {
      */
     private void resolveEffectImmediately(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to resolve immediately cannot be null.");
-        Effect<?> currentEffect = this.currentEffect;
-        this.currentEffect = null;
+        Effect<?> currentEffect = this.effectInResolution;
+        this.effectInResolution = null;
         resolveEffect(effect);
-        this.currentEffect = currentEffect;
+        this.effectInResolution = currentEffect;
     }
 
     /**
@@ -294,10 +315,10 @@ public class EffectPlayer {
      */
     public void playCard(Card card) {
         Objects.requireNonNull(card, "Card to play cannot be null.");
-        this.currentCard = card;
+        this.cardInResolution = card;
         card.getEffects().forEach(this::evaluateEffect);
         this.resolveQueue();
-        this.currentCard = null;
+        this.cardInResolution = null;
     }
 
     // ------------------------------------ getters ------------------------------------------- //
@@ -309,9 +330,7 @@ public class EffectPlayer {
      * @return the targeting manager of the current effect player
      * @see TargetingManager
      */
-    public TargetingManager getTargetingManager() {
-        return this.targetingManager;
-    }
+    public TargetingManager getTargetingManager() {return this.targetingManager;}
 
     /**
      * Returns the {@link Card} whose {@link Effect}s are currently being resolved (or
@@ -320,14 +339,22 @@ public class EffectPlayer {
      * @return the current card being resolved
      * @see Card
      */
-    public Card getCurrentCard() {return this.currentCard;}
+    public Card getCardInResolution() {return this.cardInResolution;}
 
     /**
-     * Returns the current {@link Effect} being resolved (or <code>null</code> if no effect is
-     * being resolved).
+     * Returns the current {@link Effect} being resolved.
      *
-     * @return the current effect being resolved
+     * @return the current effect being resolved or <code>null</code> if no effect is being resolved
      * @see Effect
      */
-    public Effect<?> getCurrentEffect() {return this.currentEffect;}
+    public Effect<?> getEffectInResolution() {return this.effectInResolution;}
+
+    /**
+     * Returns the current {@link Effect} being evaluated.
+     *
+     * @return the current effect being evaluated or <code>null</code> if no effects is being
+     * evaluated
+     * @see Effect
+     */
+    public Effect<?> getEffectInEvaluation() {return this.effectInEvaluation;}
 }

@@ -3,9 +3,7 @@ package exchangemage.base;
 import exchangemage.actors.Player;
 import exchangemage.effects.base.Effect;
 import exchangemage.effects.base.EffectPlayer;
-import exchangemage.effects.base.EffectSource;
 import exchangemage.effects.base.PersistentEffect;
-import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.effects.triggers.conditions.Condition;
 import exchangemage.scenes.Scene;
@@ -61,24 +59,23 @@ public class GameState {
      * Returns the {@link Effect} currently being resolved by the {@link EffectPlayer} of the
      * current {@link Scene}.
      *
-     * @return the current effect or <code>null</code> if no effect is currently being resolved
+     * @return the effect in resolution or <code>null</code> if no effect is currently being
+     * resolved
      * @see Effect
      */
-    public static Effect<?> getCurrentEffect() {return getEffectPlayer().getCurrentEffect();}
+    public static Effect<?> getEffectInResolution() {
+        return getEffectPlayer().getEffectInResolution();
+    }
 
     /**
-     * Returns the {@link Targetable} currently targeted by the {@link Effect} being resolved
+     * Returns the {@link Effect} currently being evaluated by the {@link EffectPlayer} of the
+     * current {@link Scene}.
      *
-     * @return the current target or <code>null</code> if no effect is currently being resolved
-     * @see Targetable
+     * @return the effect in evaluation or <code>null</code> if no effect is currently being
+     * evaluated
+     * @see Effect
      */
-    public static Targetable getCurrentTarget() {return getCurrentEffect().getTarget();}
-
-    /**
-     * Returns the {@link EffectSource} of the {@link Effect} currently being resolved.
-     *
-     * @return the current source or <code>null</code> if no effect is currently being resolved
-     * @see EffectSource
-     */
-    public static EffectSource getCurrentSource() {return getCurrentEffect().getSource();}
+    public static Effect<?> getEffectInEvaluation() {
+        return getEffectPlayer().getEffectInEvaluation();
+    }
 }
