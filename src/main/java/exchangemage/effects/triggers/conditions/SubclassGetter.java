@@ -55,6 +55,8 @@ public class SubclassGetter<T, S extends T> implements SubjectGetter<S> {
     @Override
     public S getSubject() {
         T subject = superclassGetter.getSubject();
+        if (subject == null)
+            throw new RuntimeException("No superclass subject could be retrieved.");
         if (subclass.isInstance(subject))
             return subclass.cast(subject);
         else

@@ -1,37 +1,51 @@
 package exchangemage.effects.targeting.selectors;
 
-import exchangemage.effects.targeting.Targetable;
-
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import exchangemage.base.GameState;
+import exchangemage.effects.targeting.Targetable;
+import exchangemage.effects.triggers.conditions.SubjectComparator;
 
 public class VariableTargetSelector<T extends Targetable> extends TargetSelector<T> {
-    private final Class<T> targetClass;
+    public enum TargetingMode {
+        SELECT,
+        RANDOM
+    }
+
+    private final SubjectComparator<T> targetFilter;
 
     private final TargetingMode targetingMode;
 
-    @Override
+    public VariableTargetSelector(Class<T> targetClass,
+                                  SubjectComparator<T> targetFilter,
+                                  TargetingMode targetingMode) {
+        super(targetClass);
+        Objects.requireNonNull(targetingMode, "Targeting mode cannot be null.");
+        this.targetFilter = targetFilter;
+        this.targetingMode = targetingMode;
+    }
+
     public Set<T> getActiveTargetables() {
-        return null;
+        Stream<T> activeTargetables = GameState.getScene().getTargetables().stream()
+                                               .filter(targetClass::isInstance)
+                                               .map(targetClass::cast);
+
+        if (targetFilter != null)
+            return activeTargetables.filter(targetFilter::compare).collect(Collectors.toSet());
+        return activeTargetables.collect(Collectors.toSet());
     }
 
     @Override
     public boolean selectTarget(Set<Targetable> activeTargetables) {
+        Objects.requireNonNull(activeTargetables, "Active targetables cannot be null.");
         return false;
     }
 
     @Override
     protected void validateTarget(Targetable target) {
 
-    }
-
-    public enum TargetingMode {
-        SELECT,
-        RANDOM
-    }
-
-    public VariableTargetSelector(Class<T> targetClass, TargetingMode targetingMode) {
-        super(targetClass);
-        this.targetClass = targetClass;
-        this.targetingMode = targetingMode;
     }
 }

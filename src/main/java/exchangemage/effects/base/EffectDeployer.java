@@ -64,21 +64,22 @@ public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
 
     /**
      * Concrete implementations of the {@link EffectDeployer} base class should override this
-     * method to handle the process of choosing a target(s) for the underlying {@link Effect}(s).
+     * method to handle the process of choosing a target(s) for the deployer and the underlying
+     * {@link Effect}(s) (if necessary).
      *
-     * @param activeTargetables the set of active targetables to choose the target from
+     * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if the target choosing process was successful, <code>false</code>
      * otherwise
      * @see Targetable
      * @see Effect
      */
     @Override
-    public abstract boolean selectTarget(Set<Targetable> activeTargetables);
+    public abstract boolean selectTarget(Set<Targetable> forbiddenTargets);
 
     /**
      * Concrete implementations of the {@link EffectDeployer} base class should override this
      * method to handle the logic of setting a source for themselves and the underlying
-     * {@link Effect}(s) they package.
+     * {@link Effect}(s) (if necessary).
      *
      * @param source the source of the effect
      * @see Effect

@@ -12,7 +12,7 @@ import java.util.Set;
  * A {@link TargetSelector} which always selects the same target for its {@link Effect}
  * (e.g. always selecting the player as the target of a healing effect).
  *
- * @param <T> the type of the {@link Targetable} objects selected by this selector.
+ * @param <T> the type of the {@link Targetable} objects selected by this selector
  * @see TargetSelector
  * @see Effect
  * @see Targetable
@@ -28,9 +28,9 @@ public class ConstantTargetSelector<T extends Targetable> extends TargetSelector
      * class.
      *
      * @param targetGetter implementation of the {@link TargetGetter} functional interface used to
-     *                     return this {@link TargetSelector}'s target.
-     * @param targetClass  the class of the {@link Targetable} objects selected by this selector.
-     * @throws NullPointerException if the given target getter is <code>null</code>.
+     *                     return this {@link TargetSelector}'s target
+     * @param targetClass  the class of the {@link Targetable} objects selected by this selector
+     * @throws NullPointerException if the given target getter is <code>null</code>
      * @see TargetGetter
      * @see TargetSelector
      * @see Targetable
@@ -45,46 +45,25 @@ public class ConstantTargetSelector<T extends Targetable> extends TargetSelector
     }
 
     /**
-     * Returns the target of the {@link ConstantTargetSelector} by calling the
-     * {@link TargetGetter#getTarget()} method of the {@link TargetGetter} implementation.
-     *
-     * @return a set containing a single {@link Targetable} object returned by the TargetGetter
-     * @see TargetGetter
-     * @see Targetable
-     */
-    @Override
-    public Set<T> getActiveTargetables() {
-        return new HashSet<>() {{add(targetGetter.getTarget());}};
-    }
-
-    /**
      * Chooses the target returned by the {@link TargetGetter#getTarget()} method if the provided
-     * set of active {@link Targetable}s contains it.
+     * set of forbidden targets does not contain it.
      *
-     * @param activeTargetables the set of active targetables to choose from.
+     * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if the target choosing process was successful, <code>false</code>
      * otherwise
-     * @throws NullPointerException   if the given set of active targetables is <code>null</code>.
-     * @throws InvalidTargetException if the given set of active targetables contains more than one
-     *                                targetable.
+     * @throws NullPointerException   if the given set of forbidden targets is <code>null</code>
      * @see TargetGetter
      * @see Targetable
      */
     @Override
-    public boolean selectTarget(Set<Targetable> activeTargetables) {
-        Objects.requireNonNull(activeTargetables, "Active targetables cannot be null.");
+    public boolean selectTarget(Set<Targetable> forbiddenTargets) {
+        Objects.requireNonNull(forbiddenTargets, "Forbidden targets cannot be null.");
 
-        if (activeTargetables.size() > 1)
-            throw new InvalidTargetException(
-                    "Invalid number of active targetables for constant target selector."
-            );
+        if (forbiddenTargets.contains(this.targetGetter.getTarget()))
+            return false;
 
-        if (activeTargetables.contains(this.targetGetter.getTarget())) {
-            this.target = this.targetGetter.getTarget();
-            return true;
-        }
-
-        return false;
+        this.target = this.targetGetter.getTarget();
+        return true;
     }
 
     /**

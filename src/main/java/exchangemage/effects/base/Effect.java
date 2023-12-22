@@ -178,15 +178,15 @@ public abstract class Effect<T extends Targetable> implements EffectSource, Targ
      * {@link TargetSelector} to choose a target. Return value indicates whether it was possible to
      * select a valid target.
      *
-     * @param activeTargetables the set of active targetables to choose the target from
+     * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if a target has been successfully selected, <code>false</code>
      * otherwise
      * @see TargetSelector
      * @see Targetable
      * @see Effect
      */
-    public boolean selectTarget(Set<Targetable> activeTargetables) {
-        return this.targetSelector.selectTarget(activeTargetables);
+    public boolean selectTarget(Set<Targetable> forbiddenTargets) {
+        return this.targetSelector.selectTarget(forbiddenTargets);
     }
 
     // --------------------------------- getters and setters ---------------------------------- //

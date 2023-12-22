@@ -1,12 +1,12 @@
 package exchangemage.effects.base;
 
+import java.util.List;
+import java.util.Set;
+
 import exchangemage.base.GameState;
 import exchangemage.effects.targeting.selectors.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * An {@link EffectDeployer} implementation used to represent a list of {@link Effect}s which target
@@ -58,29 +58,29 @@ public class EffectPacket<T extends Targetable> extends EffectDeployer<T> {
     }
 
     /**
-     * Selects a target for this {@link EffectPacket} from the given set of active
-     * {@link Targetable}s and assigns it to all the {@link Effect}s stored in this effect deployer.
+     * Calls on the {@link TargetSelector#setTarget} method to select a target for this
+     * {@link EffectPacket} and then sets the same target for all the {@link Effect}s stored within
+     * it.
      *
-     * @param activeTargetables the set of active targetables to choose the target from
+     * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return true if a target was selected and successfully assigned to all the effects
      * @see TargetSelector
      * @see Targetable
      */
     @Override
-    public boolean selectTarget(Set<Targetable> activeTargetables) {
-        if (!getTargetSelector().selectTarget(activeTargetables))
+    public boolean selectTarget(Set<Targetable> forbiddenTargets) {
+        if (!getTargetSelector().selectTarget(forbiddenTargets))
             return false;
 
-        this.effects.forEach(
-                effect -> effect.getTargetSelector().setTarget(getTargetSelector().getTarget())
-        );
+        Targetable target = getTargetSelector().getTarget();
+        this.effects.forEach(effect -> effect.getTargetSelector().setTarget(target));
 
         return true;
     }
 
     /**
      * Sets the given {@link EffectSource} as the source of the {@link EffectPacket} and all the
-     * {@link Effect}s stored in it.
+     * {@link Effect}s stored within it.
      *
      * @param source the source of the effect
      * @see EffectSource

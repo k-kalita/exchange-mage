@@ -10,7 +10,7 @@ import exchangemage.effects.targeting.selectors.ConstantTargetSelector;
  * @see ConstantTargetSelector
  */
 @FunctionalInterface
-public interface TargetGetter<T> {
+public interface TargetGetter<T extends Targetable> {
     /**
      * Returns a {@link Targetable} object. Used by {@link ConstantTargetSelector}s to select
      * their target.
