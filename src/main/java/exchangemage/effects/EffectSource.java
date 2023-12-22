@@ -1,6 +1,7 @@
-package exchangemage.effects.base;
+package exchangemage.effects;
 
 import exchangemage.cards.Card;
+import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.triggers.conditions.Condition;
 

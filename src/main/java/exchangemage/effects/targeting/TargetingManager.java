@@ -1,7 +1,7 @@
 package exchangemage.effects.targeting;
 
 import exchangemage.base.GameState;
-import exchangemage.effects.base.Effect;
+import exchangemage.effects.Effect;
 
 import java.util.Objects;
 import java.util.Set;

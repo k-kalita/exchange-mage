@@ -7,10 +7,10 @@ import exchangemage.actors.Actor;
 import exchangemage.base.Game;
 import exchangemage.base.Observer;
 import exchangemage.base.Observable;
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.base.EffectPlayer;
-import exchangemage.effects.base.PersistentEffect;
-import exchangemage.effects.base.PersistentEffectsHolder;
+import exchangemage.effects.Effect;
+import exchangemage.effects.EffectPlayer;
+import exchangemage.effects.deployers.PersistentEffect;
+import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.targeting.Targetable;
 
 public class Scene implements Targetable, PersistentEffectsHolder, Observable {

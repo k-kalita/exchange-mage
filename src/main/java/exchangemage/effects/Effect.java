@@ -1,9 +1,12 @@
-package exchangemage.effects.base;
+package exchangemage.effects;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 
+import exchangemage.effects.deployers.EffectDeployer;
+import exchangemage.effects.deployers.PersistentEffect;
+import exchangemage.effects.deployers.SequentialEffect;
 import exchangemage.scenes.Scene;
 import exchangemage.actors.Actor;
 import exchangemage.cards.Card;

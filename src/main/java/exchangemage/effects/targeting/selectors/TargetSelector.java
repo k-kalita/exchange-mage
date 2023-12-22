@@ -3,9 +3,9 @@ package exchangemage.effects.targeting.selectors;
 import java.util.Objects;
 import java.util.Set;
 
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.base.EffectDeployer;
-import exchangemage.effects.base.EffectPlayer;
+import exchangemage.effects.Effect;
+import exchangemage.effects.deployers.EffectDeployer;
+import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
 

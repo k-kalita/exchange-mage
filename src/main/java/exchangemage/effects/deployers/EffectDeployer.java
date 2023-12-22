@@ -1,10 +1,12 @@
-package exchangemage.effects.base;
+package exchangemage.effects.deployers;
 
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import exchangemage.effects.Effect;
+import exchangemage.effects.EffectSource;
 import exchangemage.effects.targeting.selectors.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;

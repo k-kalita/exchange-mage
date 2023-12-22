@@ -1,6 +1,6 @@
 package exchangemage.effects.triggers;
 
-import exchangemage.effects.base.PersistentEffect;
+import exchangemage.effects.deployers.PersistentEffect;
 
 /**
  * A {@link Trigger} which always returns a given value independent of the state of the game.

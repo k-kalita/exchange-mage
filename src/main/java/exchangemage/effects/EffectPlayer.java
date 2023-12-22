@@ -1,4 +1,4 @@
-package exchangemage.effects.base;
+package exchangemage.effects;
 
 import java.util.Queue;
 import java.util.LinkedList;
@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import exchangemage.base.GameState;
+import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.scenes.Scene;
 import exchangemage.cards.Card;

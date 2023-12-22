@@ -2,7 +2,7 @@ package exchangemage.effects.triggers;
 
 import java.util.Objects;
 
-import exchangemage.effects.base.Effect;
+import exchangemage.effects.Effect;
 import exchangemage.effects.triggers.conditions.Condition;
 
 /**

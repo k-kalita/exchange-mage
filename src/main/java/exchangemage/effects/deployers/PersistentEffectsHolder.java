@@ -1,4 +1,4 @@
-package exchangemage.effects.base;
+package exchangemage.effects.deployers;
 
 import exchangemage.actors.Actor;
 import exchangemage.scenes.Scene;

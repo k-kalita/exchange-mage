@@ -2,7 +2,7 @@ package exchangemage.cards;
 
 import java.util.List;
 
-import exchangemage.effects.base.Effect;
+import exchangemage.effects.Effect;
 
 public class Card {
     private List<Effect> effects;

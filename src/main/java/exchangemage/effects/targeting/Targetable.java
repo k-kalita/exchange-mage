@@ -2,7 +2,7 @@ package exchangemage.effects.targeting;
 
 import exchangemage.base.Observable;
 import exchangemage.base.Observer;
-import exchangemage.effects.base.Effect;
+import exchangemage.effects.Effect;
 
 /**
  * An interface for all objects that can be targeted by {@link Effect}s. All elements of the game

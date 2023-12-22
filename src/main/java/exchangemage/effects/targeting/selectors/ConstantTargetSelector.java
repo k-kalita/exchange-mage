@@ -1,12 +1,11 @@
 package exchangemage.effects.targeting.selectors;
 
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.targeting.TargetGetter;
-import exchangemage.effects.targeting.Targetable;
-
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import exchangemage.effects.Effect;
+import exchangemage.effects.targeting.TargetGetter;
+import exchangemage.effects.targeting.Targetable;
 
 /**
  * A {@link TargetSelector} which always selects the same target for its {@link Effect}

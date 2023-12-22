@@ -1,8 +1,8 @@
 package exchangemage.effects.triggers.conditions;
 
 import exchangemage.base.GameState;
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.base.PersistentEffect;
+import exchangemage.effects.Effect;
+import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.actors.Player;
 import exchangemage.actors.Actor;
 import exchangemage.effects.triggers.ConditionalTrigger;

@@ -1,7 +1,7 @@
 package exchangemage.effects.triggers.conditions;
 
 import exchangemage.base.GameState;
-import exchangemage.effects.base.Effect;
+import exchangemage.effects.Effect;
 
 /**
  * A {@link SubclassGetter} which returns the {@link Effect} currently in resolution as the subject

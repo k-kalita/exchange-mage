@@ -1,7 +1,7 @@
 package exchangemage.effects.triggers;
 
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.base.EffectPlayer;
+import exchangemage.effects.Effect;
+import exchangemage.effects.EffectPlayer;
 
 /**
  * Triggers act as evaluators of certain requirements which must be met in order for an

@@ -2,9 +2,9 @@ package exchangemage.effects.targeting.selectors;
 
 import exchangemage.base.GameState;
 import exchangemage.scenes.Scene;
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.base.PersistentEffect;
-import exchangemage.effects.base.NotificationEffect;
+import exchangemage.effects.Effect;
+import exchangemage.effects.deployers.PersistentEffect;
+import exchangemage.effects.NotificationEffect;
 
 /**
  * A {@link ConstantTargetSelector} which always targets the current {@link Scene}. Used by

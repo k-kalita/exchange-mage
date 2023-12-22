@@ -1,9 +1,9 @@
 package exchangemage.base;
 
 import exchangemage.actors.Player;
-import exchangemage.effects.base.Effect;
-import exchangemage.effects.base.EffectPlayer;
-import exchangemage.effects.base.PersistentEffect;
+import exchangemage.effects.Effect;
+import exchangemage.effects.EffectPlayer;
+import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.effects.triggers.conditions.Condition;
 import exchangemage.scenes.Scene;

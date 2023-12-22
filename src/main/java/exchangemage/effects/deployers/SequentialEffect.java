@@ -1,9 +1,12 @@
-package exchangemage.effects.base;
+package exchangemage.effects.deployers;
 
 import java.util.List;
 import java.util.Set;
 
 import exchangemage.base.GameState;
+import exchangemage.effects.Effect;
+import exchangemage.effects.EffectPlayer;
+import exchangemage.effects.EffectSource;
 import exchangemage.scenes.Scene;
 import exchangemage.effects.targeting.selectors.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
