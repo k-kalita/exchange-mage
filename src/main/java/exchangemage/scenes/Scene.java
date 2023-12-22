@@ -1,6 +1,5 @@
 package exchangemage.scenes;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
     private final Set<Observer> observers = new HashSet<>();
 
     public Scene() {
-        this.effectPlayer = new EffectPlayer(this);
+        this.effectPlayer = new EffectPlayer();
         this.actors.add(Game.getGame().getPlayer());
     }
 
@@ -43,15 +42,7 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
      */
     public EffectPlayer getEffectPlayer() {return this.effectPlayer;}
 
-    public Targetable[] getTargetables() {
-        return new Targetable[0];
-    }
-
-    public Targetable[] getTargetables(Class<?> targetClass) {
-        return Arrays.stream(getTargetables())
-                .filter(targetClass::isInstance)
-                .toArray(Targetable[]::new);
-    }
+    public Set<Targetable> getTargetables() {return null;}
 
     /**
      * Adds an {@link Observer} to this {@link Observable} object. The observer can then be notified
@@ -84,9 +75,7 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
      * @see Observer
      */
     @Override
-    public Set<Observer> getObservers() {
-        return null;
-    }
+    public Set<Observer> getObservers() {return null;}
 
     /**
      * Adds a {@link PersistentEffect} to this {@link PersistentEffectsHolder}.
@@ -120,7 +109,5 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
      * @see PersistentEffect
      */
     @Override
-    public Set<PersistentEffect> getPersistentEffects() {
-        return null;
-    }
+    public Set<PersistentEffect> getPersistentEffects() {return null;}
 }

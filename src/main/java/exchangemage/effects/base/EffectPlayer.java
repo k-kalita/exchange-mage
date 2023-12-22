@@ -1,7 +1,13 @@
 package exchangemage.effects.base;
 
-import java.util.*;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Objects;
 
+import exchangemage.base.GameState;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.scenes.Scene;
 import exchangemage.cards.Card;
@@ -12,19 +18,37 @@ import exchangemage.effects.triggers.conditions.Condition;
  * EffectPlayer is responsible for managing the process of playing {@link Card}s and resolving
  * their {@link Effect}s.
  * <br><br>
- * The crucial functionality of this class revolves around evaluating the activation of
- * {@link Effect}s, choosing their targets with the help of the {@link TargetingManager} and
- * resolving them in accordance with their {@link Effect.ResolutionMode}.
+ * The crucial functionality of this class revolves around evaluating the activation of effects,
+ * choosing their targets with the help of the {@link TargetingManager} and resolving them in
+ * accordance with their {@link Effect.ResolutionMode}.
  * <br><br>
- * The most important methods of this class are:
+ * Three most important concepts necessary for understanding the functionality of the effect player
+ * are:
  * <ul>
- *     <li>{@link #playCard(Card)} which allows for resolution of all effects of a card (along
- *     with any persistent effects triggered in the process).</li>
- *     <li>{@link #evaluateEffect(Effect)} which evaluates whether an effect is activated and can
- *     select a valid target (if it is - handles the resolution in accordance with its
- *     {@link Effect.ResolutionMode}).</li>
- *     <li>{@link #resolveQueue()} which resolves all effects currently enqueued in the resolution
- *     queue (along with any persistent effects triggered in the process).</li>
+ *     <li>
+ *         <b>Effect evaluation</b> - the process of determining whether an effect is activated
+ *         and whether it can select a valid target. This process is handled by the
+ *         {@link #evaluateEffect} method.
+ *         <br><br>
+ *         If an effect is activated and has found a valid target, it is resolved in accordance
+ *         with its {@link Effect.ResolutionMode}.
+ *     </li>
+ *     <br>
+ *     <li>
+ *         <b>Effect resolution</b> - if an effect passes the evaluation stage, it enters the
+ *         resolution process. This process is handled by the {@link #resolveEffect} method.
+ *         <br><br>
+ *         During the resolution process, the activation of {@link PersistentEffect}s (which may
+ *         potentially interrupt or modify the execution of the effect being resolved) is
+ *         evaluated in accordance with their {@link EffectResolutionStage}.<br>
+ *         The resolution process ends with the execution of the effect.
+ *     </li>
+ *     <br>
+ *     <li>
+ *         <b>Card resolution</b> - a {@link Card} is considered in resolution when its effects are
+ *         currently being evaluated and/or resolved (or during the evaluation/resolution of
+ *         effects which interrupt or modify the execution of the card's effects).
+ *     </li>
  * </ul>
  *
  * @see Effect
@@ -34,13 +58,8 @@ import exchangemage.effects.triggers.conditions.Condition;
  */
 public class EffectPlayer {
     /**
-     * The {@link Scene} this {@link EffectPlayer} is associated with.
-     */
-    private final Scene scene;
-
-    /**
-     * The {@link Card} whose {@link Effect}s are currently being resolved (or <code>null</code> if
-     * no card is being resolved).
+     * The {@link Card} whose {@link Effect}s are currently being evaluated and/or resolved (or
+     * <code>null</code> if no card is being resolved).
      */
     private Card cardInResolution = null;
 
@@ -155,18 +174,6 @@ public class EffectPlayer {
     }
 
     /**
-     * Creates a new {@link EffectPlayer} for the given {@link Scene}.
-     *
-     * @param scene the Scene to create the EffectPlayer for
-     * @throws NullPointerException if the given Scene is null
-     * @see Scene
-     */
-    public EffectPlayer(Scene scene) {
-        Objects.requireNonNull(scene, "EffectPlayer cannot be created with null Scene.");
-        this.scene = scene;
-    }
-
-    /**
      * Checks whether there is an {@link Effect} currently being resolved by the
      * {@link EffectPlayer}.
      *
@@ -210,7 +217,7 @@ public class EffectPlayer {
         this.effectInEvaluation = effect;
         if (!effect.isTriggered())
             return;
-        if (!this.targetingManager.setActiveEffect(effect).selectTarget())
+        if (!this.targetingManager.selectTarget(effect))
             return;
         this.effectInEvaluation = null;
 
@@ -263,7 +270,7 @@ public class EffectPlayer {
 
         this.effectInResolution = effect;
         EffectResolutionStage
-                .sortPersistentEffects(new ArrayList<>(this.scene.getPersistentEffects()))
+                .sortPersistentEffects(new ArrayList<>(GameState.getScene().getPersistentEffects()))
                 .forEach(this::evaluateEffect);
         effect.execute();
         this.effectInResolution = null;
@@ -294,14 +301,12 @@ public class EffectPlayer {
      * Resolves all currently enqueued {@link Effect}s (along with any persistent effects activated
      * in the process).
      *
-     * @return this {@link EffectPlayer}
      * @see Effect
      * @see PersistentEffect
      */
-    public EffectPlayer resolveQueue() {
+    public void resolveQueue() {
         while (!this.resolutionQueue.isEmpty())
             resolveEffect(this.resolutionQueue.poll());
-        return this;
     }
 
     /**

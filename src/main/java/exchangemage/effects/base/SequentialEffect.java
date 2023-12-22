@@ -67,15 +67,15 @@ public class SequentialEffect extends EffectDeployer<Scene> {
      * The {@link Effect}s stored in sequential effects select their targets individually at
      * evaluation.
      *
-     * @param activeTargetables the set of active targetables to choose the target from
+     * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if the target choosing process was successful, <code>false</code>
      * otherwise
      * @see Targetable
      * @see Effect
      */
     @Override
-    public boolean selectTarget(Set<Targetable> activeTargetables) {
-        return getTargetSelector().selectTarget(activeTargetables);
+    public boolean selectTarget(Set<Targetable> forbiddenTargets) {
+        return getTargetSelector().selectTarget(forbiddenTargets);
     }
 
     /**

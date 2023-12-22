@@ -18,8 +18,8 @@ public class EffectInResolutionGetter<S extends Effect<?>> extends SubclassGette
      * Creates a new {@link EffectInResolutionGetter} with given {@link Effect} subclass.
      *
      * @param effectSubclass the class of {@link Effect} objects returned by this
-     * {@link SubjectGetter}.
-     * @throws NullPointerException if the given effect class is <code>null</code>.
+     * {@link SubjectGetter}
+     * @throws NullPointerException if the given effect class is <code>null</code>
      * @see Effect
      */
     public EffectInResolutionGetter(Class<S> effectSubclass) {

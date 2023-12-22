@@ -102,19 +102,19 @@ public class PersistentEffect extends EffectDeployer<Scene> {
      * persistent effects use the {@link SceneSelector} as their {@link TargetSelector}) and
      * immediately after, select targets for all the {@link Effect}s stored within it.
      *
-     * @param activeTargetables the set of active targetables to choose the target from
+     * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if at least one of the stored effects successfully found a target,
      * <code>false</code> otherwise
      * @see Targetable
      * @see Effect
      */
     @Override
-    public boolean selectTarget(Set<Targetable> activeTargetables) {
-        if (!getTargetSelector().selectTarget(activeTargetables))
+    public boolean selectTarget(Set<Targetable> forbiddenTargets) {
+        if (!getTargetSelector().selectTarget(forbiddenTargets))
             return false;
 
         Stream<Boolean> results = getEffects().stream().map(
-                effect -> GameState.getTargetingManager().setActiveEffect(effect).selectTarget()
+                effect -> GameState.getTargetingManager().selectTarget(effect)
         );
 
         return results.anyMatch(Boolean::booleanValue);
