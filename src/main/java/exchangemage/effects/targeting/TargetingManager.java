@@ -84,6 +84,8 @@ public class TargetingManager {
      */
     public void clearForbiddenTargetables() {this.forbiddenTargets.clear();}
 
+    public Set<Targetable> getForbiddenTargets() {return this.forbiddenTargets;}
+
     /**
      * Called by the {@link TargetSelector} of the currently evaluated {@link Effect} to wait for
      * the player to choose a target.
