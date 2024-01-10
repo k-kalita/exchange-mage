@@ -27,7 +27,7 @@ import exchangemage.effects.targeting.Targetable;
  * @see EffectPlayer
  * @see Encounter
  */
-public class Scene implements Targetable, PersistentEffectsHolder, Observable {
+public abstract class Scene implements Targetable, PersistentEffectsHolder, Observable {
     /**
      * The set of {@link Actor}s present in the scene, including the {@link Player}.
      */
@@ -47,6 +47,12 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
      * The set of {@link Observer}s observing the scene.
      */
     private final Set<Observer> observers = new HashSet<>();
+
+    /**
+     * Starts the scene. Concrete implementations of the scene base class provide their own
+     * logic for how a scene starts and is played out.
+     */
+    public abstract void start();
 
     /**
      * Constructs a new scene with the specified set of environmental effects, adding the
@@ -85,6 +91,18 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
      */
     public EffectPlayer getEffectPlayer() {return this.effectPlayer;}
 
+    /**
+     * Returns the set of all {@link PersistentEffect}s active in the scene, including the
+     * {@link #environmentalEffects} and the ones held by individual {@link Actor}s present.
+     *
+     * @return the set of all persistent effects active in the scene
+     */
+    public Set<PersistentEffect> getAllPersistentEffects() {
+        Set<PersistentEffect> allEffects = new HashSet<>(this.environmentalEffects);
+        this.actors.forEach(actor -> allEffects.addAll(actor.getPersistentEffects()));
+        return allEffects;
+    }
+
     // --------------------------- persistent effects holder methods -------------------------- //
 
     @Override
@@ -105,6 +123,12 @@ public class Scene implements Targetable, PersistentEffectsHolder, Observable {
         this.environmentalEffects.remove(effect);
     }
 
+    /**
+     * Returns the set of {@link #environmentalEffects} present in the scene. Does not include
+     * {@link PersistentEffect}s held by individual {@link Actor}s.
+     *
+     * @return the set of persistent effects active in the scene
+     */
     @Override
     public Set<PersistentEffect> getPersistentEffects() {return this.environmentalEffects;}
 

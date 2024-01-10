@@ -1,5 +1,7 @@
 package exchangemage.effects;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +10,10 @@ import java.util.Comparator;
 import java.util.Objects;
 
 import exchangemage.base.GameState;
+import exchangemage.actors.Actor;
 import exchangemage.effects.deployers.PersistentEffect;
+import exchangemage.effects.deployers.PersistentEffectsHolder;
+import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.scenes.Scene;
 import exchangemage.cards.Card;
@@ -271,7 +276,7 @@ public class EffectPlayer {
 
         this.effectInResolution = effect;
         EffectResolutionStage
-                .sortPersistentEffects(new ArrayList<>(GameState.getScene().getPersistentEffects()))
+                .sortPersistentEffects(new ArrayList<>(getPersistentEffects(effect)))
                 .forEach(this::evaluateEffect);
         effect.execute();
         this.effectInResolution = null;
@@ -325,6 +330,41 @@ public class EffectPlayer {
         card.getEffects().forEach(this::evaluateEffect);
         this.resolveQueue();
         this.cardInResolution = null;
+    }
+
+    /**
+     * Returns the set of all {@link PersistentEffect}s which could be activated by the given
+     * {@link Effect} in the current {@link Scene}.
+     * <br><br>
+     * Effects which target the {@link Scene} itself can activate the environmental effects
+     * as well as any persistent effects held by individual {@link Actor}s present in the scene.
+     * <br><br>
+     * Effects which target individual elements of the scene can activate the environmental
+     * effects as well as any persistent effects held by the effect's source and target.
+     *
+     * @param effectInResolution the effect in resolution
+     * @return the set of all persistent effects which could be activated by the given effect
+     * @throws NullPointerException if the given effect is null
+     * @see Effect
+     * @see PersistentEffect
+     */
+    private Set<PersistentEffect> getPersistentEffects(Effect<?> effectInResolution) {
+        Objects.requireNonNull(effectInResolution, "Effect in resolution cannot be null.");
+        Scene scene = GameState.getScene();
+
+        if (effectInResolution.getTarget() instanceof Scene)
+            return scene.getAllPersistentEffects();
+
+        Set<PersistentEffect> persistentEffects = new HashSet<>(scene.getPersistentEffects());
+        EffectSource source = effectInResolution.getSource();
+        Targetable target = effectInResolution.getTarget();
+
+        if (source instanceof PersistentEffectsHolder)
+            persistentEffects.addAll(((PersistentEffectsHolder) source).getPersistentEffects());
+        if (target instanceof PersistentEffectsHolder)
+            persistentEffects.addAll(((PersistentEffectsHolder) target).getPersistentEffects());
+
+        return persistentEffects;
     }
 
     // ------------------------------------ getters ------------------------------------------- //
