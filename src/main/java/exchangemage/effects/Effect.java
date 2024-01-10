@@ -7,6 +7,7 @@ import java.util.HashSet;
 import exchangemage.effects.deployers.EffectDeployer;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.SequentialEffect;
+import exchangemage.effects.value.ValueEffect;
 import exchangemage.scenes.Scene;
 import exchangemage.actors.Actor;
 import exchangemage.cards.Card;
