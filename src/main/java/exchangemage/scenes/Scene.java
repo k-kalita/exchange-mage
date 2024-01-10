@@ -1,10 +1,12 @@
 package exchangemage.scenes;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import exchangemage.actors.Actor;
-import exchangemage.base.Game;
+import exchangemage.actors.Player;
+import exchangemage.base.GameState;
 import exchangemage.base.Observer;
 import exchangemage.base.Observable;
 import exchangemage.effects.Effect;
@@ -13,101 +15,116 @@ import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.targeting.Targetable;
 
+/**
+ * Base class for all scenes in the game. A scene is a container for {@link Actor}s and
+ * {@link PersistentEffect}s in which game events such as battles or dialogues take place.
+ * <br><br>
+ * All {@link Effect}s used to affect the elements of the game such as enemies, the player, or the
+ * environment are resolved in the context of a scene with the help of an {@link EffectPlayer}.
+ * Current scenes can be accessed through the {@link GameState} class.
+ *
+ * @see GameState
+ * @see EffectPlayer
+ * @see Encounter
+ */
 public class Scene implements Targetable, PersistentEffectsHolder, Observable {
     /**
-     * {@link EffectPlayer} used by this {@link Scene} to play {@link Effect}s.
+     * The set of {@link Actor}s present in the scene, including the {@link Player}.
      */
-    private final EffectPlayer effectPlayer;
+    protected final Set<Actor> actors = new HashSet<>();
 
     /**
-     * Set of {@link Actor}s present in the {@link Scene}.
+     * The {@link EffectPlayer} used to evaluate and resolve {@link Effect}s in the scene.
      */
-    private final Set<Actor> actors = new HashSet<>();
+    private final EffectPlayer effectPlayer = new EffectPlayer();
 
     /**
-     * Set of {@link Observer}s of the {@link Scene}.
+     * The set of {@link PersistentEffect}s active in the scene.
+     */
+    private final Set<PersistentEffect> environmentalEffects = new HashSet<>();
+
+    /**
+     * The set of {@link Observer}s observing the scene.
      */
     private final Set<Observer> observers = new HashSet<>();
 
-    public Scene() {
-        this.effectPlayer = new EffectPlayer();
-        this.actors.add(Game.getGame().getPlayer());
+    /**
+     * Constructs a new scene with the specified set of environmental effects, adding the
+     * {@link Player} the set of {@link Actor}s present in it.
+     *
+     * @param environmentalEffects the set of {@link PersistentEffect}s active in the scene.
+     */
+    public Scene(Set<PersistentEffect> environmentalEffects) {
+        this.actors.add(GameState.getPlayer());
+
+        if (environmentalEffects != null)
+            environmentalEffects.forEach(this::addPersistentEffect);
     }
 
     /**
-     * Returns the {@link EffectPlayer} used by this {@link Scene}.
+     * Returns all {@link Targetable}s present in the scene, including the ones held by the
+     * {@link Actor}s present.
      *
-     * @return the current {@link EffectPlayer}
-     * @see EffectPlayer
+     * @return the set of {@link Targetable}s present in the scene
+     * @see Targetable
+     */
+    public Set<Targetable> getTargetables() {
+        Set<Targetable> targetables = new HashSet<>();
+        this.actors.forEach(actor -> {
+            targetables.addAll(actor.getTargetables());
+            targetables.add(actor);
+        });
+        targetables.addAll(this.environmentalEffects);
+        return targetables;
+    }
+
+    /**
+     * Returns the {@link EffectPlayer} used to evaluate and resolve {@link Effect}s in the scene.
+     *
+     * @return the scene's effect player
      */
     public EffectPlayer getEffectPlayer() {return this.effectPlayer;}
 
-    public Set<Targetable> getTargetables() {return null;}
+    // --------------------------- persistent effects holder methods -------------------------- //
 
-    /**
-     * Adds an {@link Observer} to this {@link Observable} object. The observer can then be notified
-     * of certain events by calling the {@link Observable#notifyObservers} method.
-     *
-     * @param observer the observer to add
-     * @see Observer
-     */
-    @Override
-    public void addObserver(Observer observer) {
-
-    }
-
-    /**
-     * Removes an {@link Observer} from this {@link Observable} object. The observer will no longer
-     * be notified of any events.
-     *
-     * @param observer the observer to remove
-     * @see Observer
-     */
-    @Override
-    public void removeObserver(Observer observer) {
-
-    }
-
-    /**
-     * Returns a set of all {@link Observer}s of this {@link Observable} object.
-     *
-     * @return a set of all observers of this object
-     * @see Observer
-     */
-    @Override
-    public Set<Observer> getObservers() {return null;}
-
-    /**
-     * Adds a {@link PersistentEffect} to this {@link PersistentEffectsHolder}.
-     *
-     * @param effect the {@link PersistentEffect} to add to this {@link PersistentEffectsHolder}.
-     * @see PersistentEffect
-     */
     @Override
     public void addPersistentEffect(PersistentEffect effect) {
-
+        Objects.requireNonNull(effect, "Cannot add null persistent effect.");
+        if (this.environmentalEffects.contains(effect))
+            throw new IllegalArgumentException("Cannot add persistent effect that has already " +
+                                               "been added.");
+        this.environmentalEffects.add(effect);
     }
 
-    /**
-     * Removes a {@link PersistentEffect} from this {@link PersistentEffectsHolder}.
-     *
-     * @param effect the {@link PersistentEffect} to remove from this
-     *               {@link PersistentEffectsHolder}.
-     * @see PersistentEffect
-     */
     @Override
     public void removePersistentEffect(PersistentEffect effect) {
-
+        Objects.requireNonNull(effect, "Cannot remove null persistent effect.");
+        if (!this.environmentalEffects.contains(effect))
+            throw new IllegalArgumentException("Cannot remove persistent effect that has not " +
+                                               "been added.");
+        this.environmentalEffects.remove(effect);
     }
 
-    /**
-     * Returns the {@link PersistentEffect}s currently assigned to this
-     * {@link PersistentEffectsHolder}.
-     *
-     * @return the set of {@link PersistentEffect}s currently assigned to this
-     * {@link PersistentEffectsHolder}.
-     * @see PersistentEffect
-     */
     @Override
-    public Set<PersistentEffect> getPersistentEffects() {return null;}
+    public Set<PersistentEffect> getPersistentEffects() {return this.environmentalEffects;}
+
+    // --------------------------------- observable methods ----------------------------------- //
+
+    @Override
+    public void addObserver(Observer observer) {
+        Objects.requireNonNull(observer, "Cannot add null observer.");
+        this.observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        Objects.requireNonNull(observer, "Cannot remove null observer.");
+        if (!this.observers.contains(observer))
+            throw new IllegalArgumentException("Cannot remove observer that has not been added.");
+
+        this.observers.remove(observer);
+    }
+
+    @Override
+    public Set<Observer> getObservers() {return this.observers;}
 }

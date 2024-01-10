@@ -1,7 +1,14 @@
 package exchangemage.actors;
 
-import exchangemage.cards.Deck;
+import java.util.Set;
 
-public class Actor {
-    private Deck deck;
+import exchangemage.effects.deployers.PersistentEffectsHolder;
+import exchangemage.effects.targeting.Targetable;
+
+public interface Actor extends Targetable, PersistentEffectsHolder {
+    Set<Targetable> getTargetables();
+
+    void takeTurn();
+
+    void takeDamage(int damage);
 }

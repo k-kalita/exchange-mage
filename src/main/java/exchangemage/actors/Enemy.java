@@ -6,7 +6,7 @@ import exchangemage.effects.targeting.Targetable;
 
 import java.util.Set;
 
-public class Player implements Actor {
+public class Enemy implements Actor {
     @Override
     public Set<Targetable> getTargetables() {
         return null;
