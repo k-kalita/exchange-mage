@@ -106,7 +106,8 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
          *
          * @param activeTargetables the set of active {@link Targetable}s to choose the target from
          * @param selector          the {@link VariableTargetSelector} to set the target for
-         * @param <T>               the type of the {@link Targetable} objects selected by the target selector
+         * @param <T>               the type of the {@link Targetable} objects selected by the
+         *                          target selector
          * @return <code>true</code> if the target selection was successful, <code>false</code>
          * otherwise
          * @see VariableTargetSelector
@@ -185,7 +186,7 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
      *
      * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if the target selection was successful, <code>false</code>
-     *         otherwise
+     * otherwise
      * @throws NullPointerException if the given set of forbidden targets is <code>null</code>
      * @see TargetingManager
      * @see TargetingMode

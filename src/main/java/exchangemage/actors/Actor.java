@@ -11,4 +11,6 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
     void takeTurn();
 
     void takeDamage(int damage);
+
+    void heal(int healing);
 }
