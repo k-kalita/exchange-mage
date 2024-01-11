@@ -11,6 +11,7 @@ import exchangemage.base.Observer;
 import exchangemage.base.Observable;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
+import exchangemage.effects.EffectSource;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.targeting.Targetable;
@@ -27,7 +28,8 @@ import exchangemage.effects.targeting.Targetable;
  * @see EffectPlayer
  * @see Encounter
  */
-public abstract class Scene implements Targetable, PersistentEffectsHolder, Observable {
+public abstract class Scene
+        implements Targetable, PersistentEffectsHolder, EffectSource, Observable {
     /**
      * The set of {@link Actor}s present in the scene, including the {@link Player}.
      */
@@ -49,12 +51,6 @@ public abstract class Scene implements Targetable, PersistentEffectsHolder, Obse
     private final Set<Observer> observers = new HashSet<>();
 
     /**
-     * Starts the scene. Concrete implementations of the scene base class provide their own
-     * logic for how a scene starts and is played out.
-     */
-    public abstract void start();
-
-    /**
      * Constructs a new scene with the specified set of environmental effects, adding the
      * {@link Player} the set of {@link Actor}s present in it.
      *
@@ -66,6 +62,28 @@ public abstract class Scene implements Targetable, PersistentEffectsHolder, Obse
         if (environmentalEffects != null)
             environmentalEffects.forEach(this::addPersistentEffect);
     }
+
+    /**
+     * Starts the scene. Concrete implementations of the scene base class provide their own
+     * logic for how a scene starts and is played out.
+     */
+    public abstract void start();
+
+    /**
+     * Removes the specified {@link Actor} from the scene.
+     *
+     * @param actor actor to remove
+     * @throws NullPointerException     if the actor is <code>null</code>
+     * @throws IllegalArgumentException if the actor has not been added to the scene
+     */
+    public void removeActor(Actor actor) {
+        Objects.requireNonNull(actor, "Cannot remove null actor.");
+        if (!this.actors.contains(actor))
+            throw new IllegalArgumentException("Cannot remove actor that has not been added.");
+        this.actors.remove(actor);
+    }
+
+    // ------------------------------------ getter methods ------------------------------------ //
 
     /**
      * Returns all {@link Targetable}s present in the scene, including the ones held by the
