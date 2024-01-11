@@ -29,7 +29,7 @@ public class Enemy extends DeckHolderActor {
      */
     private boolean damagedThisTurn = false;
 
-    public Enemy(Deck deck, Set<PersistentEffect> persistentEffects, int maxHealth) {
+    public Enemy(Deck deck, int maxHealth, Set<PersistentEffect> persistentEffects) {
         super(deck);
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;

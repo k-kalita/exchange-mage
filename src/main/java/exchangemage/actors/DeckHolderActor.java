@@ -63,6 +63,7 @@ public abstract class DeckHolderActor implements Actor {
         Objects.requireNonNull(effect, "Cannot add null persistent effect.");
         if (this.persistentEffects.contains(effect))
             throw new IllegalArgumentException("Cannot add duplicate persistent effect.");
+        effect.setSource(this);
         this.persistentEffects.add(effect);
     }
 

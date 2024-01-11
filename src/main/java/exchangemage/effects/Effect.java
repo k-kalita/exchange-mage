@@ -49,7 +49,7 @@ import exchangemage.effects.targeting.selectors.TargetSelector;
  * @see Trigger
  * @see TargetSelector
  */
-public abstract class Effect<T extends Targetable> implements EffectSource, Targetable {
+public abstract class Effect<T extends Targetable> implements Targetable {
     /**
      * The {@link EffectSource} of the {@link Effect}. Indicates the origin of the effect (e.g. the
      * card it was played from or the {@link PersistentEffect} that deployed it).

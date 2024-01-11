@@ -57,7 +57,7 @@ import exchangemage.effects.targeting.Targetable;
  *     </li>
  * </ul>
  */
-public interface Actor extends Targetable, PersistentEffectsHolder, EffectSource {
+public interface Actor extends Targetable, PersistentEffectsHolder {
     /**
      * An enum defining events specific to {@link Actor} operations. Can be used to notify
      * its {@link Observer}s and create {@link NotificationEffect}s used to trigger

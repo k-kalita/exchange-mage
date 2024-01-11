@@ -57,24 +57,27 @@ public class PersistentEffect extends EffectDeployer<Scene> {
               trigger,
               new SceneSelector(),
               ResolutionMode.IMMEDIATE);
-
-        this.effects.forEach(effect -> effect.setSource(this));
         this.activationStage = activationStage;
     }
 
     /**
-     * Sets given {@link EffectSource} as the source of the {@link PersistentEffect}. Sets the
-     * persistent effect as the source of all the stored {@link Effect}s.
+     * Sets given {@link PersistentEffectsHolder} as the source of the {@link PersistentEffect} and
+     * the effects stored within it.
      *
-     * @param source the source of the effect
-     * @throws NullPointerException if the source is null
+     * @param effectHolder the persistent effect holder this effect is assigned to
+     * @throws NullPointerException     if the source is null
+     * @throws IllegalArgumentException if the provided {@link EffectSource} is not a persistent
+     *                                  effect holder
      * @see EffectSource
+     * @see PersistentEffectsHolder
      */
     @Override
-    public void setSource(EffectSource source) {
-        Objects.requireNonNull(source, "Cannot set null source for persistent effect.");
-        this.source = source;
-        effects.forEach(effect -> effect.setSource(this));
+    public void setSource(EffectSource effectHolder) {
+        Objects.requireNonNull(effectHolder, "Cannot set null source for effect.");
+        if (!(effectHolder instanceof PersistentEffectsHolder))
+            throw new IllegalArgumentException("Effect source must be a persistent effect holder.");
+        this.source = effectHolder;
+        effects.forEach(effect -> effect.setSource(effectHolder));
     }
 
     /**
@@ -97,7 +100,7 @@ public class PersistentEffect extends EffectDeployer<Scene> {
     @Override
     public void execute() {
         getEffects().stream().filter(Effect::hasTarget)
-                .forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
+                    .forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
     }
 
     /**

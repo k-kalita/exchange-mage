@@ -28,8 +28,7 @@ import exchangemage.effects.targeting.Targetable;
  * @see EffectPlayer
  * @see Encounter
  */
-public abstract class Scene
-        implements Targetable, PersistentEffectsHolder, EffectSource, Observable {
+public abstract class Scene implements Targetable, PersistentEffectsHolder, Observable {
     /**
      * The set of {@link Actor}s present in the scene, including the {@link Player}.
      */
@@ -129,6 +128,7 @@ public abstract class Scene
         if (this.environmentalEffects.contains(effect))
             throw new IllegalArgumentException("Cannot add persistent effect that has already " +
                                                "been added.");
+        effect.setSource(this);
         this.environmentalEffects.add(effect);
     }
 

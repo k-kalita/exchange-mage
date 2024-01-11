@@ -92,6 +92,6 @@ public class SequentialEffect extends EffectDeployer<Scene> {
     @Override
     public void setSource(EffectSource source) {
         this.source = source;
-        this.effects.forEach(effect -> effect.setSource(this));
+        this.effects.forEach(effect -> effect.setSource(source));
     }
 }
