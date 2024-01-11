@@ -1,7 +1,8 @@
-package exchangemage.effects.triggers.conditions;
+package exchangemage.effects.triggers.conditions.getters;
 
 import exchangemage.base.GameState;
 import exchangemage.effects.EffectSource;
+import exchangemage.effects.triggers.conditions.Condition;
 
 /**
  * A {@link SubclassGetter} which returns the current {@link EffectSource} as the subject for its

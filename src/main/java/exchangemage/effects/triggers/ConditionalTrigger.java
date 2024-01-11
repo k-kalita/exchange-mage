@@ -36,7 +36,5 @@ public class ConditionalTrigger implements Trigger {
      * @return <code>true</code> if the condition is fulfilled, <code>false</code> otherwise
      */
     @Override
-    public boolean isActivated() {
-        return condition.isFulfilled();
-    }
+    public boolean isActivated() {return condition.isFulfilled();}
 }

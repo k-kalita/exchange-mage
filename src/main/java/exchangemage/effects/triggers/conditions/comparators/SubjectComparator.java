@@ -1,6 +1,8 @@
-package exchangemage.effects.triggers.conditions;
+package exchangemage.effects.triggers.conditions.comparators;
 
 import exchangemage.base.GameState;
+import exchangemage.effects.triggers.conditions.ComparisonCondition;
+import exchangemage.effects.triggers.conditions.getters.SubjectGetter;
 
 /**
  * Base interface for all classes which are used to evaluate {@link ComparisonCondition}s by

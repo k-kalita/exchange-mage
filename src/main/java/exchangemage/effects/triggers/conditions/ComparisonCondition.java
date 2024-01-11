@@ -5,6 +5,8 @@ import java.util.Objects;
 import exchangemage.actors.Player;
 import exchangemage.actors.Actor;
 import exchangemage.effects.Effect;
+import exchangemage.effects.triggers.conditions.getters.SubjectGetter;
+import exchangemage.effects.triggers.conditions.comparators.SubjectComparator;
 
 /**
  * A {@link Condition} which compares a subject retrieved from the current game state by a

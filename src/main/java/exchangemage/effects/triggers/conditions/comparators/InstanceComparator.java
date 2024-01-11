@@ -1,6 +1,9 @@
-package exchangemage.effects.triggers.conditions;
+package exchangemage.effects.triggers.conditions.comparators;
 
 import java.util.Objects;
+
+import exchangemage.effects.triggers.conditions.ComparisonCondition;
+import exchangemage.effects.triggers.conditions.getters.SubjectGetter;
 
 /**
  * A {@link SubjectComparator} used to compare a subject to a given instance of that subject's type.

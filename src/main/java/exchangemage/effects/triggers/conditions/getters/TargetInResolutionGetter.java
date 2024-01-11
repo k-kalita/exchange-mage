@@ -1,7 +1,7 @@
-package exchangemage.effects.triggers.conditions;
+package exchangemage.effects.triggers.conditions.getters;
 
-import exchangemage.effects.targeting.Targetable;
 import exchangemage.base.GameState;
+import exchangemage.effects.targeting.Targetable;
 
 /**
  * A {@link SubclassGetter} which returns the target of the effect currently in resolution (provided

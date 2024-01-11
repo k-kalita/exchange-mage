@@ -10,7 +10,7 @@ import exchangemage.base.GameState;
 import exchangemage.effects.Effect;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
-import exchangemage.effects.triggers.conditions.SubjectComparator;
+import exchangemage.effects.triggers.conditions.comparators.SubjectComparator;
 
 public class VariableTargetSelector<T extends Targetable> extends TargetSelector<T> {
     /**
