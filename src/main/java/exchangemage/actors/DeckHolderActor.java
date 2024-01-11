@@ -8,6 +8,9 @@ import exchangemage.base.Observer;
 import exchangemage.cards.Deck;
 import exchangemage.cards.Card;
 import exchangemage.base.Observable;
+import exchangemage.scenes.Encounter;
+import exchangemage.effects.value.DamageEffect;
+import exchangemage.effects.value.HealEffect;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
 
@@ -17,7 +20,7 @@ import exchangemage.effects.deployers.PersistentEffectsHolder;
  * {@link Enemy} types are deck holders.
  * <br><br>
  * This base class also provides default implementations of the actor's {@link Observable} and
- * {@link PersistentEffectsHolder} methods.
+ * {@link PersistentEffectsHolder} methods. As well as logic related to the actor's health.
  *
  * @see Deck
  * @see Actor
@@ -39,14 +42,41 @@ public abstract class DeckHolderActor implements Actor {
     private final Set<Observer> observers = new HashSet<>();
 
     /**
-     * Constructs a new deck holder actor with the specified {@link Deck}.
+     * The maximum, starting health value of the enemy.
+     */
+    private final int maxHealth;
+
+    /**
+     * The current health value of the enemy.
+     */
+    private int currentHealth;
+
+    /**
+     * Whether the enemy has been damaged during current {@link Encounter}.
+     */
+    private boolean damagedThisEncounter = false;
+
+    /**
+     * Whether the enemy has been damaged during current turn.
+     */
+    private boolean damagedThisTurn = false;
+
+    /**
+     * Constructs a new deck holder actor with the specified {@link Deck} and maximum health.
      *
      * @param deck this actor's deck
-     * @throws NullPointerException if the deck is <code>null</code>
+     * @throws NullPointerException     if the deck is <code>null</code>
+     * @throws IllegalArgumentException if the max health is not positive
      */
-    public DeckHolderActor(Deck deck) {
+    public DeckHolderActor(Deck deck, int maxHealth, Set<PersistentEffect> persistentEffects) {
         Objects.requireNonNull(deck, "Actor's deck cannot be null.");
+        if (maxHealth <= 0)
+            throw new IllegalArgumentException("Actor's max health must be positive.");
         this.deck = deck;
+        this.maxHealth = maxHealth;
+        this.currentHealth = maxHealth;
+        if (persistentEffects != null)
+            persistentEffects.forEach(this::addPersistentEffect);
     }
 
     /**
@@ -55,6 +85,68 @@ public abstract class DeckHolderActor implements Actor {
      * @return this actor's deck
      */
     public Deck getDeck() {return this.deck;}
+
+    // ------------------------------------ health methods ------------------------------------ //
+
+    /**
+     * Receives the specified amount of damage and calls on the {@link #notifyOfEvent} method to
+     * alert {@link Observer}s and the {@link Encounter} of any relevant {@link ActorEvent}s.
+     * <br><br>
+     * It as a result of this method health is reduced to zero, the {@link #die} method is called.
+     *
+     * @param damage the amount of damage received (ignored if negative)
+     * @see Actor.ActorEvent
+     * @see DamageEffect
+     */
+    @Override
+    public void receiveDamage(int damage) {
+        if (damage <= 0)
+            return;
+
+        this.currentHealth = Math.max(0, this.currentHealth - damage);
+        notifyOfEvent(ActorEvent.DAMAGE_RECEIVED);
+
+        if (!this.damagedThisEncounter) {
+            this.damagedThisEncounter = true;
+            notifyOfEvent(ActorEvent.FIRST_DAMAGE_THIS_ENCOUNTER_RECEIVED);
+        }
+
+        if (!this.damagedThisTurn) {
+            this.damagedThisTurn = true;
+            notifyOfEvent(ActorEvent.FIRST_DAMAGE_THIS_TURN_RECEIVED);
+        }
+
+        if (this.currentHealth == 0)
+            die();
+    }
+
+    /**
+     * Heals the specified amount of health and calls on the {@link #notifyOfEvent} method to alert
+     * {@link Observer}s and the {@link Encounter} of any relevant {@link ActorEvent}s.
+     *
+     * @param healing the amount of healing received (ignored if negative)
+     * @see Actor.ActorEvent
+     * @see HealEffect
+     */
+    @Override
+    public void heal(int healing) {
+        if (healing <= 0)
+            return;
+
+        boolean healed = this.currentHealth < this.maxHealth;
+        this.currentHealth = Math.min(this.maxHealth, this.currentHealth + healing);
+        notifyOfEvent(ActorEvent.HEALING_RECEIVED);
+
+        if (this.currentHealth == this.maxHealth && healed)
+            notifyOfEvent(ActorEvent.MAX_HEALTH_REACHED);
+    }
+
+    /**
+     * Called when this actor's health is reduced to zero. Notifies {@link Observer}s and the
+     * {@link Encounter} of the {@link ActorEvent#DEATH} event.
+     */
+    @Override
+    public void die() {notifyOfEvent(ActorEvent.DEATH);}
 
     // -------------------------- persistent effects holder methods --------------------------- //
 
