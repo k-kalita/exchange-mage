@@ -1,12 +1,15 @@
 package exchangemage.actors;
 
-import exchangemage.base.Observer;
-import exchangemage.effects.deployers.PersistentEffect;
-import exchangemage.effects.targeting.Targetable;
-
 import java.util.Set;
 
-public class Player implements Actor {
+import exchangemage.cards.Deck;
+import exchangemage.effects.targeting.Targetable;
+
+public class Player extends DeckHolderActor {
+    public Player(Deck deck) {
+        super(deck);
+    }
+
     @Override
     public Set<Targetable> getTargetables() {
         return null;
@@ -23,32 +26,7 @@ public class Player implements Actor {
     }
 
     @Override
-    public void addObserver(Observer observer) {
+    public void heal(int healing) {
 
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-
-    }
-
-    @Override
-    public Set<Observer> getObservers() {
-        return null;
-    }
-
-    @Override
-    public void addPersistentEffect(PersistentEffect effect) {
-
-    }
-
-    @Override
-    public void removePersistentEffect(PersistentEffect effect) {
-
-    }
-
-    @Override
-    public Set<PersistentEffect> getPersistentEffects() {
-        return null;
     }
 }

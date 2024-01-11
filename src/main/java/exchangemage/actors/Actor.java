@@ -5,6 +5,7 @@ import java.util.Set;
 import exchangemage.scenes.Scene;
 import exchangemage.scenes.Encounter;
 import exchangemage.scenes.TurnPlayer;
+import exchangemage.effects.EffectSource;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.value.DamageEffect;
 import exchangemage.effects.value.HealEffect;
@@ -45,7 +46,7 @@ import exchangemage.effects.targeting.Targetable;
  *     </li>
  * </ul>
  */
-public interface Actor extends Targetable, PersistentEffectsHolder {
+public interface Actor extends Targetable, PersistentEffectsHolder, EffectSource {
     /**
      * Returns the set of {@link Targetable}s held by this actor (if any).
      *

@@ -53,6 +53,9 @@ public interface Targetable extends Observable {
         /**
          * Event used to notify {@link Observer}s that the {@link Targetable} object has been
          * deselected as the target for the {@link Effect} whose target is currently being chosen.
+         *
+         * @see Observer
+         * @see Effect
          */
         DESELECTED;
     }
