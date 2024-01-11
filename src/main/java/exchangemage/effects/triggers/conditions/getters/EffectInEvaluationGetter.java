@@ -6,7 +6,7 @@ import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.triggers.conditions.Condition;
 
 /**
- * A {@link SubclassGetter} which returns the {@link Effect} currently in resolution as the subject
+ * A {@link SubclassGetter} which returns the {@link Effect} currently in evaluation as the subject
  * for its {@link Condition} (provided that the current effect is an instance of the specified
  * effect type).
  *
@@ -15,16 +15,16 @@ import exchangemage.effects.triggers.conditions.Condition;
  * @see SubjectGetter
  * @see Effect
  */
-public class EffectInResolutionGetter<S extends Effect<?>> extends SubclassGetter<Effect<?>, S> {
+public class EffectInEvaluationGetter<S extends Effect<?>> extends SubclassGetter<Effect<?>, S> {
     /**
-     * Creates a new effect-in-resolution getter with given {@link Effect} subclass.
+     * Creates a new effect-in-evaluation getter with given {@link Effect} subclass.
      *
      * @param effectSubclass the class of {@link Effect} objects returned by this
      *                       {@link SubjectGetter}
      * @throws NullPointerException if the given effect class is <code>null</code>
-     * @see EffectPlayer#getEffectInResolution()
+     * @see EffectPlayer#getEffectInEvaluation()
      */
-    public EffectInResolutionGetter(Class<S> effectSubclass) {
-        super(GameState::getEffectInResolution, effectSubclass);
+    public EffectInEvaluationGetter(Class<S> effectSubclass) {
+        super(GameState::getEffectInEvaluation, effectSubclass);
     }
 }
