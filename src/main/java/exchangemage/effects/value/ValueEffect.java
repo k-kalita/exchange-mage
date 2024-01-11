@@ -141,7 +141,7 @@ public abstract class ValueEffect<T extends Targetable> extends Effect<T> {
      * Adds a new {@link ValueModifier} to the effect's list of value modifiers.
      *
      * @param valueModifier the value modifier to add
-     * @throws NullPointerException if the value modifier is <code>null</code>
+     * @throws NullPointerException     if the value modifier is <code>null</code>
      * @throws IllegalArgumentException if the value modifier has already been added
      * @see ValueModifier
      */

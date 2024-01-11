@@ -11,6 +11,7 @@ import exchangemage.effects.EffectPlayer;
  * @see Effect
  * @see EffectPlayer
  */
+@FunctionalInterface
 public interface Trigger {
     /**
      * Returns whether the {@link Trigger} is activated (i.e. whether the requirements of the

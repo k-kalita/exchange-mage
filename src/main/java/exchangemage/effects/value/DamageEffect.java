@@ -30,6 +30,36 @@ public class DamageEffect<T extends Actor> extends ValueEffect<T> {
     }
 
     /**
+     * Constructs a new damage effect with a basic {@link ValueGenerator} which always returns the
+     * specified value.
+     *
+     * @param value          the value held by the effect
+     * @param trigger        the {@link Trigger} of the effect
+     * @param targetSelector the {@link TargetSelector} of the effect
+     * @param resolutionMode the {@link ResolutionMode} of the effect
+     */
+    public DamageEffect(int value,
+                        Trigger trigger,
+                        TargetSelector<T> targetSelector,
+                        ResolutionMode resolutionMode) {
+        this(() -> value, trigger, targetSelector, resolutionMode);
+    }
+
+    /**
+     * Constructs a new damage effect with a basic {@link ValueGenerator} which always returns the
+     * specified value and a constant {@link Trigger} which always returns <code>true</code>.
+     *
+     * @param value          the value held by the effect
+     * @param targetSelector the {@link TargetSelector} of the effect
+     * @param resolutionMode the {@link ResolutionMode} of the effect
+     */
+    public DamageEffect(int value,
+                        TargetSelector<T> targetSelector,
+                        ResolutionMode resolutionMode) {
+        this(value, () -> true, targetSelector, resolutionMode);
+    }
+
+    /**
      * Deals damage to the target equal to the modified value of the effect.
      *
      * @see Actor#receiveDamage

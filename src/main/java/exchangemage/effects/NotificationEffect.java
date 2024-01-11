@@ -3,7 +3,6 @@ package exchangemage.effects;
 import exchangemage.base.Notification;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.scenes.Scene;
-import exchangemage.effects.triggers.ConstValueTrigger;
 import exchangemage.effects.targeting.selectors.SceneSelector;
 
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class NotificationEffect extends Effect<Scene> {
      * @see Effect
      */
     public NotificationEffect(Notification notification, EffectSource source) {
-        super(new ConstValueTrigger(true),
+        super(() -> true,
               new SceneSelector(),
               ResolutionMode.IMMEDIATE);
 
