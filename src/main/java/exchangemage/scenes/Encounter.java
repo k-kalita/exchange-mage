@@ -3,10 +3,14 @@ package exchangemage.scenes;
 import java.util.Objects;
 import java.util.Set;
 
+import exchangemage.base.Notification;
+import exchangemage.base.Observer;
+import exchangemage.base.Observable;
 import exchangemage.actors.Enemy;
 import exchangemage.actors.Actor;
 import exchangemage.actors.Player;
 import exchangemage.cards.Card;
+import exchangemage.effects.NotificationEffect;
 import exchangemage.effects.deployers.PersistentEffect;
 
 /**
@@ -18,6 +22,32 @@ import exchangemage.effects.deployers.PersistentEffect;
  * @see TurnPlayer
  */
 public class Encounter extends Scene {
+    /**
+     * An enum defining events specific to {@link Encounter} events. Can be used to notify
+     * {@link Encounter} {@link Observer}s and create {@link NotificationEffect}s used to trigger
+     * {@link PersistentEffect}s which activate at the start or end of an {@link Encounter}.
+     *
+     * @see Encounter
+     * @see NotificationEffect
+     * @see TurnPlayer.TurnPlayerEvent
+     */
+    public enum EncounterEvent implements Observable.Event, Notification {
+        /**
+         * Event used to notify {@link Observer}s that an {@link Encounter} has started.
+         *
+         * @see Observer
+         * @see Encounter
+         */
+        ENCOUNTER_START,
+        /**
+         * Event used to notify {@link Observer}s that an {@link Encounter} has ended.
+         *
+         * @see Observer
+         * @see Encounter
+         */
+        ENCOUNTER_END
+    }
+
     /**
      * The {@link TurnPlayer} used to manage the flow of turns during the encounter.
      */

@@ -8,7 +8,7 @@ import exchangemage.effects.triggers.Trigger;
  * A {@link ValueEffect} which deals damage to its target.
  *
  * @param <T> the type of {@link Actor} chosen by this effect's {@link TargetSelector}
- * @see Actor#takeDamage
+ * @see Actor#receiveDamage
  * @see ValueEffect
  */
 public class DamageEffect<T extends Actor> extends ValueEffect<T> {
@@ -32,8 +32,8 @@ public class DamageEffect<T extends Actor> extends ValueEffect<T> {
     /**
      * Deals damage to the target equal to the modified value of the effect.
      *
-     * @see Actor#takeDamage
+     * @see Actor#receiveDamage
      */
     @Override
-    public void execute() {getTarget().takeDamage(getModifiedValue());}
+    public void execute() {getTarget().receiveDamage(getModifiedValue());}
 }

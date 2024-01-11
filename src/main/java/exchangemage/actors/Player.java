@@ -21,12 +21,17 @@ public class Player extends DeckHolderActor {
     }
 
     @Override
-    public void takeDamage(int damage) {
+    public void receiveDamage(int damage) {
 
     }
 
     @Override
     public void heal(int healing) {
+
+    }
+
+    @Override
+    public void die() {
 
     }
 }
