@@ -398,6 +398,14 @@ public class EffectPlayer {
         if (target instanceof PersistentEffectsHolder)
             persistentEffects.addAll(((PersistentEffectsHolder) target).getPersistentEffects());
 
+        if (effectInResolution instanceof PersistentEffect)
+            persistentEffects.remove(effectInResolution);
+
+        persistentEffects.forEach(persistentEffect -> {
+            if (persistentEffect.getEffects().contains(effectInResolution))
+                persistentEffects.remove(persistentEffect);
+        });
+
         return persistentEffects;
     }
 
