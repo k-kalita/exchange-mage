@@ -1,5 +1,6 @@
 package exchangemage.effects;
 
+import exchangemage.actors.Player;
 import exchangemage.scenes.Encounter;
 import exchangemage.scenes.TestEncounters;
 import org.junit.jupiter.api.Assertions;
@@ -13,22 +14,43 @@ import exchangemage.actors.TestPlayers;
 
 class EffectPlayerTest {
     private Encounter encounter;
+    private Player player;
+    private EffectPlayer effectPlayer;
 
     @BeforeEach
     void setUp() {
-        TestGames.PLACEHOLDER.getGame();
-        Game.getGame().setPlayer(TestPlayers.PLACEHOLDER.getPlayer());
-        this.encounter = TestEncounters.PLACEHOLDER.getEncounter();
+        TestGames.PLACEHOLDER.get();
+        this.player = TestPlayers.PLACEHOLDER.get();
+        Game.getGame().setPlayer(this.player);
+        this.encounter = TestEncounters.PLACEHOLDER.get();
         Game.getGame().setScene(encounter);
+        this.effectPlayer = GameState.getEffectPlayer();
     }
 
     @Test
     void testBasicDamageEffectWithNoPersistentEffects() {
         int initialHealth = encounter.getEnemies().iterator().next().getCurrentHealth();
-        var effectPlayer = GameState.getEffectPlayer();
-        effectPlayer.evaluateEffect(TestEffects.DEAL_1_DAMAGE_TO_RANDOM_ENEMY.getEffect());
+
+        effectPlayer.evaluateEffect(TestEffects.DEAL_1_DAMAGE_TO_RANDOM_ENEMY.get());
         effectPlayer.resolveQueue();
+
         int finalHealth = encounter.getEnemies().iterator().next().getCurrentHealth();
         Assertions.assertEquals(initialHealth - 1, finalHealth);
+    }
+
+    @Test
+    void testBasicDamageEffectWithBasicPersistentEffect() {
+        int initialHealth = encounter.getEnemies().iterator().next().getCurrentHealth();
+        var damageEffect = TestEffects.DEAL_1_DAMAGE_TO_RANDOM_ENEMY.get();
+
+        damageEffect.setSource(player);
+        player.addPersistentEffect(
+                TestPersistentEffects.WHENEVER_ENEMY_IS_DAMAGED_DEAL_THEM_1_DAMAGE.get()
+        );
+        effectPlayer.evaluateEffect(damageEffect);
+        effectPlayer.resolveQueue();
+
+        int finalHealth = encounter.getEnemies().iterator().next().getCurrentHealth();
+        Assertions.assertEquals(initialHealth - 2, finalHealth);
     }
 }

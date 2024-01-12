@@ -7,12 +7,12 @@ import exchangemage.actors.TestEnemies;
 public enum TestEncounters {
     PLACEHOLDER {
         @Override
-        public Encounter getEncounter() {
+        public Encounter get() {
             return new Encounter(new BasicTurnPlayer(),
                                  Set.of(TestEnemies.PLACEHOLDER.getEnemy()));
         }
     },
     ;
 
-    public abstract Encounter getEncounter();
+    public abstract Encounter get();
 }

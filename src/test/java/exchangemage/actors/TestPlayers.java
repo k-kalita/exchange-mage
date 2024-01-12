@@ -5,11 +5,11 @@ import exchangemage.cards.TestDecks;
 public enum TestPlayers {
     PLACEHOLDER {
         @Override
-        public Player getPlayer() {
+        public Player get() {
             return new Player(TestDecks.EMPTY.getDeck(), 10);
         }
     },
     ;
 
-    public abstract Player getPlayer();
+    public abstract Player get();
 }
