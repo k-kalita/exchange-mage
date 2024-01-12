@@ -6,25 +6,17 @@ import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.triggers.conditions.Condition;
 
 /**
- * A {@link SubclassGetter} which returns the {@link Effect} currently in evaluation as the subject
- * for its {@link Condition} (provided that the current effect is an instance of the specified
- * effect type).
+ * A {@link SubjectGetter} which returns the {@link Effect} currently in evaluation as the subject
+ * for its {@link Condition}.
  *
- * @param <S> the type of {@link Effect} which can be returned by this {@link SubjectGetter}
- * @see SubclassGetter
  * @see SubjectGetter
  * @see Effect
+ * @see EffectPlayer
  */
-public class EffectInEvaluationGetter<S extends Effect<?>> extends SubclassGetter<Effect<?>, S> {
+public class EffectInEvaluationGetter implements SubjectGetter<Effect<?>> {
     /**
-     * Creates a new effect-in-evaluation getter with given {@link Effect} subclass.
-     *
-     * @param effectSubclass the class of {@link Effect} objects returned by this
-     *                       {@link SubjectGetter}
-     * @throws NullPointerException if the given effect class is <code>null</code>
-     * @see EffectPlayer#getEffectInEvaluation()
+     * @return the {@link Effect} currently being evaluated by the {@link EffectPlayer}
      */
-    public EffectInEvaluationGetter(Class<S> effectSubclass) {
-        super(GameState::getEffectInEvaluation, effectSubclass);
-    }
+    @Override
+    public Effect<?> getSubject() {return GameState.getEffectInEvaluation();}
 }

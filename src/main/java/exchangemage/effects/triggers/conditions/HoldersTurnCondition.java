@@ -56,11 +56,11 @@ public class HoldersTurnCondition extends ConditionStatement {
     private static ComparisonCondition<?> getHolderComparisonCondition() {
         var sourceInResolutionGetter = new EffectSourceGetter<>(
                 PersistentEffectsHolder.class,
-                new EffectInResolutionGetter<>(Effect.class)
+                new EffectInResolutionGetter()
         );
         var sourceInEvaluationGetter = new EffectSourceGetter<>(
                 PersistentEffectsHolder.class,
-                new EffectInEvaluationGetter<>(Effect.class)
+                new EffectInEvaluationGetter()
         );
 
         return new ComparisonCondition<>(sourceInResolutionGetter,

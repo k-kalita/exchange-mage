@@ -2,6 +2,7 @@ package exchangemage.effects.triggers.conditions.getters;
 
 import java.util.Objects;
 
+import exchangemage.base.GameState;
 import exchangemage.effects.value.ValueEffect;
 
 /**
@@ -36,8 +37,7 @@ public class EffectValueGetter implements SubjectGetter<Integer> {
      */
     @Override
     public Integer getSubject() {
-        var getter = new EffectInResolutionGetter<>(ValueEffect.class);
-        ValueEffect<?> effect = getter.getSubject();
-        return effect != null ? state.getValue(effect) : null;
+        var effect = GameState.getEffectInResolution();
+        return effect instanceof ValueEffect ? state.getValue((ValueEffect<?>) effect) : null;
     }
 }
