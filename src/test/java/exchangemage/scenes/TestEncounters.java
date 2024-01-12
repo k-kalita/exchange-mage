@@ -1,10 +1,15 @@
 package exchangemage.scenes;
 
+import java.util.Set;
+
+import exchangemage.actors.TestEnemies;
+
 public enum TestEncounters {
-    BASIC {
+    PLACEHOLDER {
         @Override
         public Encounter getEncounter() {
-            return null;
+            return new Encounter(new BasicTurnPlayer(),
+                                 Set.of(TestEnemies.PLACEHOLDER.getEnemy()));
         }
     },
     ;
