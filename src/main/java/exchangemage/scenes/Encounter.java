@@ -2,6 +2,7 @@ package exchangemage.scenes;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import exchangemage.base.Notification;
 import exchangemage.base.Observer;
@@ -55,13 +56,14 @@ public class Encounter extends Scene {
 
     /**
      * Constructs a new encounter with the specified {@link TurnPlayer}, {@link PersistentEffect}s,
-     * and {@link Enemy}s.
+     * and enemies.
      *
      * @param turnPlayer           the turn player used to manage the flow of turns during the
      *                             encounter
      * @param environmentalEffects the set of persistent effects active during the encounter
      * @param enemies              the set of enemies present during the encounter
      * @throws NullPointerException if the turn player or enemies are <code>null</code>
+     * @see Enemy
      */
     public Encounter(TurnPlayer turnPlayer,
                      Set<PersistentEffect> environmentalEffects,
@@ -74,6 +76,19 @@ public class Encounter extends Scene {
     }
 
     /**
+     * Constructs a new encounter with the specified {@link TurnPlayer} and enemies.
+     *
+     * @param turnPlayer the turn player used to manage the flow of turns during the encounter
+     * @param enemies    the set of enemies present during the encounter
+     * @throws NullPointerException if the turn player or enemies are <code>null</code>
+     * @see Enemy
+     */
+    public Encounter(TurnPlayer turnPlayer,
+                     Set<Enemy> enemies) {
+        this(turnPlayer, null, enemies);
+    }
+
+    /**
      * Starts the encounter by initializing  and starting the {@link #turnPlayer}.
      *
      * @see TurnPlayer
@@ -82,5 +97,24 @@ public class Encounter extends Scene {
     public void start() {
         turnPlayer.init(this);
         turnPlayer.start();
+    }
+
+    /**
+     * @return the enemies present in the {@link Encounter}
+     * @see Enemy
+     */
+    public Set<Enemy> getEnemies() {
+        return actors.stream()
+                     .filter(actor -> actor instanceof Enemy)
+                     .map(actor -> (Enemy) actor)
+                     .collect(Collectors.toSet());
+    }
+
+    /**
+     * @return <code>true</code> if any enemies are alive, <code>false</code> otherwise
+     * @see Enemy
+     */
+    public boolean enemiesAlive() {
+        return getEnemies().stream().anyMatch(actor -> !actor.isDead());
     }
 }

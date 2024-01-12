@@ -148,6 +148,23 @@ public abstract class DeckHolderActor implements Actor {
     @Override
     public void die() {notifyOfEvent(ActorEvent.DEATH);}
 
+    /**
+     * @return <code>true</code> if this actor's {@link #currentHealth} is zero,
+     * <code>false</code> otherwise
+     */
+    @Override
+    public boolean isDead() {return this.currentHealth == 0;}
+
+    /**
+     * @return this actor's {@link #maxHealth}
+     */
+    public int getMaxHealth() {return this.maxHealth;}
+
+    /**
+     * @return this actor's {@link #currentHealth}
+     */
+    public int getCurrentHealth() {return this.currentHealth;}
+
     // -------------------------- persistent effects holder methods --------------------------- //
 
     @Override

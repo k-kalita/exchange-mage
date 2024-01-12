@@ -6,6 +6,6 @@ import exchangemage.effects.targeting.Targetable;
 
 public class Deck {
     public Set<Targetable> getTargetables() {
-        return null;
+        return Set.of();
     }
 }

@@ -10,7 +10,6 @@ import exchangemage.base.Observer;
 import exchangemage.scenes.Scene;
 import exchangemage.scenes.Encounter;
 import exchangemage.scenes.TurnPlayer;
-import exchangemage.effects.EffectSource;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.NotificationEffect;
 import exchangemage.effects.value.DamageEffect;
@@ -133,6 +132,11 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
      * Describes the behavior of this actor when its health is depleted.
      */
     void die();
+
+    /**
+     * @return <code>true</code> if this actor is dead, <code>false</code> otherwise
+     */
+    boolean isDead();
 
     /**
      * Notifies this actor's {@link Observer}s of the specified {@link ActorEvent} and calls
