@@ -12,6 +12,10 @@ public class Player extends DeckHolderActor {
         super(deck, maxHealth, persistentEffects);
     }
 
+    public Player(Deck deck, int maxHealth) {
+        super(deck, maxHealth, null);
+    }
+
     @Override
     public Set<Targetable> getTargetables() {
         Set<Targetable> targetables = new HashSet<>(this.getPersistentEffects());

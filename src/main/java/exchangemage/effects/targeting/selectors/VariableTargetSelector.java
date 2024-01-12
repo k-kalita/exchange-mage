@@ -154,6 +154,20 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
     }
 
     /**
+     * Creates a new {@link VariableTargetSelector} with given target class and targeting mode.
+     *
+     * @param targetClass   the class of the {@link Targetable} objects selected by this selector
+     * @param targetingMode the {@link TargetingMode} used by this {@link VariableTargetSelector}
+     *                      to select a target
+     * @throws NullPointerException if the given target class or targeting mode is <code>null</code>
+     * @see TargetingMode
+     */
+    public VariableTargetSelector(Class<T> targetClass,
+                                  TargetingMode targetingMode) {
+        this(targetClass, null, targetingMode);
+    }
+
+    /**
      * Returns a set of {@link Targetable}s from which a valid target can be selected. The set is
      * filtered by the {@link #targetFilter} if the selector has one (and against the set of
      * forbidden targets).
