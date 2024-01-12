@@ -133,6 +133,7 @@ public abstract class ValueEffect<T extends Targetable> extends Effect<T> {
     public boolean selectTarget(Set<Targetable> forbiddenTargets) {
         if (super.selectTarget(forbiddenTargets)) {
             this.originalValue = valueGenerator.generate();
+            return true;
         }
         return false;
     }
