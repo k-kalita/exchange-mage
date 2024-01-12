@@ -40,7 +40,7 @@ public class NotificationEffect extends Effect<Scene> {
     public NotificationEffect(Notification notification, EffectSource source) {
         super(() -> true,
               new SceneSelector(),
-              ResolutionMode.IMMEDIATE);
+              ResolutionMode.ENQUEUE_ON_TOP);
 
         Objects.requireNonNull(
                 notification,

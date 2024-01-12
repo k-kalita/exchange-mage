@@ -2,7 +2,6 @@ package exchangemage.effects;
 
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Queue;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
@@ -90,7 +89,7 @@ public class EffectPlayer {
     /**
      * The queue of {@link Effect}s to be resolved.
      */
-    private final Queue<Effect<?>> resolutionQueue = new LinkedList<>();
+    private final LinkedList<Effect<?>> resolutionQueue = new LinkedList<>();
 
 
     /**
@@ -229,6 +228,7 @@ public class EffectPlayer {
 
         switch (effect.getResolutionMode()) {
             case ENQUEUE -> enqueueEffect(effect);
+            case ENQUEUE_ON_TOP -> enqueueEffectOnTop(effect);
             case IMMEDIATE -> resolveEffectImmediately(effect);
             default -> throw new IllegalStateException(
                     "Effect resolution mode not recognized: " + effect.getResolutionMode()
@@ -252,6 +252,24 @@ public class EffectPlayer {
             throw new IllegalStateException("Cannot enqueue effect with no target.");
 
         this.resolutionQueue.add(effect);
+    }
+
+    /**
+     * Enqueues given {@link Effect} on top of the resolution queue.
+     *
+     * @param effect the effect to enqueue
+     * @throws NullPointerException  if the effect is null
+     * @throws IllegalStateException if the effect has no target
+     * @see Effect
+     * @see TargetingManager
+     */
+    private void enqueueEffectOnTop(Effect<?> effect) {
+        Objects.requireNonNull(effect, "Effect to enqueue cannot be null.");
+
+        if (!effect.hasTarget())
+            throw new IllegalStateException("Cannot enqueue effect with no target.");
+
+        this.resolutionQueue.addFirst(effect);
     }
 
     /**

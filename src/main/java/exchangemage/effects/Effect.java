@@ -113,7 +113,18 @@ public abstract class Effect<T extends Targetable> implements Targetable {
          * @see Effect
          * @see EffectPlayer
          */
-        ENQUEUE
+        ENQUEUE,
+        /**
+         * Indicates that the {@link Effect} should be enqueued onto the top of the resolution queue
+         * of the {@link EffectPlayer} and resolved immediately after the effect currently being
+         * resolved (unless other effects with this or {@link #IMMEDIATE} resolution mode are
+         * evaluated in the meantime).
+         * <br><br>
+         * This resolution mode is used by effects which should be resolved immediately after the
+         * effect that activated them (e.g. {@link NotificationEffect}s triggered by an
+         * {@link Actor} being damaged).
+         */
+        ENQUEUE_ON_TOP;
     }
 
     /**
