@@ -18,5 +18,5 @@ public class EffectInResolutionGetter implements SubjectGetter<Effect<?>> {
      * @return the {@link Effect} currently being resolved by the {@link EffectPlayer}
      */
     @Override
-    public Effect<?> getSubject() {return GameState.getEffectInEvaluation();}
+    public Effect<?> getSubject() {return GameState.getEffectInResolution();}
 }
