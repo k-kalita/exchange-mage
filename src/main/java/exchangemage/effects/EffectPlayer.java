@@ -220,10 +220,10 @@ public class EffectPlayer {
             throw new IllegalStateException("There is already an effect in evaluation.");
 
         this.effectInEvaluation = effect;
-        if (!effect.isTriggered())
+        if (!effect.isTriggered() || !this.targetingManager.selectTarget(effect)) {
+            this.effectInEvaluation = null;
             return;
-        if (!this.targetingManager.selectTarget(effect))
-            return;
+        }
         this.effectInEvaluation = null;
 
         switch (effect.getResolutionMode()) {
@@ -234,6 +234,22 @@ public class EffectPlayer {
                     "Effect resolution mode not recognized: " + effect.getResolutionMode()
             );
         }
+    }
+
+    /**
+     * Evaluates given {@link Effect} immediately, regardless of whether there is another effect
+     * being evaluated or not. If an evaluation of another effect is interrupted by this method,
+     * it is resumed after the evaluation process of this effect is finished.
+     *
+     * @param effect the effect to evaluate
+     * @throws NullPointerException if the given effect is null
+     * @see EffectPlayer#evaluateEffect
+     */
+    public void evaluateEffectImmediately(Effect<?> effect) {
+        var currentEffect = this.effectInEvaluation;
+        this.effectInEvaluation = null;
+        evaluateEffect(effect);
+        this.effectInEvaluation = currentEffect;
     }
 
     /**
