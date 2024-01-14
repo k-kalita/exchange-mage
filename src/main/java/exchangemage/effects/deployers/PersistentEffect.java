@@ -1,5 +1,10 @@
 package exchangemage.effects.deployers;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import exchangemage.base.GameState;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
@@ -9,11 +14,6 @@ import exchangemage.effects.targeting.selectors.SceneSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.scenes.Scene;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * An {@link EffectDeployer} used to represent a persistent environmental/actor-specific
@@ -38,25 +38,26 @@ public class PersistentEffect extends EffectDeployer<Scene> {
     private final EffectPlayer.EffectResolutionStage activationStage;
 
     /**
-     * Constructs a {@link PersistentEffect} with given stored {@link Effect}s, activation stage and
-     * {@link Trigger}.
-     *
-     * @param effects         effects stored within the PersistentEffect
-     * @param activationStage activation stage of the persistent effect
-     * @param trigger         trigger of the persistent effect
-     * @throws NullPointerException     if the effects list is null
+     * @param description     the persistent effect's description
+     * @param effects         {@link Effect}s to be stored within the persistent effect
+     * @param activationStage the persistent effect's {@link #activationStage}
+     * @param trigger         the persistent effect's {@link Trigger}, used by the
+     *                        {@link EffectPlayer} to determine whether it should be resolved
+     * @throws NullPointerException     if the effects list, activation stage or trigger are
+     *                                  <code>null</code>
      * @throws IllegalArgumentException if the effects list is empty
-     * @see Effect
      * @see EffectPlayer.EffectResolutionStage
-     * @see Trigger
      */
-    public PersistentEffect(List<Effect<?>> effects,
+    public PersistentEffect(String description,
+                            List<Effect<?>> effects,
                             EffectPlayer.EffectResolutionStage activationStage,
                             Trigger trigger) {
-        super(effects,
+        super(description,
+              effects,
               trigger,
               new SceneSelector(),
               ResolutionMode.IMMEDIATE);
+        Objects.requireNonNull(activationStage, "Activation stage cannot be null.");
         this.activationStage = activationStage;
     }
 
@@ -80,22 +81,13 @@ public class PersistentEffect extends EffectDeployer<Scene> {
         effects.forEach(effect -> effect.setSource(effectHolder));
     }
 
-    /**
-     * Returns the activation stage of the {@link PersistentEffect}.
-     *
-     * @return the activation stage of the persistent effect
-     * @see EffectPlayer.EffectResolutionStage
-     * @see PersistentEffect
-     */
+    /** @return the {@link #activationStage} of the persistent effect */
     public EffectPlayer.EffectResolutionStage getActivationStage() {return this.activationStage;}
 
     /**
      * Calls the {@link EffectPlayer#evaluateEffect} method for all of its stored {@link Effect}s
      * which managed to find a target when the {@link PersistentEffect#selectTarget} method was
      * called.
-     *
-     * @see EffectPlayer
-     * @see PersistentEffect
      */
     @Override
     public void execute() {
@@ -111,8 +103,8 @@ public class PersistentEffect extends EffectDeployer<Scene> {
      * @param forbiddenTargets the set of forbidden targets to exclude from the selection process
      * @return <code>true</code> if at least one of the stored effects successfully found a target,
      * <code>false</code> otherwise
+     * @see TargetSelector
      * @see Targetable
-     * @see Effect
      */
     @Override
     public boolean selectTarget(Set<Targetable> forbiddenTargets) {

@@ -41,6 +41,7 @@ public enum TestPersistentEffects {
             ));
 
             return new PersistentEffect(
+                    "Whenever an enemy is damaged, deal them 1 damage",
                     List.of(TestEffects.DEAL_1_DAMAGE_TO_CURRENTLY_TARGETED_ENEMY.get()),
                     EffectResolutionStage.RESPONSE,
                     new ConditionalTrigger(conditionStatement)

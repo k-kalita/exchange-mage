@@ -22,38 +22,45 @@ import exchangemage.effects.triggers.Trigger;
  * health is above 50%, deal further 2 damage</i>).
  *
  * @param <T> the type of target chosen by the deployer's {@link TargetSelector} and the underlying
- * effects
+ *            effects
  * @see Effect
  * @see EffectDeployer
  */
 public class EffectPacket<T extends Targetable> extends EffectDeployer<T> {
     /**
-     * Constructs an {@link EffectPacket} with given {@link Effect}s, {@link Trigger},
-     * {@link TargetSelector} and {@link ResolutionMode}.
-     *
-     * @param effects        effects to be stored in this effect packet
-     * @param trigger        trigger of the effect
-     * @param targetSelector target selector of the effect
-     * @param resolutionMode resolution mode of the effect
-     * @throws NullPointerException     if the effects list is null
+     * @param effects        {@link Effect}s to be stored in the packet
+     * @param trigger        the packet's {@link Trigger}, used by the {@link EffectPlayer} to
+     *                       determine whether it should be resolved
+     * @param targetSelector the packet's {@link TargetSelector}, used to choose its target
+     *                       (and the target for all the effects stored within it)
+     * @param resolutionMode the packet's {@link ResolutionMode}, used by the effect player to
+     *                       determine how the packet should be resolved
+     * @throws NullPointerException     if the effects list, trigger, target selector or resolution
+     *                                  mode is <code>null</code>
      * @throws IllegalArgumentException if the effects list is empty
-     * @see Effect
-     * @see Trigger
-     * @see TargetSelector
-     * @see ResolutionMode
      */
     public EffectPacket(List<Effect<T>> effects,
                         Trigger trigger,
                         TargetSelector<T> targetSelector,
                         ResolutionMode resolutionMode) {
-        super(effects, trigger, targetSelector, resolutionMode);
+        super(generateDescription(effects), effects, trigger, targetSelector, resolutionMode);
+    }
+
+    /**
+     * @param effects {@link Effect}s to be stored in the packet
+     * @return the {@link EffectPacket}'s description based on the descriptions of the effects
+     * stored within it
+     */
+    private static String generateDescription(List<? extends Effect<?>> effects) {
+        StringBuilder description = new StringBuilder();
+        description.append("Effect packet containing:\n");
+        effects.forEach(effect -> description.append(effect.getDescription()).append("\n"));
+        return description.toString();
     }
 
     /**
      * Calls on the {@link EffectPlayer} to evaluate the {@link Effect}s stored in this
      * {@link EffectPacket}.
-     *
-     * @see EffectPlayer
      */
     @Override
     public void execute() {
@@ -86,8 +93,6 @@ public class EffectPacket<T extends Targetable> extends EffectDeployer<T> {
      * {@link Effect}s stored within it.
      *
      * @param source the source of the effect
-     * @see EffectSource
-     * @see Effect
      */
     @Override
     public void setSource(EffectSource source) {

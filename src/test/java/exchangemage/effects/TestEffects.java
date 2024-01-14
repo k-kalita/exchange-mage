@@ -14,7 +14,8 @@ public enum TestEffects {
         @Override
         public Effect<?> get() {
             var targetSelector = new VariableTargetSelector<>(Enemy.class, TargetingMode.RANDOM);
-            return new DamageEffect<>(1, targetSelector, Effect.ResolutionMode.ENQUEUE);
+            return new DamageEffect<>("Deal 1 damage to a random enemy",
+                                      1, targetSelector, Effect.ResolutionMode.ENQUEUE);
         }
 
     },
@@ -25,7 +26,8 @@ public enum TestEffects {
                     new EffectTargetGetter<>(Enemy.class, new EffectInResolutionGetter()),
                     Enemy.class
             );
-            return new DamageEffect<>(1, targetSelector, Effect.ResolutionMode.ENQUEUE);
+            return new DamageEffect<>("Deal 1 damage to the currently targeted enemy",
+                                      1, targetSelector, Effect.ResolutionMode.ENQUEUE);
         }
     },
     DEAL_1_DAMAGE_TO_SOURCE_ENEMY {
@@ -35,10 +37,10 @@ public enum TestEffects {
                     new EffectSourceGetter<>(Enemy.class, new EffectInResolutionGetter()),
                     Enemy.class
             );
-            return new DamageEffect<>(1, targetSelector, Effect.ResolutionMode.ENQUEUE);
+            return new DamageEffect<>("Deal 1 damage to the source enemy",
+                                      1, targetSelector, Effect.ResolutionMode.ENQUEUE);
         }
-    }
-    ;
+    };
 
     public abstract Effect<?> get();
 }

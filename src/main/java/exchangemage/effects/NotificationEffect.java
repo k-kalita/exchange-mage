@@ -12,33 +12,25 @@ import java.util.Objects;
  * events which could potentially trigger them (e.g. <i>the start of a new turn</i> or <i>an
  * enemy's death</i>).
  * <br><br>
- * {@link EffectSource}s which are responsible for reporting such events should implement their own
+ * Classes which are responsible for reporting such events should implement their own
  * {@link Notification}s to represent the events related persistent effects might be interested in.
  *
  * @see Effect
  * @see PersistentEffect
  */
 public class NotificationEffect extends Effect<Scene> {
-    /**
-     * The {@link Notification} used to represent the event this {@link NotificationEffect} is
-     * alerting of.
-     */
+    /** The {@link Notification} representing the event this effect is alerting of. */
     private final Notification notification;
 
     /**
-     * Creates a new {@link NotificationEffect} with given {@link Notification} and {@link
-     * EffectSource}. The source should be the object which is responsible for reporting the event
-     * this {@link Effect} is alerting of.
-     *
-     * @param notification the notification used to represent the event this effect is alerting of
-     * @param source       object reporting the event
+     * @param notification the {@link Notification} used to represent the event this
+     *                     effect is alerting of
+     * @param source       {@link EffectSource} which this notification effect pertains to
      * @throws NullPointerException if the notification or source are null
-     * @see Notification
-     * @see EffectSource
-     * @see Effect
      */
     public NotificationEffect(Notification notification, EffectSource source) {
-        super(() -> true,
+        super(null,
+              () -> true,
               new SceneSelector(),
               ResolutionMode.ENQUEUE_ON_TOP);
 
@@ -55,6 +47,10 @@ public class NotificationEffect extends Effect<Scene> {
         setSource(source);
     }
 
+    /** @return a description generated with the help of the {@link Notification#getText} method */
+    @Override
+    public String toString() {return "Notifies of: " + this.notification.getText(getSource());}
+
     /**
      * This method does not have any effect.
      * <br><br>
@@ -66,12 +62,10 @@ public class NotificationEffect extends Effect<Scene> {
     @Override
     public void execute() {}
 
-    /**
-     * Returns the {@link Notification} used to represent the event this {@link NotificationEffect}
-     * is alerting of.
-     *
-     * @return this effect's notification
-     * @see Notification
-     */
+    /** @return a description generated with the help of the {@link Notification#getText} method */
+    @Override
+    public String getDescription() {return this.toString();}
+
+    /** @return this effect's {@link #notification} */
     public Notification getNotification() {return notification;}
 }

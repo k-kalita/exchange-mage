@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import exchangemage.effects.deployers.EffectDeployer;
 import exchangemage.effects.deployers.PersistentEffect;
+import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.deployers.SequentialEffect;
 import exchangemage.effects.value.ValueEffect;
 import exchangemage.scenes.Scene;
@@ -51,40 +52,8 @@ import exchangemage.effects.targeting.selectors.TargetSelector;
  */
 public abstract class Effect<T extends Targetable> implements Targetable {
     /**
-     * The {@link EffectSource} of the {@link Effect}. Indicates the origin of the effect (e.g. the
-     * card it was played from or the {@link PersistentEffect} that deployed it).
-     */
-    protected EffectSource source;
-
-    /**
-     * The {@link Trigger} of the {@link Effect}. Represents the conditions which must be met for
-     * given effect to be resolved by the {@link EffectPlayer}.
-     */
-    private final Trigger trigger;
-
-    /**
-     * The {@link ResolutionMode} of the {@link Effect}. Indicates to the {@link EffectPlayer}
-     * what should be done with the effect upon its activation.
-     */
-    private final ResolutionMode resolutionMode;
-
-    /**
-     * The {@link TargetSelector} of the {@link Effect}. Used to choose the target of the effect.
-     */
-    private final TargetSelector<T> targetSelector;
-
-    /**
-     * A set of {@link Observer}s of the {@link Effect}.
-     */
-    private final Set<Observer> observers;
-
-    /**
      * An enum indicating to the {@link EffectPlayer} what should be done with an {@link Effect}
-     * upon its activation.
-     *
-     * @see Effect
-     * @see EffectPlayer
-     * @see Trigger
+     * upon its successful evaluation.
      */
     public enum ResolutionMode {
         /**
@@ -123,23 +92,52 @@ public abstract class Effect<T extends Targetable> implements Targetable {
          * This resolution mode is used by effects which should be resolved immediately after the
          * effect that activated them (e.g. {@link NotificationEffect}s triggered by an
          * {@link Actor} being damaged).
+         *
+         * @see Effect
+         * @see EffectPlayer
          */
         ENQUEUE_ON_TOP;
     }
 
+    /** Description providing basic information about the {@link Effect}. */
+    private final String description;
+
     /**
-     * Constructs an {@link Effect} with given {@link Trigger}, {@link TargetSelector} and
-     * {@link ResolutionMode}.
-     *
-     * @param trigger        trigger of the effect
-     * @param targetSelector target selector of the effect
-     * @param resolutionMode resolution mode of the effect
-     * @throws NullPointerException if any of the provided parameters are <code>null</code>
-     * @see Trigger
-     * @see TargetSelector
-     * @see ResolutionMode
+     * The {@link EffectSource} of the {@link Effect}. Indicates the origin of the effect (e.g. the
+     * card it was played from or the {@link PersistentEffectsHolder} from which it was deployed).
      */
-    public Effect(Trigger trigger,
+    protected EffectSource source;
+
+    /**
+     * The {@link Trigger} of the {@link Effect}. Represents the conditions which must be met for
+     * given effect to be resolved by the {@link EffectPlayer}.
+     */
+    private final Trigger trigger;
+
+    /**
+     * The {@link ResolutionMode} of the {@link Effect}. Indicates to the {@link EffectPlayer}
+     * what should be done with the effect upon its activation.
+     */
+    private final ResolutionMode resolutionMode;
+
+    /** The {@link TargetSelector} of the {@link Effect}. Used to choose its target. */
+    private final TargetSelector<T> targetSelector;
+
+    /** A set of {@link Observer}s of the {@link Effect}. */
+    private final Set<Observer> observers;
+
+    /**
+     * @param description    description of the effect
+     * @param trigger        the effect's {@link Trigger}, used by the {@link EffectPlayer} to
+     *                       determine whether it should be resolved
+     * @param targetSelector the effect's {@link TargetSelector}, used to choose its target
+     * @param resolutionMode the effect's {@link ResolutionMode}, used by the effect player to
+     *                       determine how the effect should be resolved
+     * @throws NullPointerException if the trigger, target selector or resolution mode is
+     *                              <code>null</code>
+     */
+    public Effect(String description,
+                  Trigger trigger,
                   TargetSelector<T> targetSelector,
                   ResolutionMode resolutionMode) {
         Objects.requireNonNull(trigger, "Cannot create effect with null trigger.");
@@ -148,12 +146,17 @@ public abstract class Effect<T extends Targetable> implements Targetable {
         Objects.requireNonNull(resolutionMode,
                                "Cannot create effect with null resolution mode.");
 
+        this.description = description != null ? description : "";
         this.source = null;
         this.observers = new HashSet<>();
         this.trigger = trigger;
         this.targetSelector = targetSelector;
         this.resolutionMode = resolutionMode;
     }
+
+    /** @return the description of the {@link Effect} */
+    @Override
+    public String toString() {return this.description;}
 
     // ------------------------------- evaluation & resolution -------------------------------- //
 
@@ -163,28 +166,18 @@ public abstract class Effect<T extends Targetable> implements Targetable {
      *
      * @return <code>true</code> if the trigger of the effect is activated, <code>false</code>
      * otherwise
-     * @see Trigger
-     * @see Effect
-     * @see EffectPlayer
      */
     public boolean isTriggered() {return this.trigger.isActivated();}
 
     /**
      * Executes the {@link Effect}. This method is called by the {@link EffectPlayer} at the end
      * of the resolution process.
-     *
-     * @see Effect
-     * @see EffectPlayer
      */
     public abstract void execute();
 
     /**
-     * Checks if the {@link TargetSelector} of the {@link Effect} has a target by calling its
-     * {@link TargetSelector#hasTarget()} method.
-     *
-     * @return <code>true</code> if the target selector of the effect has a target,
+     * @return <code>true</code> if the {@link TargetSelector} of the {@link Effect} has a target,
      * <code>false</code> otherwise
-     * @see TargetSelector
      */
     public boolean hasTarget() {return this.targetSelector.hasTarget();}
 
@@ -206,59 +199,33 @@ public abstract class Effect<T extends Targetable> implements Targetable {
 
     // --------------------------------- getters and setters ---------------------------------- //
 
-    /**
-     * Returns the {@link EffectSource} of the {@link Effect}.
-     *
-     * @return the source of the effect
-     * @see EffectSource
-     * @see Effect
-     */
+    /** @return the description of the {@link Effect} */
+    public String getDescription() {return this.description;}
+
+    /** @return the {@link EffectSource} of the {@link Effect} */
     public EffectSource getSource() {return this.source;}
 
     /**
-     * Sets the {@link EffectSource} of the {@link Effect}.
+     * Sets the {@link #source} of the {@link Effect}.
      *
-     * @param source the source of the effect
+     * @param source the {@link EffectSource} to set
      * @throws NullPointerException if the given source is <code>null</code>
-     * @see EffectSource
-     * @see Effect
      */
     public void setSource(EffectSource source) {
         Objects.requireNonNull(source, "Cannot set null source of effect.");
         this.source = source;
     }
 
-    /**
-     * Returns the {@link Trigger} of the {@link Effect}.
-     *
-     * @return the trigger of the effect
-     * @see Trigger
-     */
+    /** @return the {@link Trigger} of the {@link Effect} */
     public Trigger getTrigger() {return this.trigger;}
 
-    /**
-     * Returns the {@link ResolutionMode} of the {@link Effect}.
-     *
-     * @return the resolution mode of the effect
-     * @see ResolutionMode
-     */
+    /** @return the {@link ResolutionMode} of the {@link Effect} */
     public ResolutionMode getResolutionMode() {return this.resolutionMode;}
 
-    /**
-     * Returns the {@link TargetSelector} of the {@link Effect}.
-     *
-     * @return the target selector of the effect
-     * @see TargetSelector
-     */
+    /** @return the {@link TargetSelector} of the {@link Effect} */
     public TargetSelector<T> getTargetSelector() {return this.targetSelector;}
 
-    /**
-     * Returns the target of the {@link Effect} from its {@link TargetSelector}.
-     *
-     * @return the target of the effect
-     * @see Targetable
-     * @see TargetSelector
-     */
+    /** @return the target of the {@link Effect} from its {@link TargetSelector} */
     public T getTarget() {return this.targetSelector.getTarget();}
 
     // --------------------------------- observable methods ----------------------------------- //

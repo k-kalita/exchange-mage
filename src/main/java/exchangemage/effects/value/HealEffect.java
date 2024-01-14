@@ -1,6 +1,7 @@
 package exchangemage.effects.value;
 
 import exchangemage.actors.Actor;
+import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.targeting.selectors.TargetSelector;
 import exchangemage.effects.triggers.Trigger;
 
@@ -13,50 +14,53 @@ import exchangemage.effects.triggers.Trigger;
  */
 public class HealEffect<T extends Actor> extends ValueEffect<T> {
     /**
-     * Constructs a new heal effect with the specified {@link ValueGenerator}, {@link Trigger},
-     * {@link TargetSelector}, and {@link ResolutionMode}.
-     *
-     * @param valueGenerator the value generator used to generate the value of the effect
-     * @param trigger        the trigger of the effect
-     * @param targetSelector the target selector of the effect
-     * @param resolutionMode the resolution mode of the effect
-     * @throws NullPointerException if any of the arguments are <code>null</code>
+     * @param description    the effect's description
+     * @param valueGenerator the effect's {@link ValueGenerator}
+     * @param trigger        the effect's {@link Trigger}, used by the {@link EffectPlayer} to
+     *                       determine whether it should be resolved
+     * @param targetSelector the effect's {@link TargetSelector}, used to choose its target
+     * @param resolutionMode the effect's {@link ResolutionMode}, used by the effect player to
+     *                       determine how the effect should be resolved
+     * @throws NullPointerException if value generator, trigger, target selector, or resolution
+     *                              mode is <code>null</code>
      */
-    public HealEffect(ValueGenerator valueGenerator,
+    public HealEffect(String description,
+                      ValueGenerator valueGenerator,
                       Trigger trigger,
                       TargetSelector<T> targetSelector,
                       ResolutionMode resolutionMode) {
-        super(valueGenerator, trigger, targetSelector, resolutionMode);
+        super(description, valueGenerator, trigger, targetSelector, resolutionMode);
     }
 
     /**
-     * Constructs a new heal effect with a basic {@link ValueGenerator} which always returns the
-     * specified value.
-     *
+     * @param description    the effect's description
      * @param value          the value held by the effect
-     * @param trigger        the {@link Trigger} of the effect
-     * @param targetSelector the {@link TargetSelector} of the effect
-     * @param resolutionMode the {@link ResolutionMode} of the effect
+     * @param trigger        the effect's {@link Trigger}, used by the {@link EffectPlayer} to
+     *                       determine whether it should be resolved
+     * @param targetSelector the effect's {@link TargetSelector}, used to choose its target
+     * @param resolutionMode the effect's {@link ResolutionMode}, used by the effect player to
+     *                       determine how the effect should be resolved
      */
-    public HealEffect(int value,
+    public HealEffect(String description,
+                      int value,
                       Trigger trigger,
                       TargetSelector<T> targetSelector,
                       ResolutionMode resolutionMode) {
-        this(() -> value, trigger, targetSelector, resolutionMode);
+        this(description, () -> value, trigger, targetSelector, resolutionMode);
     }
 
     /**
-     * Constructs a new heal effect with a basic {@link ValueGenerator} which always returns the
-     * specified value and a constant {@link Trigger} which always returns <code>true</code>.
-     *
+     * @param description    the effect's description
      * @param value          the value held by the effect
-     * @param targetSelector the {@link TargetSelector} of the effect
-     * @param resolutionMode the {@link ResolutionMode} of the effect
+     * @param targetSelector the effect's {@link TargetSelector}, used to choose its target
+     * @param resolutionMode the effect's {@link ResolutionMode}, used by the effect player to
+     *                       determine how the effect should be resolved
      */
-    public HealEffect(int value,
+    public HealEffect(String description,
+                      int value,
                       TargetSelector<T> targetSelector,
                       ResolutionMode resolutionMode) {
-        this(value, () -> true, targetSelector, resolutionMode);
+        this(description, value, () -> true, targetSelector, resolutionMode);
     }
 
     /**

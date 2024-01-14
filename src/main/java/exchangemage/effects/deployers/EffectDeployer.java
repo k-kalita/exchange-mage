@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectSource;
+import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.targeting.selectors.TargetSelector;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.triggers.Trigger;
@@ -20,31 +21,27 @@ import exchangemage.effects.triggers.Trigger;
  * @see Effect
  */
 public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
-    /**
-     * A list of {@link Effect}s stored by this {@link EffectDeployer}.
-     */
+    /** A list of {@link Effect}s stored by this {@link EffectDeployer}. */
     protected List<? extends Effect<?>> effects;
 
     /**
-     * Constructs an {@link EffectDeployer} with given {@link Trigger}, {@link TargetSelector},
-     * {@link ResolutionMode} and list of {@link Effect}s.
-     *
-     * @param effects        effects stored by the deployer
-     * @param trigger        trigger of the effect
-     * @param targetSelector target selector of the effect
-     * @param resolutionMode resolution mode of the effect
-     * @throws NullPointerException     if the effects list is null
+     * @param description    description of the deployer
+     * @param effects        {@link Effect}s stored by the deployer
+     * @param trigger        the deployer's {@link Trigger}, used by the {@link EffectPlayer} to
+     *                       determine whether it should be resolved
+     * @param targetSelector the deployer's {@link TargetSelector}, used to choose its target
+     * @param resolutionMode the deployer's {@link ResolutionMode}, used by the effect player to
+     *                       determine how the deployer should be resolved
+     * @throws NullPointerException     if the effects list, trigger, target selector or resolution
+     *                                  mode is <code>null</code>
      * @throws IllegalArgumentException if the effects list is empty
-     * @see Effect
-     * @see Trigger
-     * @see TargetSelector
-     * @see ResolutionMode
      */
-    public EffectDeployer(List<? extends Effect<?>> effects,
+    public EffectDeployer(String description,
+                          List<? extends Effect<?>> effects,
                           Trigger trigger,
                           TargetSelector<T> targetSelector,
                           ResolutionMode resolutionMode) {
-        super(trigger, targetSelector, resolutionMode);
+        super(description, trigger, targetSelector, resolutionMode);
 
         Objects.requireNonNull(effects,
                                "Effects list of an EffectDeployer cannot be null.");
@@ -56,12 +53,7 @@ public abstract class EffectDeployer<T extends Targetable> extends Effect<T> {
         this.effects = new ArrayList<>(effects);
     }
 
-    /**
-     * Returns the {@link Effect}(s) this {@link EffectDeployer} is a wrapper for.
-     *
-     * @return a list of effects stored by this deployer
-     * @see Effect
-     */
+    /** @return the {@link Effect}(s) this {@link EffectDeployer} is a wrapper for */
     public List<? extends Effect<?>> getEffects() {return this.effects;}
 
     /**
