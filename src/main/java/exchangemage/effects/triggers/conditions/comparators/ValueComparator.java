@@ -12,14 +12,10 @@ import exchangemage.effects.triggers.conditions.ComparisonCondition;
  * @see ComparisonCondition
  */
 public class ValueComparator<T> implements SubjectComparator<T> {
-    /**
-     * The value the subject is compared to.
-     */
+    /** The value the subject is compared to. */
     private final T targetValue;
 
     /**
-     * Creates a new {@link ValueComparator} with the given target value.
-     *
      * @param targetValue the value the subject is compared to.
      * @throws NullPointerException if the target value is null.
      */
@@ -30,8 +26,6 @@ public class ValueComparator<T> implements SubjectComparator<T> {
     }
 
     /**
-     * Checks if the subject is equal to the target value.
-     *
      * @param subject the subject to be compared
      * @return <code>true</code> if the subject is equal to the target value, <code>false</code>
      * otherwise.

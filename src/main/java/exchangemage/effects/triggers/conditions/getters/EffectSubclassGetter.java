@@ -15,11 +15,10 @@ import exchangemage.effects.triggers.conditions.Condition;
  */
 public class EffectSubclassGetter<S extends Effect<?>> extends SubclassGetter<Effect<?>, S> {
     /**
-     * Creates a new effect subclass getter with given {@link Effect} subclass and effect getter.
-     *
-     * @param effectSubclass the class of effect objects returned by this {@link SubjectGetter}
-     * @param effectGetter   the subject getter which provides the effect to be returned by this
-     *                       getter
+     * @param effectSubclass the class of {@link Effect}s which can be returned by this getter
+     * @param effectGetter   the {@link SubjectGetter} used to retrieve the effect which is returned
+     *                       by this getter (provided that it is an instance of the specified effect
+     *                       type)
      */
     public EffectSubclassGetter(Class<S> effectSubclass,
                                 SubjectGetter<? extends Effect<?>> effectGetter) {

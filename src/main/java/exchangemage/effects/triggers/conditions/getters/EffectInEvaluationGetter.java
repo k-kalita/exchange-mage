@@ -14,9 +14,7 @@ import exchangemage.effects.triggers.conditions.Condition;
  * @see EffectPlayer
  */
 public class EffectInEvaluationGetter implements SubjectGetter<Effect<?>> {
-    /**
-     * @return the {@link Effect} currently being evaluated by the {@link EffectPlayer}
-     */
+    /** @return the {@link Effect} currently being evaluated by the {@link EffectPlayer} */
     @Override
     public Effect<?> getSubject() {return GameState.getEffectInEvaluation();}
 }

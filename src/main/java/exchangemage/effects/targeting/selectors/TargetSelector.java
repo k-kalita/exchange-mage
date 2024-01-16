@@ -38,15 +38,11 @@ public abstract class TargetSelector<T extends Targetable> {
      */
     protected T target = null;
 
-    /**
-     * The class of the {@link Targetable} objects selected by this {@link TargetSelector}.
-     */
+    /** The class of {@link Targetable} objects selected by this {@link TargetSelector}. */
     protected final Class<T> targetClass;
 
     /**
-     * Creates a new {@link TargetSelector} with given target class.
-     *
-     * @param targetClass the class of the {@link Targetable} objects selected by this selector.
+     * @param targetClass the class of {@link Targetable} objects selected by this selector.
      * @throws NullPointerException if the given target class is <code>null</code>.
      */
     public TargetSelector(Class<T> targetClass) {
@@ -58,7 +54,6 @@ public abstract class TargetSelector<T extends Targetable> {
      * An exception thrown when an attempt is made to set an invalid target for a
      * {@link TargetSelector}.
      *
-     * @see TargetSelector
      * @see Targetable
      */
     public static class InvalidTargetException extends IllegalArgumentException {
@@ -91,12 +86,7 @@ public abstract class TargetSelector<T extends Targetable> {
      */
     protected abstract void validateTarget(T target);
 
-    /**
-     * Returns whether this {@link TargetSelector} has a selected target.
-     *
-     * @return <code>true</code> if a target has been selected, <code>false</code> otherwise.
-     * @see Targetable
-     */
+    /** @return <code>true</code> if a target has been selected, <code>false</code> otherwise. */
     public boolean hasTarget() {return target != null;}
 
     /**
@@ -118,8 +108,6 @@ public abstract class TargetSelector<T extends Targetable> {
     }
 
     /**
-     * Returns the selected target.
-     *
      * @return the target selected by this {@link TargetSelector}.
      * @throws IllegalStateException if no target has been selected.
      * @see Targetable

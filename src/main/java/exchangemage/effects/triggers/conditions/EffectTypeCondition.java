@@ -17,14 +17,10 @@ import exchangemage.effects.triggers.conditions.comparators.TypeComparator;
  */
 @SuppressWarnings("rawtypes")
 public class EffectTypeCondition implements Condition {
-    /**
-     * The {@link SubjectGetter} used to retrieve the {@link Effect} to check.
-     */
+    /** The {@link SubjectGetter} used to retrieve the {@link Effect} to check. */
     private final SubjectGetter<Effect<?>> subjectGetter;
 
-    /**
-     * The type against which the retrieved {@link Effect} is checked.
-     */
+    /** The type against which the retrieved {@link Effect} is checked. */
     private final Class<? extends Effect> type;
 
     /**

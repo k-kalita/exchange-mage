@@ -29,32 +29,19 @@ import exchangemage.effects.targeting.Targetable;
  * @see Encounter
  */
 public abstract class Scene implements Targetable, PersistentEffectsHolder, Observable {
-    /**
-     * The set of {@link Actor}s present in the scene, including the {@link Player}.
-     */
+    /** The set of {@link Actor}s present in the scene, including the {@link Player}. */
     protected final Set<Actor> actors = new HashSet<>();
 
-    /**
-     * The {@link EffectPlayer} used to evaluate and resolve {@link Effect}s in the scene.
-     */
+    /** The {@link EffectPlayer} used to evaluate and resolve {@link Effect}s in the scene. */
     private final EffectPlayer effectPlayer = new EffectPlayer();
 
-    /**
-     * The set of {@link PersistentEffect}s active in the scene.
-     */
+    /** The set of {@link PersistentEffect}s active in the scene. */
     private final Set<PersistentEffect> environmentalEffects = new HashSet<>();
 
-    /**
-     * The set of {@link Observer}s observing the scene.
-     */
+    /** The set of {@link Observer}s observing the scene. */
     private final Set<Observer> observers = new HashSet<>();
 
-    /**
-     * Constructs a new scene with the specified set of environmental effects, adding the
-     * {@link Player} the set of {@link Actor}s present in it.
-     *
-     * @param environmentalEffects the set of {@link PersistentEffect}s active in the scene.
-     */
+    /** @param environmentalEffects the set of {@link PersistentEffect}s active in the scene. */
     public Scene(Set<PersistentEffect> environmentalEffects) {
         this.actors.add(GameState.getPlayer());
 
@@ -85,11 +72,8 @@ public abstract class Scene implements Targetable, PersistentEffectsHolder, Obse
     // ------------------------------------ getter methods ------------------------------------ //
 
     /**
-     * Returns all {@link Targetable}s present in the scene, including the ones held by the
-     * {@link Actor}s present.
-     *
-     * @return the set of {@link Targetable}s present in the scene
-     * @see Targetable
+     * @return all {@link Targetable}s present in the scene, including the ones held by the
+     * {@link Actor}s present
      */
     public Set<Targetable> getTargetables() {
         Set<Targetable> targetables = new HashSet<>();
@@ -102,17 +86,14 @@ public abstract class Scene implements Targetable, PersistentEffectsHolder, Obse
     }
 
     /**
-     * Returns the {@link EffectPlayer} used to evaluate and resolve {@link Effect}s in the scene.
-     *
-     * @return the scene's effect player
+     * @return the {@link EffectPlayer} used to evaluate and resolve {@link Effect}s in the scene
      */
     public EffectPlayer getEffectPlayer() {return this.effectPlayer;}
 
     /**
-     * Returns the set of all {@link PersistentEffect}s active in the scene, including the
-     * {@link #environmentalEffects} and the ones held by individual {@link Actor}s present.
-     *
-     * @return the set of all persistent effects active in the scene
+     * @return the set of all {@link PersistentEffect}s active in the scene, including the
+     * {@link #environmentalEffects} and the ones held by individual {@link Actor}s present
+     * @see #getPersistentEffects()
      */
     public Set<PersistentEffect> getAllPersistentEffects() {
         Set<PersistentEffect> allEffects = new HashSet<>(this.environmentalEffects);
@@ -142,10 +123,9 @@ public abstract class Scene implements Targetable, PersistentEffectsHolder, Obse
     }
 
     /**
-     * Returns the set of {@link #environmentalEffects} present in the scene. Does not include
-     * {@link PersistentEffect}s held by individual {@link Actor}s.
-     *
-     * @return the set of persistent effects active in the scene
+     * @return the set of {@link #environmentalEffects} present in the scene. Does not include
+     * {@link PersistentEffect}s held by individual {@link Actor}s
+     * @see #getAllPersistentEffects()
      */
     @Override
     public Set<PersistentEffect> getPersistentEffects() {return this.environmentalEffects;}

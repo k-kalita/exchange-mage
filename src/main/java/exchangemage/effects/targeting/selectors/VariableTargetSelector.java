@@ -126,23 +126,16 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
      */
     private final SubjectComparator<T> targetFilter;
 
-    /**
-     * The {@link TargetingMode} used by this {@link VariableTargetSelector} to select a target.
-     */
+    /** The {@link TargetingMode} used by this {@link VariableTargetSelector} to select a target. */
     private final TargetingMode targetingMode;
 
     /**
-     * Creates a new {@link VariableTargetSelector} with given target class, filter and targeting
-     * mode.
-     *
-     * @param targetClass   the class of the {@link Targetable} objects selected by this selector
+     * @param targetClass   the class of {@link Targetable} objects selected by this selector
      * @param targetFilter  the {@link SubjectComparator} used to filter the set of active
      *                      targetables
-     * @param targetingMode the {@link TargetingMode} used by this {@link VariableTargetSelector}
-     *                      to select a target
+     * @param targetingMode the {@link TargetingMode} used by the variable target selector to
+     *                      select a target
      * @throws NullPointerException if the given target class or targeting mode is <code>null</code>
-     * @see TargetingMode
-     * @see SubjectComparator
      */
     public VariableTargetSelector(Class<T> targetClass,
                                   SubjectComparator<T> targetFilter,
@@ -154,13 +147,10 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
     }
 
     /**
-     * Creates a new {@link VariableTargetSelector} with given target class and targeting mode.
-     *
-     * @param targetClass   the class of the {@link Targetable} objects selected by this selector
-     * @param targetingMode the {@link TargetingMode} used by this {@link VariableTargetSelector}
-     *                      to select a target
+     * @param targetClass   the class of {@link Targetable} objects selected by this selector
+     * @param targetingMode the {@link TargetingMode} used by this variable target selector to
+     *                      select a target
      * @throws NullPointerException if the given target class or targeting mode is <code>null</code>
-     * @see TargetingMode
      */
     public VariableTargetSelector(Class<T> targetClass,
                                   TargetingMode targetingMode) {

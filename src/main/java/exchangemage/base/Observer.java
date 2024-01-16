@@ -18,9 +18,7 @@ public interface Observer {
      *
      * @param publisher the {@link Observable} object that called this method
      * @param event the event to notify this observer of
-     *
-     * @see Observable
      * @see Observable.Event
      */
-    public void update(Observable publisher, Observable.Event event);
+    void update(Observable publisher, Observable.Event event);
 }

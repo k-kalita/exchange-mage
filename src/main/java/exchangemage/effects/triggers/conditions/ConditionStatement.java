@@ -13,17 +13,13 @@ import java.util.List;
  */
 public class ConditionStatement implements Condition {
     /**
-     * Enumerates the logical operators which can be used to combine multiple {@link Condition}s
-     * into a single {@link ConditionStatement}.
+     * An enum of logical operators which can be used to combine multiple {@link Condition}s into a
+     * single {@link ConditionStatement}.
      */
     public enum Operator {
-        /**
-         * The logical AND operator.
-         */
+        /** The logical AND operator. */
         AND {
             /**
-             * Checks whether all operands of the logical statement are fulfilled.
-             *
              * @param operands the operands of the logical statement
              * @return <code>true</code> if all operands are fulfilled, <code>false</code> otherwise
              */
@@ -35,13 +31,9 @@ public class ConditionStatement implements Condition {
                 return true;
             }
         },
-        /**
-         * The logical OR operator.
-         */
+        /** The logical OR operator. */
         OR {
             /**
-             * Checks whether at least one of the operands of the logical statement is fulfilled.
-             *
              * @param operands the operands of the logical statement
              * @return <code>true</code> if at least one operand is fulfilled, <code>false</code>
              * otherwise
@@ -54,13 +46,9 @@ public class ConditionStatement implements Condition {
                 return false;
             }
         },
-        /**
-         * The logical NOT operator.
-         */
+        /** The logical NOT operator. */
         NOT {
             /**
-             * Checks whether the operand of the logical statement is not fulfilled.
-             *
              * @param operands a list containing the single operand of the logical statement
              * @return <code>true</code> if the operand is not fulfilled <code>false</code>
              * otherwise
@@ -72,13 +60,9 @@ public class ConditionStatement implements Condition {
                 return !operands.get(0).isFulfilled();
             }
         },
-        /**
-         * The logical XOR operator.
-         */
+        /** The logical XOR operator. */
         XOR {
             /**
-             * Checks whether exactly one of the operands of the logical statement is fulfilled.
-             *
              * @param operands a list containing the two operands of the logical statement
              * @return <code>true</code> if exactly one operand is fulfilled, <code>false</code>
              * otherwise
@@ -101,20 +85,14 @@ public class ConditionStatement implements Condition {
         public abstract boolean eval(List<Condition> operands);
     }
 
-    /**
-     * The {@link Operator} used to combine the operands of this {@link ConditionStatement}.
-     */
+    /** The {@link Operator} used to combine the operands of this {@link ConditionStatement}. */
     private final Operator operator;
 
-    /**
-     * The operands of this {@link ConditionStatement}.
-     */
+    /** The operands of this {@link ConditionStatement}. */
     private final List<Condition> operands;
 
     /**
-     * Creates a new {@link ConditionStatement} with given {@link Operator} and operands.
-     *
-     * @param operator the operator used to combine the operands
+     * @param operator the {@link Operator} used to combine the operands of this statement
      * @param operands the operands of the logical statement
      * @throws NullPointerException if the operator or the operands are null
      * @throws IllegalArgumentException if the operands list is empty
@@ -131,12 +109,7 @@ public class ConditionStatement implements Condition {
         this.operands = operands;
     }
 
-    /**
-     * Evaluates the logical statement represented by this {@link ConditionStatement} to a boolean
-     * value.
-     *
-     * @return <code>true</code> if the statement is fulfilled, <code>false</code> otherwise
-     */
+    /** @return <code>true</code> if the statement is fulfilled, <code>false</code> otherwise */
     @Override
     public boolean isFulfilled() {return this.operator.eval(operands);}
 }

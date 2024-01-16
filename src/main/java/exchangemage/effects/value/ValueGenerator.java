@@ -10,10 +10,6 @@ package exchangemage.effects.value;
  */
 @FunctionalInterface
 public interface ValueGenerator {
-    /**
-     * Generates a value to be used by a {@link ValueEffect}.
-     *
-     * @return the generated value
-     */
+    /** @return a value to be used by a {@link ValueEffect} */
     int generate();
 }

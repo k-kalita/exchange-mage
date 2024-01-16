@@ -15,9 +15,7 @@ public interface TargetGetter<T extends Targetable> {
      * Returns a {@link Targetable} object. Used by {@link ConstantTargetSelector}s to select
      * their target.
      *
-     * @return a {@link Targetable} object.
-     * @see Targetable
-     * @see ConstantTargetSelector
+     * @return a targetable object.
      */
     T getTarget();
 }

@@ -12,15 +12,12 @@ import exchangemage.effects.triggers.conditions.ComparisonCondition;
  * @see ComparisonCondition
  */
 public class TypeComparator<T> implements SubjectComparator<T> {
-    /**
-     * The class the subject's type is compared to.
-     */
+    /** The class the subject's type is compared to. */
     Class<? extends T> targetType;
 
     /**
-     * Creates a new {@link TypeComparator} which the given target type.
-     *
      * @param targetType the class the subject's type is compared to.
+     * @throws NullPointerException if the target type is <code>null</code>.
      */
     public TypeComparator(Class<? extends T> targetType) {
         Objects.requireNonNull(targetType, "Target type of TypeComparator cannot be null.");
@@ -28,8 +25,6 @@ public class TypeComparator<T> implements SubjectComparator<T> {
     }
 
     /**
-     * Checks if the subject is an instance of the target type.
-     *
      * @param subject the subject to be compared
      * @return <code>true</code> if the subject is an instance of the target type,
      * <code>false</code> otherwise.

@@ -20,60 +20,34 @@ import exchangemage.scenes.Scene;
  * @see Game
  */
 public class GameState {
-    /**
-     * Returns the {@link Player} of the current {@link Game}.
-     *
-     * @return the player
-     * @see Player
-     */
+    /** @return the {@link Player} of the current {@link Game} */
     public static Player getPlayer() {return Game.getGame().getPlayer();}
 
-    /**
-     * Returns the current {@link Scene} in the {@link Game}.
-     *
-     * @return the current scene
-     * @see Scene
-     */
+    /** @return the current {@link Scene} in the {@link Game} */
     public static Scene getScene() {return Game.getGame().getScene();}
 
-    /**
-     * Returns the {@link EffectPlayer} used by the current {@link Scene}.
-     *
-     * @return the current effect player
-     * @see EffectPlayer
-     */
+    /** @return the {@link EffectPlayer} used by the current {@link Scene} */
     public static EffectPlayer getEffectPlayer() {return getScene().getEffectPlayer();}
 
     /**
-     * Returns the {@link TargetingManager} used by the {@link EffectPlayer} of the current
-     * {@link Scene}.
-     *
-     * @return the current targeting manager
-     * @see TargetingManager
+     * @return the {@link TargetingManager} used by the {@link EffectPlayer} of the current
+     * {@link Scene}
      */
     public static TargetingManager getTargetingManager() {
         return getEffectPlayer().getTargetingManager();
     }
 
     /**
-     * Returns the {@link Effect} currently being resolved by the {@link EffectPlayer} of the
-     * current {@link Scene}.
-     *
-     * @return the effect in resolution or <code>null</code> if no effect is currently being
-     * resolved
-     * @see Effect
+     * @return the {@link Effect} currently being resolved by the {@link EffectPlayer} of the
+     * current {@link Scene} or <code>null</code> if there is no effect in resolution
      */
     public static Effect<?> getEffectInResolution() {
         return getEffectPlayer().getEffectInResolution();
     }
 
     /**
-     * Returns the {@link Effect} currently being evaluated by the {@link EffectPlayer} of the
-     * current {@link Scene}.
-     *
-     * @return the effect in evaluation or <code>null</code> if no effect is currently being
-     * evaluated
-     * @see Effect
+     * @return the {@link Effect} currently being evaluated by the {@link EffectPlayer} of the
+     * current {@link Scene} or <code>null</code> if there is no effect in evaluation
      */
     public static Effect<?> getEffectInEvaluation() {
         return getEffectPlayer().getEffectInEvaluation();

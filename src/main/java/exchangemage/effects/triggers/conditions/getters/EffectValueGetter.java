@@ -18,9 +18,8 @@ public class EffectValueGetter implements SubjectGetter<Integer> {
     private final ValueEffect.ValueState state;
 
     /**
-     * Creates a new effect value getter with the specified {@link ValueEffect.ValueState}.
-     *
-     * @param state the state in which to retrieve the value from the effect
+     * @param state the {@link ValueEffect.ValueState} in which to retrieve the value of the
+     *              {@link ValueEffect} currently in resolution.
      */
     public EffectValueGetter(ValueEffect.ValueState state) {
         Objects.requireNonNull(state, "Value state cannot be null.");
@@ -28,12 +27,9 @@ public class EffectValueGetter implements SubjectGetter<Integer> {
     }
 
     /**
-     * Returns the value carried by the {@link ValueEffect} currently in resolution using the
-     * specified {@link ValueEffect.ValueState} or <code>null</code> if no such effect is in
-     * resolution.
-     *
-     * @return current value of a value effect or <code>null</code> if none is in resolution
-     * @see ValueEffect
+     * @return value carried by the {@link ValueEffect} currently in the specified state or
+     * <code>null</code> if no such effect is in resolution.
+     * @see ValueEffect.ValueState
      */
     @Override
     public Integer getSubject() {

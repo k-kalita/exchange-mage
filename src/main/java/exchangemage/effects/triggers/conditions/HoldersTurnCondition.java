@@ -23,9 +23,6 @@ import exchangemage.scenes.TurnPlayer;
  */
 public class HoldersTurnCondition extends ConditionStatement {
     /**
-     * Creates a new holders-turn condition which is fulfilled when the {@link Effect} currently in
-     * resolution represents the appropriate {@link TurnPlayer.TurnPlayerEvent} turn event.
-     *
      * @param turnStart <code>true</code> if the expected notification should signify the start of
      *                  the holder's turn, <code>false</code> if it should signify its end
      */

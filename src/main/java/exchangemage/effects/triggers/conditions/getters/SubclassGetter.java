@@ -21,24 +21,17 @@ import exchangemage.effects.triggers.conditions.comparators.SubjectComparator;
  * @see ComparisonCondition
  */
 public class SubclassGetter<T, S extends T> implements SubjectGetter<S> {
-    /**
-     * The superclass getter decorated by this {@link SubclassGetter}.
-     */
+    /** The superclass getter decorated by this {@link SubclassGetter}. */
     private final SubjectGetter<T> superclassGetter;
 
-    /**
-     * The class of subjects returned by this {@link SubclassGetter}.
-     */
+    /** The class of subjects returned by this {@link SubclassGetter}. */
     private final Class<S> subclass;
 
     /**
-     * Creates a new {@link SubclassGetter} with given superclass getter and subclass.
-     *
      * @param superclassGetter the {@link SubjectGetter} used to retrieve the subject to be
      * evaluated and potentially returned by this getter.
      * @param subclass the class of subjects returned by this getter.
      * @throws NullPointerException if the given superclass getter or subclass is <code>null</code>.
-     * @see SubjectGetter
      */
     public SubclassGetter(SubjectGetter<T> superclassGetter, Class<S> subclass) {
         Objects.requireNonNull(superclassGetter,
@@ -49,11 +42,8 @@ public class SubclassGetter<T, S extends T> implements SubjectGetter<S> {
     }
 
     /**
-     * Returns the subject retrieved by the superclass getter cast to the subclass if it is an
-     * instance of it, otherwise returns <code>null</code>.
-     *
-     * @return the subject if it is an instance of the subclass, otherwise <code>null</code>.
-     * @see SubjectGetter
+     * @return the subject retrieved by the {@link #superclassGetter} cast to the subclass if it is
+     * an instance of it, otherwise <code>null</code>.
      */
     @Override
     public S getSubject() {

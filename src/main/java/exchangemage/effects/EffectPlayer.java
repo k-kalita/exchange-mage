@@ -86,9 +86,7 @@ public class EffectPlayer {
      */
     private final TargetingManager targetingManager = new TargetingManager();
 
-    /**
-     * The queue of {@link Effect}s to be resolved.
-     */
+    /** The queue of {@link Effect}s to be resolved. */
     private final LinkedList<Effect<?>> resolutionQueue = new LinkedList<>();
 
 
@@ -170,7 +168,6 @@ public class EffectPlayer {
          *
          * @param effects the list of persistent effects to sort
          * @return the sorted list of persistent effects
-         * @see PersistentEffect
          */
         public static List<PersistentEffect> sortPersistentEffects(List<PersistentEffect> effects) {
             effects.sort(Comparator.comparing(PersistentEffect::getActivationStage));
@@ -179,22 +176,14 @@ public class EffectPlayer {
     }
 
     /**
-     * Checks whether there is an {@link Effect} currently being resolved by the
-     * {@link EffectPlayer}.
-     *
      * @return <code>true</code> if there is an effect currently being resolved, <code>false</code>
      * otherwise
-     * @see Effect
      */
     public boolean effectInResolution() {return this.effectInResolution != null;}
 
     /**
-     * Checks whether there is an {@link Effect} currently being evaluated by the
-     * {@link EffectPlayer}.
-     *
      * @return <code>true</code> if there is an effect currently being evaluated, <code>false</code>
      * otherwise
-     * @see Effect
      */
     public boolean effectInEvaluation() {return this.effectInEvaluation != null;}
 
@@ -208,10 +197,8 @@ public class EffectPlayer {
      * @param effect the effect to evaluate
      * @throws NullPointerException  if the given effect is null
      * @throws IllegalStateException if the resolution mode of the effect is not recognized
-     * @see Effect
      * @see Trigger
      * @see TargetingManager
-     * @see Effect.ResolutionMode
      */
     public void evaluateEffect(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to evaluate cannot be null.");
@@ -253,13 +240,11 @@ public class EffectPlayer {
     }
 
     /**
-     * Enqueues given {@link Effect} into the resolution queue.
+     * Enqueues given {@link Effect} into the {@link #resolutionQueue}.
      *
      * @param effect the effect to enqueue
      * @throws NullPointerException  if the effect is null
      * @throws IllegalStateException if the effect has no target
-     * @see Effect
-     * @see TargetingManager
      */
     private void enqueueEffect(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to enqueue cannot be null.");
@@ -271,7 +256,7 @@ public class EffectPlayer {
     }
 
     /**
-     * Enqueues given {@link Effect} on top of the resolution queue.
+     * Enqueues given {@link Effect} on top of the {@link #resolutionQueue}.
      *
      * @param effect the effect to enqueue
      * @throws NullPointerException  if the effect is null
@@ -296,8 +281,6 @@ public class EffectPlayer {
      * @throws NullPointerException  if the given effect is null
      * @throws IllegalStateException if there is already an effect being resolved or if the given
      *                               effect has no target
-     * @see Effect
-     * @see PersistentEffect
      * @see EffectResolutionStage
      */
     private void resolveEffect(Effect<?> effect) {
@@ -309,9 +292,8 @@ public class EffectPlayer {
             throw new IllegalStateException("Effect to resolve has no target.");
 
         this.effectInResolution = effect;
-        EffectResolutionStage
-                .sortPersistentEffects(new ArrayList<>(getPersistentEffects(effect)))
-                .forEach(this::evaluateEffect);
+        EffectResolutionStage.sortPersistentEffects(new ArrayList<>(getPersistentEffects(effect)))
+                             .forEach(this::evaluateEffect);
         effect.execute();
         this.effectInResolution = null;
     }
@@ -326,8 +308,6 @@ public class EffectPlayer {
      *
      * @param effect the effect to resolve
      * @throws NullPointerException if the given effect is null
-     * @see Effect
-     * @see Effect.ResolutionMode
      */
     private void resolveEffectImmediately(Effect<?> effect) {
         Objects.requireNonNull(effect, "Effect to resolve immediately cannot be null.");
@@ -338,11 +318,8 @@ public class EffectPlayer {
     }
 
     /**
-     * Resolves all currently enqueued {@link Effect}s (along with any persistent effects activated
-     * in the process).
-     *
-     * @see Effect
-     * @see PersistentEffect
+     * Resolves all currently enqueued {@link Effect}s (along with any {@link PersistentEffect}s
+     * triggered in the process).
      */
     public void resolveQueue() {
         while (!this.resolutionQueue.isEmpty())
@@ -355,8 +332,6 @@ public class EffectPlayer {
      *
      * @param card the card to play
      * @throws NullPointerException if the given card is null
-     * @see Effect
-     * @see Card
      */
     public void playCard(Card card) {
         Objects.requireNonNull(card, "Card to play cannot be null.");
@@ -370,7 +345,7 @@ public class EffectPlayer {
      * Returns the set of all {@link PersistentEffect}s which could be activated by the given
      * {@link Effect} in the current {@link Scene}.
      * <br><br>
-     * Effects which target the {@link Scene} itself can activate the environmental effects
+     * Effects which target the {@link Scene} itself can activate the environmental effects,
      * as well as any persistent effects held by individual {@link Actor}s present in the scene.
      * <br><br>
      * Effects which target individual elements of the scene can activate the environmental
@@ -379,7 +354,6 @@ public class EffectPlayer {
      * @param effectInResolution the effect in resolution
      * @return the set of all persistent effects which could be activated by the given effect
      * @throws NullPointerException if the given effect is null
-     * @see Effect
      * @see PersistentEffect
      */
     private Set<PersistentEffect> getPersistentEffects(Effect<?> effectInResolution) {
@@ -412,37 +386,26 @@ public class EffectPlayer {
     // ------------------------------------ getters ------------------------------------------- //
 
     /**
-     * Returns the {@link TargetingManager} used by the {@link EffectPlayer} of the current
-     * {@link Scene} in the game.
-     *
-     * @return the targeting manager of the current effect player
-     * @see TargetingManager
+     * @return the {@link TargetingManager} used by the {@link EffectPlayer} of the current
+     * {@link Scene} in the game
      */
     public TargetingManager getTargetingManager() {return this.targetingManager;}
 
     /**
-     * Returns the {@link Card} whose {@link Effect}s are currently being resolved (or
-     * <code>null</code> if no card is being resolved).
-     *
-     * @return the current card being resolved
-     * @see Card
+     * @return the {@link Card} whose {@link Effect}s are currently being resolved (or
+     * <code>null</code> if no card is being resolved)
      */
     public Card getCardInResolution() {return this.cardInResolution;}
 
     /**
-     * Returns the current {@link Effect} being resolved.
-     *
-     * @return the current effect being resolved or <code>null</code> if no effect is being resolved
-     * @see Effect
+     * @return the {@link Effect} currently being resolved (or <code>null</code> if no effect is
+     * being resolved)
      */
     public Effect<?> getEffectInResolution() {return this.effectInResolution;}
 
     /**
-     * Returns the current {@link Effect} being evaluated.
-     *
-     * @return the current effect being evaluated or <code>null</code> if no effects is being
-     * evaluated
-     * @see Effect
+     * @return the {@link Effect} currently being evaluated (or <code>null</code> if no effect is
+     * being evaluated)
      */
     public Effect<?> getEffectInEvaluation() {return this.effectInEvaluation;}
 }

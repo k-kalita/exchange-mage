@@ -15,13 +15,11 @@ import exchangemage.effects.EffectSource;
  */
 public class EffectSourceGetter<S extends EffectSource> extends SubclassGetter<EffectSource, S> {
     /**
-     * Creates a new {@link EffectSourceGetter} with given {@link EffectSource} subclass and effect
-     * {@link SubjectGetter}.
-     *
-     * @param effectSourceSubclass the class of effect source objects returned by this subject
+     * @param effectSourceSubclass the class of {@link EffectSource} which can be returned by this
      *                             getter
-     * @param effectGetter         the subject getter used to retrieve the effect whose source is
-     *                             returned by this getter
+     * @param effectGetter         the {@link SubjectGetter} used to retrieve the effect whose
+     *                             source is returned by this getter (provided that it is an
+     *                             instance of the specified effect source type)
      */
     public EffectSourceGetter(Class<S> effectSourceSubclass,
                               SubjectGetter<? extends Effect<?>> effectGetter) {

@@ -41,11 +41,9 @@ public class ComparisonCondition<T> implements Condition {
     private final SubjectComparator<T> subjectComparator;
 
     /**
-     * Constructs a new {@link ComparisonCondition} with the given {@link SubjectGetter} and
-     * {@link SubjectComparator}.
-     *
-     * @param subjectGetter the subject getter used to retrieve the subject of the comparison
-     * @param subjectComparator the subject comparator used to compare the subject
+     * @param subjectGetter the {@link SubjectGetter} used to retrieve the subject of the comparison
+     * @param subjectComparator the {@link SubjectComparator} used to compare the subject retrieved
+     *                          by the subject getter
      */
     public ComparisonCondition(SubjectGetter<T> subjectGetter,
                                SubjectComparator<T> subjectComparator) {

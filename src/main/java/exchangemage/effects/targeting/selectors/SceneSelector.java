@@ -16,11 +16,6 @@ import exchangemage.effects.NotificationEffect;
  * @see TargetSelector
  */
 public class SceneSelector extends ConstantTargetSelector<Scene> {
-    /**
-     * Creates a new {@link SceneSelector}.
-     *
-     * @see Scene
-     * @see ConstantTargetSelector
-     */
+    /** Creates a new {@link SceneSelector}.*/
     public SceneSelector() {super(GameState::getScene, Scene.class);}
 }

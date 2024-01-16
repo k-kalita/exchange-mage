@@ -67,13 +67,9 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
      * @see Observable
      */
     enum ActorEvent implements Observable.Event, Notification {
-        /**
-         * Event used to notify {@link Observer}s that an {@link Actor} has died.
-         */
+        /** Event used to notify {@link Observer}s that an {@link Actor} has died. */
         DEATH,
-        /**
-         * Event used to notify {@link Observer}s that an {@link Actor} has received damage.
-         */
+        /** Event used to notify {@link Observer}s that an {@link Actor} has received damage. */
         DAMAGE_RECEIVED,
         /**
          * Event used to notify {@link Observer}s that an {@link Actor} has received damage for the
@@ -85,9 +81,7 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
          * first time during current turn.
          */
         FIRST_DAMAGE_THIS_TURN_RECEIVED,
-        /**
-         * Event used to notify {@link Observer}s that an {@link Actor} has been healed.
-         */
+        /** Event used to notify {@link Observer}s that an {@link Actor} has been healed. */
         HEALING_RECEIVED,
         /**
          * Event used to notify {@link Observer}s that an {@link Actor}'s health has been restored
@@ -96,12 +90,7 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
         MAX_HEALTH_REACHED;
     }
 
-    /**
-     * Returns the set of {@link Targetable}s held by this actor (if any).
-     *
-     * @return the set of targetables held by this actor or an empty set if none are held
-     * @see Targetable
-     */
+    /** @return the set of {@link Targetable}s held by this actor (if any) */
     Set<Targetable> getTargetables();
 
     /**
@@ -128,14 +117,10 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
      */
     void heal(int healing);
 
-    /**
-     * Describes the behavior of this actor when its health is depleted.
-     */
+    /** Describes the behavior of this actor when its health is depleted. */
     void die();
 
-    /**
-     * @return <code>true</code> if this actor is dead, <code>false</code> otherwise
-     */
+    /** @return <code>true</code> if this actor is dead, <code>false</code> otherwise */
     boolean isDead();
 
     /**

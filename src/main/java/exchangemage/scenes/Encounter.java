@@ -24,43 +24,28 @@ import exchangemage.effects.deployers.PersistentEffect;
  */
 public class Encounter extends Scene {
     /**
-     * An enum defining events specific to {@link Encounter} events. Can be used to notify
+     * An enum defining events specific to {@link Encounter}s. Can be used to notify
      * {@link Encounter} {@link Observer}s and create {@link NotificationEffect}s used to trigger
      * {@link PersistentEffect}s which activate at the start or end of an {@link Encounter}.
      *
-     * @see Encounter
      * @see NotificationEffect
      * @see TurnPlayer.TurnPlayerEvent
      */
     public enum EncounterEvent implements Observable.Event, Notification {
-        /**
-         * Event used to notify {@link Observer}s that an {@link Encounter} has started.
-         *
-         * @see Observer
-         * @see Encounter
-         */
+        /** Event used to notify {@link Observer}s that an {@link Encounter} has started. */
         ENCOUNTER_START,
-        /**
-         * Event used to notify {@link Observer}s that an {@link Encounter} has ended.
-         *
-         * @see Observer
-         * @see Encounter
-         */
+        /** Event used to notify {@link Observer}s that an {@link Encounter} has ended. */
         ENCOUNTER_END
     }
 
-    /**
-     * The {@link TurnPlayer} used to manage the flow of turns during the encounter.
-     */
+    /** The {@link TurnPlayer} used to manage the flow of turns during the encounter. */
     private final TurnPlayer turnPlayer;
 
     /**
-     * Constructs a new encounter with the specified {@link TurnPlayer}, {@link PersistentEffect}s,
-     * and enemies.
-     *
-     * @param turnPlayer           the turn player used to manage the flow of turns during the
-     *                             encounter
-     * @param environmentalEffects the set of persistent effects active during the encounter
+     * @param turnPlayer           the {@link TurnPlayer} used to manage the flow of turns during
+     *                             the encounter
+     * @param environmentalEffects the set of {@link PersistentEffect}s which will be active
+     *                             at the start of the encounter
      * @param enemies              the set of enemies present during the encounter
      * @throws NullPointerException if the turn player or enemies are <code>null</code>
      * @see Enemy
@@ -76,9 +61,8 @@ public class Encounter extends Scene {
     }
 
     /**
-     * Constructs a new encounter with the specified {@link TurnPlayer} and enemies.
-     *
-     * @param turnPlayer the turn player used to manage the flow of turns during the encounter
+     * @param turnPlayer the {@link TurnPlayer} used to manage the flow of turns during the
+     *                   encounter
      * @param enemies    the set of enemies present during the encounter
      * @throws NullPointerException if the turn player or enemies are <code>null</code>
      * @see Enemy
@@ -88,11 +72,7 @@ public class Encounter extends Scene {
         this(turnPlayer, null, enemies);
     }
 
-    /**
-     * Starts the encounter by initializing  and starting the {@link #turnPlayer}.
-     *
-     * @see TurnPlayer
-     */
+    /** Starts the encounter by initializing and starting the {@link #turnPlayer}. */
     @Override
     public void start() {
         turnPlayer.init(this);

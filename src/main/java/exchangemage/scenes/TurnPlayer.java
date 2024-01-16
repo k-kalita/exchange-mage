@@ -30,34 +30,14 @@ public interface TurnPlayer {
      * {@link PersistentEffect}s which activate at the start or end of an {@link Actor}'s turn.
      */
     enum TurnPlayerEvent implements Observable.Event, Notification {
-        /**
-         * Event used to notify {@link Observer}s that the turn player has started a new round.
-         *
-         * @see Observer
-         */
+        /** Event used to notify {@link Observer}s that a new round has started. */
         ROUND_STARTED,
-        /**
-         * Event used to notify {@link Observer}s that the turn player has ended a round.
-         *
-         * @see Observer
-         */
+        /** Event used to notify {@link Observer}s that a round has ended. */
         ROUND_ENDED,
-        /**
-         * Event used to notify {@link Observer}s that the turn player has started an
-         * {@link Actor}'s turn.
-         *
-         * @see Observer
-         * @see Actor
-         */
+        /** Event used to notify {@link Observer}s that an {@link Actor}'s turn has started. */
         TURN_STARTED,
-        /**
-         * Event used to notify {@link Observer}s that the turn player has ended an
-         * {@link Actor}'s turn.
-         *
-         * @see Observer
-         * @see Actor
-         */
-        TURN_ENDED;
+        /** Event used to notify {@link Observer}s that an {@link Actor}'s turn has ended. */
+        TURN_ENDED
     }
 
     /**

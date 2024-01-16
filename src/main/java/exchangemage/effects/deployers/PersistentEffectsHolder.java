@@ -20,7 +20,6 @@ public interface PersistentEffectsHolder extends EffectSource {
      * Adds a {@link PersistentEffect} to this {@link PersistentEffectsHolder}.
      *
      * @param effect the persistent effect to add to this persistent effect holder.
-     * @see PersistentEffect
      */
     void addPersistentEffect(PersistentEffect effect);
 
@@ -28,16 +27,12 @@ public interface PersistentEffectsHolder extends EffectSource {
      * Removes a {@link PersistentEffect} from this {@link PersistentEffectsHolder}.
      *
      * @param effect the persistent effect to remove from this persistent effect holder.
-     * @see PersistentEffect
      */
     void removePersistentEffect(PersistentEffect effect);
 
     /**
-     * Returns the {@link PersistentEffect}s currently assigned to this
+     * @return the {@link PersistentEffect}s currently assigned to this
      * {@link PersistentEffectsHolder}.
-     *
-     * @return the set of persistent effects currently assigned to this persistent effect holder.
-     * @see PersistentEffect
      */
     Set<PersistentEffect> getPersistentEffects();
 }

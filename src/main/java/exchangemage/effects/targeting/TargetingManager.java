@@ -52,7 +52,6 @@ public class TargetingManager {
      * @return <code>true</code> if the effect already has a non-forbidden target or is able to
      * select one, <code>false</code> otherwise
      * @throws NullPointerException if the effect is <code>null</code>
-     * @see Effect
      * @see Targetable
      * @see TargetSelector
      */
@@ -77,21 +76,15 @@ public class TargetingManager {
         this.forbiddenTargets.add(targetable);
     }
 
-    /**
-     * Clears the set of {@link #forbiddenTargets}.
-     *
-     * @see Targetable
-     */
+    /** Clear the set of {@link #forbiddenTargets}. */
     public void clearForbiddenTargetables() {this.forbiddenTargets.clear();}
 
+    /** @return the set of {@link #forbiddenTargets}. */
     public Set<Targetable> getForbiddenTargets() {return this.forbiddenTargets;}
 
     /**
      * Called by the {@link TargetSelector} of the currently evaluated {@link Effect} to wait for
      * the player to choose a target.
-     *
-     * @see Targetable
-     * @see TargetSelector
      */
     public void waitForTarget() {
         synchronized (this.lock) {
@@ -111,8 +104,6 @@ public class TargetingManager {
      *
      * @param target the target chosen by the player
      * @throws NullPointerException if the target is <code>null</code>
-     * @see Targetable
-     * @see TargetSelector
      */
     public void chooseTarget(Targetable target) {
         Objects.requireNonNull(target, "Target cannot be null.");

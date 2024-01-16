@@ -15,12 +15,11 @@ import exchangemage.effects.targeting.Targetable;
  */
 public class EffectTargetGetter<S extends Targetable> extends SubclassGetter<Targetable, S> {
     /**
-     * Creates a new {@link EffectTargetGetter} with given {@link Targetable} subclass and effect
-     * {@link SubjectGetter}.
-     *
-     * @param targetableSubclass the class of targetable objects returned by this subject getter
-     * @param effectGetter       the subject getter used to retrieve the effect whose target is
-     *                           returned by this getter
+     * @param targetableSubclass the class of {@link Targetable}s which can be returned by this
+     *                           getter
+     * @param effectGetter       the {@link SubjectGetter} used to retrieve the effect whose target
+     *                           is returned by this getter (provided that it is an instance of the
+     *                           specified targetable type)
      */
     public EffectTargetGetter(Class<S> targetableSubclass,
                               SubjectGetter<? extends Effect<?>> effectGetter) {

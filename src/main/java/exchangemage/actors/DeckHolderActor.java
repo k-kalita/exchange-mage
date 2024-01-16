@@ -20,51 +20,37 @@ import exchangemage.effects.deployers.PersistentEffectsHolder;
  * {@link Enemy} types are deck holders.
  * <br><br>
  * This base class also provides default implementations of the actor's {@link Observable} and
- * {@link PersistentEffectsHolder} methods. As well as logic related to the actor's health.
+ * {@link PersistentEffectsHolder} methods, as well as logic related to the actor's health.
  *
  * @see Deck
  * @see Actor
  */
 public abstract class DeckHolderActor implements Actor {
-    /**
-     * The {@link Deck} representing the abilities of this actor.
-     */
+    /** The {@link Deck} representing the abilities of this actor. */
     private final Deck deck;
 
-    /**
-     * The set of {@link PersistentEffect}s currently affecting this actor.
-     */
+    /** The set of {@link PersistentEffect}s currently affecting this actor. */
     private final Set<PersistentEffect> persistentEffects = new HashSet<>();
 
-    /**
-     * The set of {@link Observer}s currently observing this actor.
-     */
+    /** The set of {@link Observer}s currently observing this actor. */
     private final Set<Observer> observers = new HashSet<>();
 
-    /**
-     * The maximum, starting health value of the enemy.
-     */
+    /** The maximum, starting health value of the enemy. */
     private final int maxHealth;
 
-    /**
-     * The current health value of the enemy.
-     */
+    /** The current health value of the enemy. */
     private int currentHealth;
 
-    /**
-     * Whether the enemy has been damaged during current {@link Encounter}.
-     */
+    /** Whether the enemy has been damaged during current {@link Encounter}. */
     private boolean damagedThisEncounter = false;
 
-    /**
-     * Whether the enemy has been damaged during current turn.
-     */
-    private boolean damagedThisTurn = false;
+    /** Whether the enemy has been damaged during current round. */
+    private boolean damagedThisRound = false;
 
     /**
-     * Constructs a new deck holder actor with the specified {@link Deck} and maximum health.
-     *
-     * @param deck this actor's deck
+     * @param deck              this actor's {@link Deck}
+     * @param maxHealth         this actor's maximum health
+     * @param persistentEffects the set of {@link PersistentEffect}s affecting this actor
      * @throws NullPointerException     if the deck is <code>null</code>
      * @throws IllegalArgumentException if the max health is not positive
      */
@@ -79,11 +65,7 @@ public abstract class DeckHolderActor implements Actor {
             persistentEffects.forEach(this::addPersistentEffect);
     }
 
-    /**
-     * Returns this actor's {@link Deck}
-     *
-     * @return this actor's deck
-     */
+    /** @return this actor's {@link Deck} */
     public Deck getDeck() {return this.deck;}
 
     // ------------------------------------ health methods ------------------------------------ //
@@ -92,7 +74,7 @@ public abstract class DeckHolderActor implements Actor {
      * Receives the specified amount of damage and calls on the {@link #notifyOfEvent} method to
      * alert {@link Observer}s and the {@link Encounter} of any relevant {@link ActorEvent}s.
      * <br><br>
-     * It as a result of this method health is reduced to zero, the {@link #die} method is called.
+     * If as a result of this method health is reduced to zero, the {@link #die} method is called.
      *
      * @param damage the amount of damage received (ignored if negative)
      * @see Actor.ActorEvent
@@ -111,8 +93,8 @@ public abstract class DeckHolderActor implements Actor {
             notifyOfEvent(ActorEvent.FIRST_DAMAGE_THIS_ENCOUNTER_RECEIVED);
         }
 
-        if (!this.damagedThisTurn) {
-            this.damagedThisTurn = true;
+        if (!this.damagedThisRound) {
+            this.damagedThisRound = true;
             notifyOfEvent(ActorEvent.FIRST_DAMAGE_THIS_TURN_RECEIVED);
         }
 
@@ -155,14 +137,10 @@ public abstract class DeckHolderActor implements Actor {
     @Override
     public boolean isDead() {return this.currentHealth == 0;}
 
-    /**
-     * @return this actor's {@link #maxHealth}
-     */
+    /** @return this actor's {@link #maxHealth} */
     public int getMaxHealth() {return this.maxHealth;}
 
-    /**
-     * @return this actor's {@link #currentHealth}
-     */
+    /** @return this actor's {@link #currentHealth} */
     public int getCurrentHealth() {return this.currentHealth;}
 
     // -------------------------- persistent effects holder methods --------------------------- //

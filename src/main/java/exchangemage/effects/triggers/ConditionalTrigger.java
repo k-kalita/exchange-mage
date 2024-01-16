@@ -14,15 +14,12 @@ import exchangemage.effects.triggers.conditions.Condition;
  * @see Condition
  */
 public class ConditionalTrigger implements Trigger {
-    /**
-     * The condition to be checked when evaluating activation of this trigger.
-     */
+    /** The condition to be checked when evaluating activation of this trigger. */
     private final Condition condition;
 
     /**
-     * Creates a new {@link ConditionalTrigger} with given {@link Condition}.
-     *
-     * @param condition the condition to be checked when evaluating activation
+     * @param condition the {@link Condition} to be checked when evaluating activation of this
+     *                  trigger
      * @throws NullPointerException if the condition is null
      */
     public ConditionalTrigger(Condition condition) {
@@ -30,11 +27,7 @@ public class ConditionalTrigger implements Trigger {
         this.condition = condition;
     }
 
-    /**
-     * Evaluates whether the {@link Condition} of this trigger is fulfilled.
-     *
-     * @return <code>true</code> if the condition is fulfilled, <code>false</code> otherwise
-     */
+    /** @return <code>true</code> if the condition is fulfilled, <code>false</code> otherwise */
     @Override
     public boolean isActivated() {return condition.isFulfilled();}
 }

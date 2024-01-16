@@ -14,10 +14,8 @@ import exchangemage.effects.Effect;
 @FunctionalInterface
 public interface ValueModifier {
     /**
-     * Returns a modified value to be used by a {@link ValueEffect}.
-     *
      * @param value the value to be modified
-     * @return the modified value
+     * @return a modified value to be used by a {@link ValueEffect}
      */
     int modify(int value);
 }

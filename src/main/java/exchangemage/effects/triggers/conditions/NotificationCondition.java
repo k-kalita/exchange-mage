@@ -13,9 +13,9 @@ import exchangemage.effects.triggers.conditions.comparators.ValueComparator;
  */
 public class NotificationCondition extends ComparisonCondition<Notification> {
     /**
-     * Constructs a new {@link NotificationCondition} with the given target {@link Notification}.
-     *
-     * @param notification the target notification
+     * @param notification the target {@link Notification} whose equality with the notification
+     *                     carried by the {@link NotificationEffect} currently in resolution
+     *                     fulfills this condition
      */
     public NotificationCondition(Notification notification) {
         super(new NotificationGetter(), new ValueComparator<>(notification));

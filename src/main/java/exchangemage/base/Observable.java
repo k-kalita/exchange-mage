@@ -30,7 +30,6 @@ public interface Observable {
      * of certain events by calling the {@link Observable#notifyObservers} method.
      *
      * @param observer the observer to add
-     * @see Observer
      */
     void addObserver(Observer observer);
 
@@ -39,23 +38,16 @@ public interface Observable {
      * be notified of any events.
      *
      * @param observer the observer to remove
-     * @see Observer
      */
     void removeObserver(Observer observer);
 
-    /**
-     * Returns a set of all {@link Observer}s of this {@link Observable} object.
-     *
-     * @return a set of all observers of this object
-     * @see Observer
-     */
+    /** @return the set of all {@link Observer}s of this {@link Observable} object */
     Set<Observer> getObservers();
 
     /**
      * Notifies all {@link Observer}s of this {@link Observable} object of the given event.
      *
      * @param event the event to notify observers of
-     * @see Observer
      * @see Observable.Event
      */
     default void notifyObservers(Event event) {

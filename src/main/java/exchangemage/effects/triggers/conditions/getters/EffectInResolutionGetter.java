@@ -14,9 +14,7 @@ import exchangemage.effects.triggers.conditions.Condition;
  * @see EffectPlayer
  */
 public class EffectInResolutionGetter implements SubjectGetter<Effect<?>> {
-    /**
-     * @return the {@link Effect} currently being resolved by the {@link EffectPlayer}
-     */
+    /** @return the {@link Effect} currently being resolved by the {@link EffectPlayer} */
     @Override
     public Effect<?> getSubject() {return GameState.getEffectInResolution();}
 }
