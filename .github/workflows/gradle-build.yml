@@ -1,5 +1,9 @@
 name: Run Gradle on Push
 on: [push]
+permissions:
+  id-token: write
+  contents: read
+  checks: write
 jobs:
   gradle:
     runs-on: ubuntu-latest
