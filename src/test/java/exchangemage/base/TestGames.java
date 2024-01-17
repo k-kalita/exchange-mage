@@ -3,9 +3,9 @@ package exchangemage.base;
 public enum TestGames {
     PLACEHOLDER {
         @Override
-        public void get() {Game.getGame();}
+        public Game get() {return new Game();}
     },
     ;
 
-    public abstract void get();
+    public abstract Game get();
 }

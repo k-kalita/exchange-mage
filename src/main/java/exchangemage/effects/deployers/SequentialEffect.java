@@ -3,7 +3,7 @@ package exchangemage.effects.deployers;
 import java.util.List;
 import java.util.Set;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.EffectSource;
@@ -67,7 +67,9 @@ public class SequentialEffect extends EffectDeployer<Scene> {
      */
     @Override
     public void execute() {
-        this.effects.forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
+        this.effects.forEach(effect -> GameStateLocator.getGameState()
+                                                       .getEffectPlayer()
+                                                       .evaluateEffect(effect));
     }
 
     /**

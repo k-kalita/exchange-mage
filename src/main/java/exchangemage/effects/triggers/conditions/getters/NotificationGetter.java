@@ -1,6 +1,6 @@
 package exchangemage.effects.triggers.conditions.getters;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.base.Notification;
 import exchangemage.effects.NotificationEffect;
 
@@ -17,7 +17,7 @@ public class NotificationGetter implements SubjectGetter<Notification> {
      */
     @Override
     public Notification getSubject() {
-        var effect = GameState.getEffectInResolution();
+        var effect = GameStateLocator.getGameState().getEffectInResolution();
         if (effect instanceof NotificationEffect)
             return ((NotificationEffect) effect).getNotification();
         return null;

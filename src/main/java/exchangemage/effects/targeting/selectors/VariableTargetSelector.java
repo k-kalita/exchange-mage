@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.Random;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.effects.Effect;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
@@ -56,7 +56,7 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
                 if (activeTargetables.isEmpty())
                     return false;
 
-                GameState.getTargetingManager().waitForTarget();
+                GameStateLocator.getGameState().getTargetingManager().waitForTarget();
 
                 if (!selector.hasTarget())
                     throw new RuntimeException("Wait for target ended without a target being" +
@@ -171,10 +171,11 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
      */
     public Set<T> getActiveTargetables(Set<Targetable> forbiddenTargets) {
         Objects.requireNonNull(forbiddenTargets, "Forbidden targets set cannot be null.");
-        Stream<T> activeTargetables = GameState.getScene().getTargetables().stream()
-                                               .filter(targetClass::isInstance)
-                                               .filter(target -> !forbiddenTargets.contains(target))
-                                               .map(targetClass::cast);
+        Stream<T> activeTargetables = GameStateLocator
+                .getGameState().getScene().getTargetables().stream()
+                .filter(targetClass::isInstance)
+                .filter(target -> !forbiddenTargets.contains(target))
+                .map(targetClass::cast);
 
         if (targetFilter != null)
             return activeTargetables.filter(targetFilter::compare).collect(Collectors.toSet());

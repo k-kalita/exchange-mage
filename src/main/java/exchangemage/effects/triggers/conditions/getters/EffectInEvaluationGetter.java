@@ -1,6 +1,6 @@
 package exchangemage.effects.triggers.conditions.getters;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.triggers.conditions.Condition;
@@ -16,5 +16,5 @@ import exchangemage.effects.triggers.conditions.Condition;
 public class EffectInEvaluationGetter implements SubjectGetter<Effect<?>> {
     /** @return the {@link Effect} currently being evaluated by the {@link EffectPlayer} */
     @Override
-    public Effect<?> getSubject() {return GameState.getEffectInEvaluation();}
+    public Effect<?> getSubject() {return GameStateLocator.getGameState().getEffectInEvaluation();}
 }

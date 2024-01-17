@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.deployers.EffectDeployer;
@@ -88,7 +88,7 @@ public class TargetingManager {
      */
     public void waitForTarget() {
         synchronized (this.lock) {
-            while (!GameState.getEffectInEvaluation().hasTarget()) {
+            while (!GameStateLocator.getGameState().getEffectInEvaluation().hasTarget()) {
                 try {
                     this.lock.wait();
                 } catch (InterruptedException e) {
@@ -108,7 +108,10 @@ public class TargetingManager {
     public void chooseTarget(Targetable target) {
         Objects.requireNonNull(target, "Target cannot be null.");
         synchronized (this.lock) {
-            GameState.getEffectInEvaluation().getTargetSelector().setTarget(target);
+            GameStateLocator.getGameState()
+                            .getEffectInEvaluation()
+                            .getTargetSelector()
+                            .setTarget(target);
             this.lock.notify();
         }
     }

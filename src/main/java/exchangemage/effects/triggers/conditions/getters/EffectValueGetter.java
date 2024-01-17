@@ -2,7 +2,7 @@ package exchangemage.effects.triggers.conditions.getters;
 
 import java.util.Objects;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.effects.value.ValueEffect;
 
 /**
@@ -33,7 +33,7 @@ public class EffectValueGetter implements SubjectGetter<Integer> {
      */
     @Override
     public Integer getSubject() {
-        var effect = GameState.getEffectInResolution();
+        var effect = GameStateLocator.getGameState().getEffectInResolution();
         return effect instanceof ValueEffect ? state.getValue((ValueEffect<?>) effect) : null;
     }
 }

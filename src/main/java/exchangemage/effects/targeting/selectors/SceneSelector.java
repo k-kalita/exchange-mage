@@ -1,6 +1,6 @@
 package exchangemage.effects.targeting.selectors;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.scenes.Scene;
 import exchangemage.effects.Effect;
 import exchangemage.effects.deployers.PersistentEffect;
@@ -17,5 +17,5 @@ import exchangemage.effects.NotificationEffect;
  */
 public class SceneSelector extends ConstantTargetSelector<Scene> {
     /** Creates a new {@link SceneSelector}.*/
-    public SceneSelector() {super(GameState::getScene, Scene.class);}
+    public SceneSelector() {super(() -> GameStateLocator.getGameState().getScene(), Scene.class);}
 }

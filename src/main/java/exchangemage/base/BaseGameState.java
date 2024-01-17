@@ -6,42 +6,41 @@ import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.targeting.TargetingManager;
 import exchangemage.scenes.Scene;
 
-
 /**
- * An interface of an auxiliary class used as a centralised gateway for accessing the most important
- * elements of the current game state (e.g. the {@link Player}, the current {@link Scene}, the
- * {@link Effect} currently being resolved, etc.).
- * <br><br>
- * The instance of GameState currently in use can be obtained through the {@link GameStateLocator}
- * class (provided that it has been initialised).
- *
- * @see Game
+ * Base implementation of the {@link GameState} interface. Retrieves game state elements from the
+ * current {@link Game} retrieved through the {@link GameLocator} class.
  */
-public interface GameState {
+public class BaseGameState implements GameState {
     /** @return the {@link Player} of the current {@link Game} */
-    Player getPlayer();
+    @Override
+    public Player getPlayer() {return GameLocator.getGame().getPlayer();}
 
     /** @return the current {@link Scene} in the {@link Game} */
-    Scene getScene();
+    @Override
+    public Scene getScene() {return GameLocator.getGame().getScene();}
 
     /** @return the {@link EffectPlayer} used by the current {@link Scene} */
-    EffectPlayer getEffectPlayer();
+    @Override
+    public EffectPlayer getEffectPlayer() {return getScene().getEffectPlayer();}
 
     /**
      * @return the {@link TargetingManager} used by the {@link EffectPlayer} of the current
      * {@link Scene}
      */
-    TargetingManager getTargetingManager();
+    @Override
+    public TargetingManager getTargetingManager() {return getEffectPlayer().getTargetingManager();}
 
     /**
      * @return the {@link Effect} currently being resolved by the {@link EffectPlayer} of the
      * current {@link Scene} or <code>null</code> if there is no effect in resolution
      */
-    Effect<?> getEffectInResolution();
+    @Override
+    public Effect<?> getEffectInResolution() {return getEffectPlayer().getEffectInResolution();}
 
     /**
      * @return the {@link Effect} currently being evaluated by the {@link EffectPlayer} of the
      * current {@link Scene} or <code>null</code> if there is no effect in evaluation
      */
-    Effect<?> getEffectInEvaluation();
+    @Override
+    public Effect<?> getEffectInEvaluation() {return getEffectPlayer().getEffectInEvaluation();}
 }

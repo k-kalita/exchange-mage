@@ -3,10 +3,7 @@ package exchangemage.actors;
 import java.util.Objects;
 import java.util.Set;
 
-import exchangemage.base.GameState;
-import exchangemage.base.Notification;
-import exchangemage.base.Observable;
-import exchangemage.base.Observer;
+import exchangemage.base.*;
 import exchangemage.scenes.Scene;
 import exchangemage.scenes.Encounter;
 import exchangemage.scenes.TurnPlayer;
@@ -135,6 +132,7 @@ public interface Actor extends Targetable, PersistentEffectsHolder {
     default void notifyOfEvent(ActorEvent event) {
         Objects.requireNonNull(event, "Cannot notify of null event.");
         notifyObservers(event);
-        GameState.getEffectPlayer().evaluateEffect(new NotificationEffect(event, this));
+        GameStateLocator.getGameState().getEffectPlayer()
+                        .evaluateEffect(new NotificationEffect(event, this));
     }
 }

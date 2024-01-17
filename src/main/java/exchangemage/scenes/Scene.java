@@ -7,11 +7,11 @@ import java.util.Set;
 import exchangemage.actors.Actor;
 import exchangemage.actors.Player;
 import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.base.Observer;
 import exchangemage.base.Observable;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
-import exchangemage.effects.EffectSource;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.targeting.Targetable;
@@ -22,7 +22,8 @@ import exchangemage.effects.targeting.Targetable;
  * <br><br>
  * All {@link Effect}s used to affect the elements of the game such as enemies, the player, or the
  * environment are resolved in the context of a scene with the help of an {@link EffectPlayer}.
- * Current scenes can be accessed through the {@link GameState} class.
+ * Current scenes can be accessed through the {@link GameState} instance provided by the
+ * {@link GameStateLocator} class.
  *
  * @see GameState
  * @see EffectPlayer
@@ -43,7 +44,7 @@ public abstract class Scene implements Targetable, PersistentEffectsHolder, Obse
 
     /** @param environmentalEffects the set of {@link PersistentEffect}s active in the scene. */
     public Scene(Set<PersistentEffect> environmentalEffects) {
-        this.actors.add(GameState.getPlayer());
+        this.actors.add(GameStateLocator.getGameState().getPlayer());
 
         if (environmentalEffects != null)
             environmentalEffects.forEach(this::addPersistentEffect);

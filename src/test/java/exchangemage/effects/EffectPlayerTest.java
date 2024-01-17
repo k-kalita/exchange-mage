@@ -1,15 +1,13 @@
 package exchangemage.effects;
 
 import exchangemage.actors.Player;
+import exchangemage.base.*;
 import exchangemage.scenes.Encounter;
 import exchangemage.scenes.TestEncounters;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import exchangemage.base.Game;
-import exchangemage.base.GameState;
-import exchangemage.base.TestGames;
 import exchangemage.actors.TestPlayers;
 
 class EffectPlayerTest {
@@ -19,12 +17,13 @@ class EffectPlayerTest {
 
     @BeforeEach
     void setUp() {
-        TestGames.PLACEHOLDER.get();
+        GameLocator.init(TestGames.PLACEHOLDER.get());
+        GameStateLocator.init(new BaseGameState());
         this.player = TestPlayers.PLACEHOLDER.get();
-        Game.getGame().setPlayer(this.player);
+        GameLocator.getGame().setPlayer(this.player);
         this.encounter = TestEncounters.PLACEHOLDER.get();
-        Game.getGame().setScene(encounter);
-        this.effectPlayer = GameState.getEffectPlayer();
+        GameLocator.getGame().setScene(encounter);
+        this.effectPlayer = GameStateLocator.getGameState().getEffectPlayer();
     }
 
     @Test

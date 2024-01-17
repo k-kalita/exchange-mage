@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.EffectSource;
@@ -92,7 +92,9 @@ public class PersistentEffect extends EffectDeployer<Scene> {
     @Override
     public void execute() {
         getEffects().stream().filter(Effect::hasTarget)
-                    .forEach(effect -> GameState.getEffectPlayer().evaluateEffect(effect));
+                    .forEach(effect -> GameStateLocator.getGameState()
+                                                       .getEffectPlayer()
+                                                       .evaluateEffect(effect));
     }
 
     /**
@@ -112,7 +114,7 @@ public class PersistentEffect extends EffectDeployer<Scene> {
             return false;
 
         Stream<Boolean> results = getEffects().stream().map(
-                effect -> GameState.getTargetingManager().selectTarget(effect)
+                effect -> GameStateLocator.getGameState().getTargetingManager().selectTarget(effect)
         );
 
         return results.anyMatch(Boolean::booleanValue);

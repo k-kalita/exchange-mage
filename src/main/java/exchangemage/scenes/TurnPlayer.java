@@ -1,6 +1,6 @@
 package exchangemage.scenes;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.base.Notification;
 import exchangemage.base.Observable;
 import exchangemage.base.Observer;
@@ -84,7 +84,8 @@ public interface TurnPlayer {
      * {@link TurnPlayerEvent#ROUND_STARTED} event and plays a {@link NotificationEffect}.
      */
     default void notifyRoundStarted() {
-        notifyTurnPlayerEvent(TurnPlayerEvent.ROUND_STARTED, GameState.getScene());
+        notifyTurnPlayerEvent(TurnPlayerEvent.ROUND_STARTED,
+                              GameStateLocator.getGameState().getScene());
     }
 
     /**
@@ -92,7 +93,8 @@ public interface TurnPlayer {
      * {@link TurnPlayerEvent#ROUND_ENDED} event and plays a {@link NotificationEffect}.
      */
     default void notifyRoundEnded() {
-        notifyTurnPlayerEvent(TurnPlayerEvent.ROUND_ENDED, GameState.getScene());
+        notifyTurnPlayerEvent(TurnPlayerEvent.ROUND_ENDED,
+                              GameStateLocator.getGameState().getScene());
     }
 
     /**
@@ -107,8 +109,8 @@ public interface TurnPlayer {
     default void notifyTurnPlayerEvent(TurnPlayerEvent event, EffectSource source) {
         Objects.requireNonNull(event, "Cannot notify observers of null event.");
         Objects.requireNonNull(source, "Notification effect source cannot be null.");
-        GameState.getScene().notifyObservers(event);
-        GameState.getEffectPlayer().evaluateEffect(
+        GameStateLocator.getGameState().getScene().notifyObservers(event);
+        GameStateLocator.getGameState().getEffectPlayer().evaluateEffect(
                 new NotificationEffect(event, source)
         );
     }

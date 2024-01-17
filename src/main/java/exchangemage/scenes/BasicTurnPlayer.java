@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import exchangemage.actors.Actor;
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 
 public class BasicTurnPlayer implements TurnPlayer {
     private Encounter encounter;
@@ -13,7 +13,7 @@ public class BasicTurnPlayer implements TurnPlayer {
     @Override
     public void init(Encounter encounter) {
         this.encounter = encounter;
-        queue.add(GameState.getPlayer());
+        queue.add(GameStateLocator.getGameState().getPlayer());
         queue.addAll(encounter.getEnemies());
     }
 

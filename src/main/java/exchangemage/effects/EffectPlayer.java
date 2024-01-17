@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 
-import exchangemage.base.GameState;
+import exchangemage.base.GameStateLocator;
 import exchangemage.actors.Actor;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
@@ -358,7 +358,7 @@ public class EffectPlayer {
      */
     private Set<PersistentEffect> getPersistentEffects(Effect<?> effectInResolution) {
         Objects.requireNonNull(effectInResolution, "Effect in resolution cannot be null.");
-        Scene scene = GameState.getScene();
+        Scene scene = GameStateLocator.getGameState().getScene();
 
         if (effectInResolution.getTarget() instanceof Scene)
             return scene.getAllPersistentEffects();
