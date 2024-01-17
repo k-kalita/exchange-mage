@@ -13,7 +13,8 @@ import exchangemage.effects.triggers.conditions.Condition;
  * @see SubjectGetter
  * @see Effect
  */
-public class EffectSubclassGetter<S extends Effect<?>> extends SubclassGetter<Effect<?>, S> {
+@SuppressWarnings("rawtypes")
+public class EffectSubclassGetter<S extends Effect> extends SubclassGetter<Effect, S> {
     /**
      * @param effectSubclass the class of {@link Effect}s which can be returned by this getter
      * @param effectGetter   the {@link SubjectGetter} used to retrieve the effect which is returned
@@ -21,7 +22,7 @@ public class EffectSubclassGetter<S extends Effect<?>> extends SubclassGetter<Ef
      *                       type)
      */
     public EffectSubclassGetter(Class<S> effectSubclass,
-                                SubjectGetter<? extends Effect<?>> effectGetter) {
+                                SubjectGetter<? extends Effect> effectGetter) {
         super(effectGetter::getSubject, effectSubclass);
     }
 }
