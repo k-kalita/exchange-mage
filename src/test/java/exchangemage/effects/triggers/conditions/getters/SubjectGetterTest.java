@@ -19,10 +19,10 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubjectGetterTest {
-    private static Effect<?> mockEffect;
-    private static GameState mockGameState;
-    private static Player mockPlayer;
-    private static Enemy mockEnemy;
+    private static Effect<?>                mockEffect;
+    private static GameState                mockGameState;
+    private static Player                   mockPlayer;
+    private static Enemy                    mockEnemy;
     private static EffectInEvaluationGetter effectInEvaluationGetter;
     private static EffectInResolutionGetter effectInResolutionGetter;
 
@@ -78,8 +78,8 @@ class SubjectGetterTest {
     @ParameterizedTest
     @CsvSource({"ORIGINAL,1", "UNMODIFIED,2", "MODIFIED,3"})
     void testEffectValueGetter(ValueEffect.ValueState valueState, int value) {
-        EffectValueGetter getter = new EffectValueGetter(valueState);
-        DamageEffect<?> mockDamageEffect = Mockito.mock(DamageEffect.class);
+        EffectValueGetter getter           = new EffectValueGetter(valueState);
+        DamageEffect<?>   mockDamageEffect = Mockito.mock(DamageEffect.class);
         Mockito.when(mockDamageEffect.getOriginalValue()).thenReturn(1);
         Mockito.when(mockDamageEffect.getUnmodifiedValue()).thenReturn(2);
         Mockito.when(mockDamageEffect.getModifiedValue()).thenReturn(3);
@@ -97,9 +97,9 @@ class SubjectGetterTest {
 
     @Test
     void testNotificationGetter() {
-        NotificationGetter getter = new NotificationGetter();
+        NotificationGetter getter                 = new NotificationGetter();
         NotificationEffect mockNotificationEffect = Mockito.mock(NotificationEffect.class);
-        Notification mockNotification = Mockito.mock(Notification.class);
+        Notification       mockNotification       = Mockito.mock(Notification.class);
         Mockito.when(mockNotificationEffect.getNotification()).thenReturn(mockNotification);
         Mockito.when(mockGameState.getEffectInResolution())
                .thenAnswer(invocation -> mockNotificationEffect);
@@ -115,7 +115,7 @@ class SubjectGetterTest {
                 DamageEffect.class,
                 effectInResolutionGetter
         );
-        DamageEffect<?> mockDamageEffect = Mockito.mock(DamageEffect.class);
+        DamageEffect<?>    mockDamageEffect       = Mockito.mock(DamageEffect.class);
         NotificationEffect mockNotificationEffect = Mockito.mock(NotificationEffect.class);
         Mockito.when(mockGameState.getEffectInResolution())
                .thenAnswer(invocation -> mockDamageEffect);
