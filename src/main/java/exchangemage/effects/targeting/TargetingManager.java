@@ -42,7 +42,9 @@ public class TargetingManager {
     /**
      * The lock used to synchronize the {@link #waitForTarget} and {@link #chooseTarget} methods.
      */
-    private final Object lock = new Object();
+    private final Object targetSelectorLock = new Object();
+
+    private final Object playerSelectionLock = new Object();
 
     /**
      * Selects a target for the given {@link Effect}. If the effect already has a target, this
@@ -87,15 +89,28 @@ public class TargetingManager {
      * the player to choose a target.
      */
     public void waitForTarget() {
-        synchronized (this.lock) {
+        synchronized (this.targetSelectorLock) {
             while (!GameStateLocator.getGameState().getEffectInEvaluation().hasTarget()) {
                 try {
-                    this.lock.wait();
+                    synchronized (this.playerSelectionLock) {this.playerSelectionLock.notify();}
+                    this.targetSelectorLock.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    public void waitAndSelect(Targetable target) {
+        synchronized (this.playerSelectionLock) {
+            try {
+                synchronized (this.targetSelectorLock) {this.targetSelectorLock.notify();}
+                this.playerSelectionLock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        chooseTarget(target);
     }
 
     /**
@@ -107,12 +122,16 @@ public class TargetingManager {
      */
     public void chooseTarget(Targetable target) {
         Objects.requireNonNull(target, "Target cannot be null.");
-        synchronized (this.lock) {
+        synchronized (this.targetSelectorLock) {
             GameStateLocator.getGameState()
                             .getEffectInEvaluation()
                             .getTargetSelector()
                             .setTarget(target);
-            this.lock.notify();
+            this.targetSelectorLock.notify();
         }
     }
+
+    public Object getTargetSelectorLock() {return this.targetSelectorLock;}
+
+    public Object getPlayerSelectionLock() {return this.playerSelectionLock;}
 }

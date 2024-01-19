@@ -71,6 +71,17 @@ public abstract class DeckHolderActor implements Actor {
     // ------------------------------------ health methods ------------------------------------ //
 
     /**
+     * Sets this actor's {@link #currentHealth} to the specified value.
+     * @param currentHealth the new value of this actor's current health
+     * @throws IllegalArgumentException if the specified value is negative
+     */
+    public void setCurrentHealth(int currentHealth) {
+        if (currentHealth < 0)
+            throw new IllegalArgumentException("Actor's current health cannot be negative.");
+        this.currentHealth = currentHealth;
+    }
+
+    /**
      * Receives the specified amount of damage and calls on the {@link #notifyOfEvent} method to
      * alert {@link Observer}s and the {@link Encounter} of any relevant {@link ActorEvent}s.
      * <br><br>
