@@ -24,9 +24,9 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 
 class VariableTargetSelectorTest {
-    private static Player    player;
-    private static Enemy     enemy1;
-    private static Enemy     enemy2;
+    private static Player player;
+    private static Enemy  enemy1;
+    private static Enemy  enemy2;
 
     @BeforeAll
     static void setUp() {
