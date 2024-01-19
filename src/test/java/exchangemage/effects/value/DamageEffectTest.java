@@ -78,6 +78,7 @@ class DamageEffectTest {
 
     @Test
     void testSimpleResolve() {
+        simpleEffect.resetSource();
         GameStateLocator.getGameState().getEffectPlayer().evaluateEffect(simpleEffect);
         assertEquals(99, enemy.getCurrentHealth());
     }

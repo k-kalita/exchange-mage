@@ -225,6 +225,9 @@ public abstract class Effect<T extends Targetable> implements Targetable {
         this.source = source;
     }
 
+    /** Resets the {@link #source} of the {@link Effect} to <code>null</code>. */
+    public void resetSource() {this.source = null;}
+
     /** @return the {@link Trigger} of the {@link Effect} */
     public Trigger getTrigger() {return this.trigger;}
 
