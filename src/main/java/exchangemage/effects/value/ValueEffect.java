@@ -126,6 +126,13 @@ public abstract class ValueEffect<T extends Targetable> extends Effect<T> {
         return false;
     }
 
+    /** Clears the effect's target and {@link #valueModifiers} list. */
+    @Override
+    public void reset() {
+        super.reset();
+        this.valueModifiers.clear();
+    }
+
     /**
      * Adds a new {@link ValueModifier} to the effect's list of value modifiers.
      *

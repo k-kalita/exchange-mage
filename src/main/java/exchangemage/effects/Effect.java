@@ -197,6 +197,15 @@ public abstract class Effect<T extends Targetable> implements Targetable {
         return this.targetSelector.selectTarget(forbiddenTargets);
     }
 
+    /**
+     * Called by the {@link EffectPlayer} after the {@link Effect} has been resolved and executed
+     * to reset it back to its initial, ready-for-evaluation state.
+     * <br><br>
+     * By default, this method clears the {@link TargetSelector} of the {@link Effect}.
+     * Inheriting classes should extend this logic if necessary.
+     */
+    public void reset() {this.targetSelector.clearTarget();}
+
     // --------------------------------- getters and setters ---------------------------------- //
 
     /** @return the description of the {@link Effect} */

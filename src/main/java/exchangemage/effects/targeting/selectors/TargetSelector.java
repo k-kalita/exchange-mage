@@ -117,4 +117,7 @@ public abstract class TargetSelector<T extends Targetable> {
             throw new IllegalStateException("No target has been selected.");
         return this.target;
     }
+
+    /** Clears this selector's {@link #target}. */
+    public void clearTarget() {this.target = null;}
 }

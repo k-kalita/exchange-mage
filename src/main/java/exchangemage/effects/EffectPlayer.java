@@ -295,6 +295,7 @@ public class EffectPlayer {
         EffectResolutionStage.sortPersistentEffects(new ArrayList<>(getPersistentEffects(effect)))
                              .forEach(this::evaluateEffect);
         effect.execute();
+        effect.reset();
         this.effectInResolution = null;
     }
 
