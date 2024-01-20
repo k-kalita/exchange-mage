@@ -2,8 +2,8 @@ package exchangemage.effects;
 
 import exchangemage.base.Notification;
 import exchangemage.effects.deployers.PersistentEffect;
-import exchangemage.scenes.Scene;
 import exchangemage.effects.targeting.selectors.SceneSelector;
+import exchangemage.scenes.Scene;
 
 import java.util.Objects;
 

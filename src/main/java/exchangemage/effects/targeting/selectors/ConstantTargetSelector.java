@@ -5,7 +5,7 @@ import java.util.Set;
 
 import exchangemage.effects.Effect;
 import exchangemage.effects.targeting.Targetable;
-import exchangemage.effects.triggers.conditions.getters.SubjectGetter;
+import exchangemage.effects.triggers.getters.SubjectGetter;
 
 /**
  * A {@link TargetSelector} which always selects the same target for its {@link Effect}

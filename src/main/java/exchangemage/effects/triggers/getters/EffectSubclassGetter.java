@@ -1,12 +1,12 @@
-package exchangemage.effects.triggers.conditions.getters;
+package exchangemage.effects.triggers.getters;
 
 import exchangemage.effects.Effect;
-import exchangemage.effects.triggers.conditions.Condition;
+import exchangemage.effects.triggers.ConditionalTrigger;
 
 /**
  * A {@link SubclassGetter} which returns the {@link Effect} provided by a {@link SubjectGetter} as
- * the subject for its {@link Condition} (provided that the current effect is an instance of the
- * specified effect type).
+ * the subject for its {@link ConditionalTrigger} (provided that the current effect is an
+ * instance of the specified effect type).
  *
  * @param <S> the type of {@link Effect} which can be returned by this {@link SubjectGetter}
  * @see SubclassGetter

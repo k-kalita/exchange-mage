@@ -2,9 +2,9 @@ package exchangemage.effects;
 
 import exchangemage.actors.Enemy;
 import exchangemage.effects.targeting.selectors.ConstantTargetSelector;
-import exchangemage.effects.triggers.conditions.getters.EffectInResolutionGetter;
-import exchangemage.effects.triggers.conditions.getters.EffectSourceGetter;
-import exchangemage.effects.triggers.conditions.getters.EffectTargetGetter;
+import exchangemage.effects.triggers.getters.EffectInResolutionGetter;
+import exchangemage.effects.triggers.getters.EffectSourceGetter;
+import exchangemage.effects.triggers.getters.EffectTargetGetter;
 import exchangemage.effects.value.DamageEffect;
 import exchangemage.effects.targeting.selectors.VariableTargetSelector;
 import exchangemage.effects.targeting.selectors.VariableTargetSelector.TargetingMode;

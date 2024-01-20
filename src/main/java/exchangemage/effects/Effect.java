@@ -4,19 +4,19 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
 
+import exchangemage.base.Observer;
+import exchangemage.actors.Actor;
+import exchangemage.cards.Card;
+import exchangemage.cards.Deck;
 import exchangemage.effects.deployers.EffectDeployer;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.deployers.SequentialEffect;
 import exchangemage.effects.value.ValueEffect;
-import exchangemage.scenes.Scene;
-import exchangemage.actors.Actor;
-import exchangemage.cards.Card;
-import exchangemage.cards.Deck;
-import exchangemage.base.Observer;
 import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.selectors.TargetSelector;
+import exchangemage.scenes.Scene;
 
 /**
  * Base class for all effects in the game. Effects represent all isolated, indivisible actions that
@@ -201,7 +201,7 @@ public abstract class Effect<T extends Targetable> implements Targetable {
      * Called by the {@link EffectPlayer} after the {@link Effect} has been resolved and executed
      * to reset it back to its initial, ready-for-evaluation state.
      * <br><br>
-     * By default, this method clears the {@link TargetSelector} of the {@link Effect}.
+     * By default, this method clears the {@link TargetSelector} of the {@link Effect}.<br>
      * Inheriting classes should extend this logic if necessary.
      */
     public void reset() {this.targetSelector.clearTarget();}

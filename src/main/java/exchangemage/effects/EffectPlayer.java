@@ -10,14 +10,14 @@ import java.util.Objects;
 
 import exchangemage.base.GameStateLocator;
 import exchangemage.actors.Actor;
+import exchangemage.cards.Card;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.deployers.PersistentEffectsHolder;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
-import exchangemage.scenes.Scene;
-import exchangemage.cards.Card;
 import exchangemage.effects.triggers.Trigger;
-import exchangemage.effects.triggers.conditions.Condition;
+import exchangemage.effects.triggers.ConditionalTrigger;
+import exchangemage.scenes.Scene;
 
 /**
  * EffectPlayer is responsible for managing the process of playing {@link Card}s and resolving
@@ -93,26 +93,29 @@ public class EffectPlayer {
     /**
      * EffectResolutionStage is an enum representing the stages of the resolution process of an
      * {@link Effect} and is used to define the order in which the activation of
-     * {@link PersistentEffect}s is resolved.
+     * {@link PersistentEffect}s is evaluated.
      * <br><br>
      * The stages are:
      * <ul>
-     *     <li>{@link #ACTIVATION} - if the conditions of a persistent effect's {@link Trigger}
-     *     depend on the initial, unmodified version of the effect being resolved and do not
+     *     <li>{@link #ACTIVATION} - if the activation of a persistent effect's {@link Trigger}
+     *     depends on the initial, unmodified version of the effect being resolved and it does not
      *     modify the effect itself (e.g. <i>Whenever an effect with a damage of 1 is played,
      *     give the target bleed 3</i>) the persistent effect's activation should be resolved in
      *     this stage.</li>
-     *     <li>{@link #MODIFICATION} - if the conditions of a persistent effect's trigger depend
-     *     on the initial, unmodified version of the effect being resolved and modify the effect
-     *     itself (e.g. <i>Whenever an effect with a damage of 1 is played, increase its damage
-     *     by 1</i>) the persistent effect's activation should be resolved in this stage.</li>
-     *     <li>{@link #RESOLUTION} - if the conditions of a persistent effect's trigger depend on
-     *     the modified version of the effect being resolved and/or their activation may act as a
+     *     <br>
+     *     <li>{@link #MODIFICATION} - if the activation of a persistent effect's trigger depends
+     *     on the initial, unmodified version of the effect being resolved but it may modify the
+     *     effect itself (e.g. <i>Whenever an effect with a damage of 1 is played, increase its
+     *     damage by 1</i>) the persistent effect's activation should be resolved in this stage.
+     *     </li><br>
+     *     <li>{@link #RESOLUTION} - if the activation of a persistent effect's trigger depends on
+     *     the modified version of the effect being resolved and/or their execution may act as a
      *     final intervention in the resolution process (e.g. <i>Whenever an effect would deal 2
      *     or more damage to this entity, reduce the damage to 1</i>) the persistent effect's
      *     activation should be resolved in this stage.</li>
-     *     <li>{@link #RESPONSE} - if the conditions of a persistent effect's trigger depend on
-     *     the final version of the effect being resolved and do not modify the effect itself
+     *     <br>
+     *     <li>{@link #RESPONSE} - if the activation of a persistent effect's trigger depends on
+     *     the final version of the effect being resolved and it does not modify the effect itself
      *     (e.g. <i>Whenever you deal 3 or more damage to an entity, heal 1</i>) the persistent
      *     effect's activation should be resolved in this stage.</li>
      * </ul>
@@ -124,41 +127,29 @@ public class EffectPlayer {
      */
     public enum EffectResolutionStage {
         /**
-         * The initial stage of the resolution process. Used for resolving the activation of
+         * The initial stage of the resolution process. Used for evaluating the activation of
          * {@link PersistentEffect}s which do not modify the {@link Effect} being resolved and
-         * whose {@link Trigger} {@link Condition}s depend on its initial, unmodified version.
-         *
-         * @see Effect
-         * @see PersistentEffect
+         * whose {@link ConditionalTrigger}s depend on its initial, unmodified version.
          */
         ACTIVATION,
         /**
-         * The second stage of the resolution process. Used for resolving the activation of
+         * The second stage of the resolution process. Used for evaluating the activation of
          * {@link PersistentEffect}s which modify the {@link Effect} being resolved and whose
-         * {@link Trigger} {@link Condition}s depend on its initial, unmodified version.
-         *
-         * @see Effect
-         * @see PersistentEffect
+         * {@link ConditionalTrigger}s depend on its initial, unmodified version.
          */
         MODIFICATION,
         /**
-         * The third stage of the resolution process. Used for resolving the activation of
-         * {@link PersistentEffect}s whose {@link Trigger} {@link Condition}s depend on the
-         * final version of the {@link Effect} being resolved and/or whose activation may act as
+         * The third stage of the resolution process. Used for evaluating the activation of
+         * {@link PersistentEffect}s whose {@link ConditionalTrigger}s depend on the final
+         * version of the {@link Effect} being resolved and/or whose activation may act as
          * a final intervention in the resolution process.
-         *
-         * @see Effect
-         * @see PersistentEffect
          */
         RESOLUTION,
         /**
-         * The final stage of the resolution process. Used for resolving the activation of
+         * The final stage of the resolution process. Used for evaluating the activation of
          * {@link PersistentEffect}s which do not modify the {@link Effect} being resolved and
-         * whose {@link Trigger} {@link Condition}s depend on its final version, acting as a
-         * response to the resolution of the effect.
-         *
-         * @see Effect
-         * @see PersistentEffect
+         * whose {@link ConditionalTrigger}s depend on its final version, acting as a response to
+         * the resolution of the effect.
          */
         RESPONSE;
 
@@ -221,22 +212,6 @@ public class EffectPlayer {
                     "Effect resolution mode not recognized: " + effect.getResolutionMode()
             );
         }
-    }
-
-    /**
-     * Evaluates given {@link Effect} immediately, regardless of whether there is another effect
-     * being evaluated or not. If an evaluation of another effect is interrupted by this method,
-     * it is resumed after the evaluation process of this effect is finished.
-     *
-     * @param effect the effect to evaluate
-     * @throws NullPointerException if the given effect is null
-     * @see EffectPlayer#evaluateEffect
-     */
-    public void evaluateEffectImmediately(Effect<?> effect) {
-        var currentEffect = this.effectInEvaluation;
-        this.effectInEvaluation = null;
-        evaluateEffect(effect);
-        this.effectInEvaluation = currentEffect;
     }
 
     /**
@@ -365,8 +340,8 @@ public class EffectPlayer {
             return scene.getAllPersistentEffects();
 
         Set<PersistentEffect> persistentEffects = new HashSet<>(scene.getPersistentEffects());
-        EffectSource source = effectInResolution.getSource();
-        Targetable target = effectInResolution.getTarget();
+        EffectSource          source            = effectInResolution.getSource();
+        Targetable            target            = effectInResolution.getTarget();
 
         if (source instanceof PersistentEffectsHolder)
             persistentEffects.addAll(((PersistentEffectsHolder) source).getPersistentEffects());

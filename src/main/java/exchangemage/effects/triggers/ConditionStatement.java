@@ -1,19 +1,19 @@
-package exchangemage.effects.triggers.conditions;
+package exchangemage.effects.triggers;
 
 import java.util.Objects;
 import java.util.List;
 
 /**
- * A {@link Condition} which represents a logical statement composed of other conditions. Used to
- * combine multiple conditions into a single one using logical operators such as AND, OR, NOT, XOR.
- * More complex statements can be built by nesting {@link ConditionStatement}s.
+ * A wrapper {@link Trigger} which represents a logical statement composed of other triggers. Used
+ * to combine multiple {@link ConditionalTrigger}s into a single one using logical operators.
+ * More complex statements can be built by nesting condition statements.
  *
- * @see Condition
+ * @see ConditionalTrigger
  * @see ConditionStatement.Operator
  */
-public class ConditionStatement implements Condition {
+public class ConditionStatement implements Trigger {
     /**
-     * An enum of logical operators which can be used to combine multiple {@link Condition}s into a
+     * An enum of logical operators which can be used to combine multiple {@link Trigger}s into a
      * single {@link ConditionStatement}.
      */
     public enum Operator {
@@ -21,12 +21,12 @@ public class ConditionStatement implements Condition {
         AND {
             /**
              * @param operands the operands of the logical statement
-             * @return <code>true</code> if all operands are fulfilled, <code>false</code> otherwise
+             * @return <code>true</code> if all operands are activated, <code>false</code> otherwise
              */
             @Override
-            public boolean eval(List<Condition> operands) {
-                for (Condition operand : operands)
-                    if (!operand.isFulfilled())
+            public boolean eval(List<Trigger> operands) {
+                for (Trigger operand : operands)
+                    if (!operand.isActivated())
                         return false;
                 return true;
             }
@@ -35,13 +35,13 @@ public class ConditionStatement implements Condition {
         OR {
             /**
              * @param operands the operands of the logical statement
-             * @return <code>true</code> if at least one operand is fulfilled, <code>false</code>
+             * @return <code>true</code> if at least one operand is activated, <code>false</code>
              * otherwise
              */
             @Override
-            public boolean eval(List<Condition> operands) {
-                for (Condition operand : operands)
-                    if (operand.isFulfilled())
+            public boolean eval(List<Trigger> operands) {
+                for (Trigger operand : operands)
+                    if (operand.isActivated())
                         return true;
                 return false;
             }
@@ -50,28 +50,28 @@ public class ConditionStatement implements Condition {
         NOT {
             /**
              * @param operands a list containing the single operand of the logical statement
-             * @return <code>true</code> if the operand is not fulfilled <code>false</code>
+             * @return <code>true</code> if the operand is not activated <code>false</code>
              * otherwise
              */
             @Override
-            public boolean eval(List<Condition> operands) {
+            public boolean eval(List<Trigger> operands) {
                 if (operands.size() != 1)
                     throw new IllegalArgumentException("NOT operator can only have one operand.");
-                return !operands.get(0).isFulfilled();
+                return !operands.get(0).isActivated();
             }
         },
         /** The logical XOR operator. */
         XOR {
             /**
              * @param operands a list containing the two operands of the logical statement
-             * @return <code>true</code> if exactly one operand is fulfilled, <code>false</code>
+             * @return <code>true</code> if exactly one operand is activated, <code>false</code>
              * otherwise
              */
             @Override
-            public boolean eval(List<Condition> operands) {
+            public boolean eval(List<Trigger> operands) {
                 if (operands.size() != 2)
                     throw new IllegalArgumentException("XOR operator can only have two operands.");
-                return operands.get(0).isFulfilled() ^ operands.get(1).isFulfilled();
+                return operands.get(0).isActivated() ^ operands.get(1).isActivated();
             }
         };
 
@@ -82,28 +82,28 @@ public class ConditionStatement implements Condition {
          * @param operands the operands of the logical statement
          * @return <code>true</code> if the statement is fulfilled, <code>false</code> otherwise
          */
-        public abstract boolean eval(List<Condition> operands);
+        public abstract boolean eval(List<Trigger> operands);
     }
 
     /** The {@link Operator} used to combine the operands of this {@link ConditionStatement}. */
     private final Operator operator;
 
     /** The operands of this {@link ConditionStatement}. */
-    private final List<Condition> operands;
+    private final List<Trigger> operands;
 
     /**
      * @param operator the {@link Operator} used to combine the operands of this statement
      * @param operands the operands of the logical statement
-     * @throws NullPointerException if the operator or the operands are null
+     * @throws NullPointerException if the operator or the operands are <code>null</code>
      * @throws IllegalArgumentException if the operands list is empty
-     * @see Condition
+     * @see ConditionalTrigger
      */
-    public ConditionStatement(Operator operator, List<Condition> operands) {
-        Objects.requireNonNull(operator, "Condition operator cannot be null.");
-        Objects.requireNonNull(operands, "Condition operands cannot be null.");
+    public ConditionStatement(Operator operator, List<Trigger> operands) {
+        Objects.requireNonNull(operator, "Condition statement operator cannot be null.");
+        Objects.requireNonNull(operands, "Condition statement operands cannot be null.");
 
         if (operands.isEmpty())
-            throw new IllegalArgumentException("Condition operands cannot be empty.");
+            throw new IllegalArgumentException("Condition statement operands cannot be empty.");
 
         this.operator = operator;
         this.operands = operands;
@@ -111,5 +111,5 @@ public class ConditionStatement implements Condition {
 
     /** @return <code>true</code> if the statement is fulfilled, <code>false</code> otherwise */
     @Override
-    public boolean isFulfilled() {return this.operator.eval(operands);}
+    public boolean isActivated() {return this.operator.eval(operands);}
 }

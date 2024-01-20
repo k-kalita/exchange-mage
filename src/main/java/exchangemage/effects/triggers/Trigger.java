@@ -13,13 +13,6 @@ import exchangemage.effects.EffectPlayer;
  */
 @FunctionalInterface
 public interface Trigger {
-    /**
-     * Returns whether the {@link Trigger} is activated (i.e. whether the requirements of the
-     * trigger are met).
-     *
-     * @return <code>true</code> if the trigger is activated, <code>false</code> otherwise.
-     *
-     * @see Effect
-     */
+    /** @return <code>true</code> if the trigger is activated, <code>false</code> otherwise. */
     boolean isActivated();
 }

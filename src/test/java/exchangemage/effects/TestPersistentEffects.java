@@ -6,15 +6,14 @@ import exchangemage.actors.Enemy;
 import exchangemage.effects.EffectPlayer.EffectResolutionStage;
 import exchangemage.effects.deployers.PersistentEffect;
 import exchangemage.effects.triggers.ConditionalTrigger;
-import exchangemage.effects.triggers.conditions.ComparisonCondition;
-import exchangemage.effects.triggers.conditions.ConditionStatement;
-import exchangemage.effects.triggers.conditions.ConditionStatement.Operator;
-import exchangemage.effects.triggers.conditions.EffectTypeCondition;
-import exchangemage.effects.triggers.conditions.comparators.NumericValueComparator;
-import exchangemage.effects.triggers.conditions.getters.EffectInResolutionGetter;
-import exchangemage.effects.triggers.conditions.comparators.NonNullComparator;
-import exchangemage.effects.triggers.conditions.getters.EffectTargetGetter;
-import exchangemage.effects.triggers.conditions.getters.EffectValueGetter;
+import exchangemage.effects.triggers.ConditionStatement;
+import exchangemage.effects.triggers.ConditionStatement.Operator;
+import exchangemage.effects.triggers.EffectTypeTrigger;
+import exchangemage.effects.triggers.conditions.NumericValueCondition;
+import exchangemage.effects.triggers.getters.EffectInResolutionGetter;
+import exchangemage.effects.triggers.conditions.NonNullCondition;
+import exchangemage.effects.triggers.getters.EffectTargetGetter;
+import exchangemage.effects.triggers.getters.EffectValueGetter;
 import exchangemage.effects.value.DamageEffect;
 import exchangemage.effects.value.ValueEffect;
 
@@ -22,29 +21,29 @@ public enum TestPersistentEffects {
     WHENEVER_ENEMY_IS_DAMAGED_DEAL_THEM_1_DAMAGE {
         @Override
         public PersistentEffect get() {
-            var effectTypeCondition = new EffectTypeCondition(
+            var effectTypeTrigger = new EffectTypeTrigger(
                     new EffectInResolutionGetter(),
                     DamageEffect.class
             );
-            var effectTargetCondition = new ComparisonCondition<>(
+            var effectTargetCondition = new ConditionalTrigger<>(
                     new EffectTargetGetter<>(Enemy.class, new EffectInResolutionGetter()),
-                    new NonNullComparator<>()
+                    new NonNullCondition<>()
             );
-            var effectValueCondition = new ComparisonCondition<>(
+            var effectValueCondition = new ConditionalTrigger<>(
                     new EffectValueGetter(ValueEffect.ValueState.MODIFIED),
-                    new NumericValueComparator<>(0,
-                                                 NumericValueComparator.Operator.GT
+                    new NumericValueCondition<>(0,
+                                                NumericValueCondition.Operator.GT
                     )
             );
             var conditionStatement = new ConditionStatement(Operator.AND, List.of(
-                    effectTypeCondition, effectTargetCondition, effectValueCondition
+                    effectTypeTrigger, effectTargetCondition, effectValueCondition
             ));
 
             return new PersistentEffect(
                     "Whenever an enemy is damaged, deal them 1 damage",
                     List.of(TestEffects.DEAL_1_DAMAGE_TO_CURRENTLY_TARGETED_ENEMY.get()),
                     EffectResolutionStage.RESPONSE,
-                    new ConditionalTrigger(conditionStatement)
+                    conditionStatement
             );
         }
     },

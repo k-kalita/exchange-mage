@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import exchangemage.effects.Effect;
 import exchangemage.effects.targeting.selectors.ConstantTargetSelector;
-import exchangemage.effects.triggers.conditions.getters.EffectSubclassGetter;
-import exchangemage.effects.triggers.conditions.getters.EffectInResolutionGetter;
+import exchangemage.effects.triggers.getters.EffectSubclassGetter;
+import exchangemage.effects.triggers.getters.EffectInResolutionGetter;
 
 /**
  * An {@link Effect} which adds a {@link ValueModifier} to the {@link ValueEffect} currently in

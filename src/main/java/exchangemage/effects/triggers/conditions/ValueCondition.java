@@ -1,17 +1,16 @@
-package exchangemage.effects.triggers.conditions.comparators;
+package exchangemage.effects.triggers.conditions;
 
 import java.util.Objects;
 
-import exchangemage.effects.triggers.conditions.ComparisonCondition;
+import exchangemage.effects.triggers.ConditionalTrigger;
 
 /**
- * A {@link SubjectComparator} used to compare a subject's value to a given value.
+ * A {@link Condition} fulfilled if the subject is equal to the target value.
  *
- * @param <T> the type of the subject being compared.
- * @see SubjectComparator
- * @see ComparisonCondition
+ * @param <T> the type of the subject accepted by this condition
+ * @see ConditionalTrigger
  */
-public class ValueComparator<T> implements SubjectComparator<T> {
+public class ValueCondition<T> implements Condition<T> {
     /** The value the subject is compared to. */
     private final T targetValue;
 
@@ -19,19 +18,19 @@ public class ValueComparator<T> implements SubjectComparator<T> {
      * @param targetValue the value the subject is compared to.
      * @throws NullPointerException if the target value is null.
      */
-    public ValueComparator(T targetValue) {
+    public ValueCondition(T targetValue) {
         Objects.requireNonNull(targetValue,
-                               "Target value of ValueComparator cannot be null.");
+                               "Target value of ValueCondition cannot be null.");
         this.targetValue = targetValue;
     }
 
     /**
-     * @param subject the subject to be compared
+     * @param subject the subject to be evaluated
      * @return <code>true</code> if the subject is equal to the target value, <code>false</code>
      * otherwise.
      */
     @Override
-    public boolean compare(T subject) {
+    public boolean evaluate(T subject) {
         if (subject == null)
             return false;
         return subject.equals(targetValue);

@@ -1,9 +1,9 @@
-package exchangemage.effects.triggers.conditions.getters;
+package exchangemage.effects.triggers.getters;
 
 import java.util.Objects;
 
-import exchangemage.effects.triggers.conditions.ComparisonCondition;
-import exchangemage.effects.triggers.conditions.comparators.SubjectComparator;
+import exchangemage.effects.triggers.ConditionalTrigger;
+import exchangemage.effects.triggers.conditions.Condition;
 
 /**
  * A {@link SubjectGetter} used as a decorator for another subject getter. It returns the subject
@@ -11,14 +11,14 @@ import exchangemage.effects.triggers.conditions.comparators.SubjectComparator;
  * getter.
  * <br><br>
  * Subclass getters implement the SubjectGetter interface parameterized with the subclass of the
- * subject class they return to allow the {@link SubjectComparator} receiving the subject to
- * access its subclass-specific methods.
+ * subject class they return to allow the {@link Condition} receiving the subject to access its
+ * subclass-specific methods.
  *
  * @param <T> the type of the subject returned by the decorated getter
  * @param <S> subclass of <code>T</code> returned by this getter
  * @see SubjectGetter
- * @see SubjectComparator
- * @see ComparisonCondition
+ * @see Condition
+ * @see ConditionalTrigger
  */
 public class SubclassGetter<T, S extends T> implements SubjectGetter<S> {
     /** The superclass getter decorated by this {@link SubclassGetter}. */
@@ -29,8 +29,8 @@ public class SubclassGetter<T, S extends T> implements SubjectGetter<S> {
 
     /**
      * @param superclassGetter the {@link SubjectGetter} used to retrieve the subject to be
-     * evaluated and potentially returned by this getter.
-     * @param subclass the class of subjects returned by this getter.
+     *                         evaluated and potentially returned by this getter.
+     * @param subclass         the class of subjects returned by this getter.
      * @throws NullPointerException if the given superclass getter or subclass is <code>null</code>.
      */
     public SubclassGetter(SubjectGetter<T> superclassGetter, Class<S> subclass) {

@@ -1,18 +1,18 @@
-package exchangemage.effects.triggers.conditions.comparators;
+package exchangemage.effects.triggers.conditions;
 
 import java.util.Objects;
 
-import exchangemage.effects.triggers.conditions.ComparisonCondition;
-import exchangemage.effects.triggers.conditions.getters.SubjectGetter;
+import exchangemage.effects.triggers.ConditionalTrigger;
+import exchangemage.effects.triggers.getters.SubjectGetter;
 
 /**
- * A {@link SubjectComparator} used to compare a subject to a given instance of that subject's type.
+ * A {@link Condition} fulfilled if the provided subject is the same instance as the one retrieved
+ * by {@link #targetGetter}.
  *
- * @param <T> the type of the subject being compared.
- * @see SubjectComparator
- * @see ComparisonCondition
+ * @param <T> the type of the subject this condition accepts
+ * @see ConditionalTrigger
  */
-public class InstanceComparator<T> implements SubjectComparator<T> {
+public class InstanceCondition<T> implements Condition<T> {
     /** A {@link SubjectGetter} used to get the instance the subject is compared to. */
     private final SubjectGetter<T> targetGetter;
 
@@ -21,9 +21,9 @@ public class InstanceComparator<T> implements SubjectComparator<T> {
      * @throws NullPointerException if the target getter is null.
      * @see SubjectGetter
      */
-    public InstanceComparator(SubjectGetter<T> targetGetter) {
+    public InstanceCondition(SubjectGetter<T> targetGetter) {
         Objects.requireNonNull(targetGetter,
-                               "Target getter of InstanceComparator cannot be null.");
+                               "Target getter of InstanceCondition cannot be null.");
         this.targetGetter = targetGetter;
     }
 
@@ -33,7 +33,7 @@ public class InstanceComparator<T> implements SubjectComparator<T> {
      * <code>false</code> otherwise.
      */
     @Override
-    public boolean compare(T subject) {
+    public boolean evaluate(T subject) {
         if (subject == null)
             return false;
         return subject == targetGetter.getSubject();

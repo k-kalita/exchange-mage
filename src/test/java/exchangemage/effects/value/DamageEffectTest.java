@@ -13,15 +13,14 @@ import exchangemage.cards.Deck;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectPlayer;
 import exchangemage.effects.deployers.PersistentEffect;
+import exchangemage.effects.triggers.Trigger;
 import exchangemage.effects.triggers.ConditionalTrigger;
-import exchangemage.effects.triggers.conditions.ComparisonCondition;
-import exchangemage.effects.triggers.conditions.Condition;
-import exchangemage.effects.triggers.conditions.ConditionStatement;
-import exchangemage.effects.triggers.conditions.EffectTypeCondition;
+import exchangemage.effects.triggers.ConditionStatement;
+import exchangemage.effects.triggers.EffectTypeTrigger;
 import exchangemage.effects.targeting.selectors.VariableTargetSelector;
-import exchangemage.effects.triggers.conditions.comparators.NonNullComparator;
-import exchangemage.effects.triggers.conditions.getters.EffectInResolutionGetter;
-import exchangemage.effects.triggers.conditions.getters.EffectSourceGetter;
+import exchangemage.effects.triggers.conditions.NonNullCondition;
+import exchangemage.effects.triggers.getters.EffectInResolutionGetter;
+import exchangemage.effects.triggers.getters.EffectSourceGetter;
 import exchangemage.scenes.BasicTurnPlayer;
 import exchangemage.scenes.Encounter;
 
@@ -36,7 +35,7 @@ class DamageEffectTest {
     private static Player              player;
     private static Enemy               enemy;
     private static DamageEffect<Enemy> simpleEffect;
-    private static ConditionalTrigger  trigger;
+    private static Trigger             trigger;
 
     @BeforeAll
     static void setUp() {
@@ -56,18 +55,16 @@ class DamageEffectTest {
                 "Deal 1 damage to random enemy",
                 1, selector, Effect.ResolutionMode.IMMEDIATE
         );
-        Condition damageEffectInResolution = new EffectTypeCondition(
+        Trigger damageEffectInResolution = new EffectTypeTrigger(
                 new EffectInResolutionGetter(),
                 DamageEffect.class
         );
-        Condition playerIsSource = new ComparisonCondition<Player>(
+        Trigger playerIsSource = new ConditionalTrigger<>(
                 new EffectSourceGetter<>(Player.class, new EffectInResolutionGetter()),
-                new NonNullComparator<>()
+                new NonNullCondition<>()
         );
-        trigger = new ConditionalTrigger(
-                new ConditionStatement(ConditionStatement.Operator.AND,
-                                       List.of(damageEffectInResolution, playerIsSource))
-        );
+        trigger = new ConditionStatement(ConditionStatement.Operator.AND,
+                                         List.of(damageEffectInResolution, playerIsSource));
     }
 
     @BeforeEach

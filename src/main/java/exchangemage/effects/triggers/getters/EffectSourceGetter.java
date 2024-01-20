@@ -1,4 +1,4 @@
-package exchangemage.effects.triggers.conditions.getters;
+package exchangemage.effects.triggers.getters;
 
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectSource;

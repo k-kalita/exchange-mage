@@ -1,19 +1,18 @@
-package exchangemage.effects.triggers.conditions.comparators;
+package exchangemage.effects.triggers.conditions;
 
 import java.util.Objects;
 
-import exchangemage.effects.triggers.conditions.ComparisonCondition;
+import exchangemage.effects.triggers.ConditionalTrigger;
 
 /**
- * A {@link SubjectComparator} used to compare the value of a numeric subject to a given value using
- * a given {@link Operator}.
+ * A {@link Condition} used to compare the value of a numeric subject against a target value
+ * using the given {@link Operator}.
  *
- * @param <T> the type of the subject being compared. Must be a subclass of {@link Number}.
- * @see SubjectComparator
- * @see ComparisonCondition
+ * @param <T> the type of subject being compared. Must be a subclass of {@link Number}.
+ * @see ConditionalTrigger
  */
-public class NumericValueComparator<T extends Number> implements SubjectComparator<T> {
-    /** An enum of operators used to compare a subject's value to a target value. */
+public class NumericValueCondition<T extends Number> implements Condition<T> {
+    /** An enum of operators used to compare the subject to the target value. */
     public enum Operator {
         /** Equal to operator. */
         EQ {
@@ -97,9 +96,10 @@ public class NumericValueComparator<T extends Number> implements SubjectComparat
         /**
          * Compares the subject to the target value using this operator.
          *
-         * @param subject the subject to be compared
+         * @param subject     the subject to be compared
          * @param targetValue the target value to compare the subject to
-         * @return the result of the comparison
+         * @return <code>true</code> if the statement represented by the comparison is fulfilled,
+         * <code>false</code> otherwise.
          */
         public abstract boolean compare(Number subject, Number targetValue);
     }
@@ -107,19 +107,20 @@ public class NumericValueComparator<T extends Number> implements SubjectComparat
     /** The value the subject is compared to. */
     private final T targetValue;
 
-
     /** The operator used to compare the subject to the target value. */
     private final Operator operator;
 
     /**
      * @param targetValue the value the subject is compared to
-     * @param operator the {@link Operator} used to compare the subject to the target value
+     * @param operator    the {@link Operator} used to compare the subject to the target value
+     * @throws NullPointerException if either the target value or the operator is
+     *                              <code>null</code>.
      */
-    public NumericValueComparator(T targetValue, Operator operator) {
+    public NumericValueCondition(T targetValue, Operator operator) {
         Objects.requireNonNull(targetValue,
-                               "Target value of NumericValueComparator cannot be null.");
+                               "Target value of NumericValueCondition cannot be null.");
         Objects.requireNonNull(operator,
-                               "Operator of NumericValueComparator cannot be null.");
+                               "Operator of NumericValueCondition cannot be null.");
         this.targetValue = targetValue;
         this.operator = operator;
     }
@@ -130,7 +131,7 @@ public class NumericValueComparator<T extends Number> implements SubjectComparat
      * <code>false</code> otherwise.
      */
     @Override
-    public boolean compare(T subject) {
+    public boolean evaluate(T subject) {
         if (subject == null)
             return false;
         return operator.compare(subject, targetValue);

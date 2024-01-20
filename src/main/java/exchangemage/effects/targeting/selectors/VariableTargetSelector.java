@@ -10,7 +10,7 @@ import exchangemage.base.GameStateLocator;
 import exchangemage.effects.Effect;
 import exchangemage.effects.targeting.Targetable;
 import exchangemage.effects.targeting.TargetingManager;
-import exchangemage.effects.triggers.conditions.comparators.SubjectComparator;
+import exchangemage.effects.triggers.conditions.Condition;
 
 public class VariableTargetSelector<T extends Targetable> extends TargetSelector<T> {
     /**
@@ -120,25 +120,23 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
     }
 
     /**
-     * A {@link SubjectComparator} used to filter the set of active targetables. Only
-     * {@link Targetable}s which match the requirements of the comparator will be considered for
-     * selection.
+     * A {@link Condition} used to filter the set of active targetables. Only {@link Targetable}s
+     * which match the requirements of the comparator will be considered for selection.
      */
-    private final SubjectComparator<T> targetFilter;
+    private final Condition<T> targetFilter;
 
     /** The {@link TargetingMode} used by this {@link VariableTargetSelector} to select a target. */
     private final TargetingMode targetingMode;
 
     /**
      * @param targetClass   the class of {@link Targetable} objects selected by this selector
-     * @param targetFilter  the {@link SubjectComparator} used to filter the set of active
-     *                      targetables
+     * @param targetFilter  the {@link Condition} used to filter the set of active targetables
      * @param targetingMode the {@link TargetingMode} used by the variable target selector to
      *                      select a target
      * @throws NullPointerException if the given target class or targeting mode is <code>null</code>
      */
     public VariableTargetSelector(Class<T> targetClass,
-                                  SubjectComparator<T> targetFilter,
+                                  Condition<T> targetFilter,
                                   TargetingMode targetingMode) {
         super(targetClass);
         Objects.requireNonNull(targetingMode, "Targeting mode cannot be null.");
@@ -178,7 +176,7 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
                 .map(targetClass::cast);
 
         if (targetFilter != null)
-            return activeTargetables.filter(targetFilter::compare).collect(Collectors.toSet());
+            return activeTargetables.filter(targetFilter::evaluate).collect(Collectors.toSet());
         return activeTargetables.collect(Collectors.toSet());
     }
 
@@ -209,11 +207,11 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
      *
      * @param target the target to validate.
      * @throws InvalidTargetException if the target does not match the filter's requirements
-     * @see SubjectComparator
+     * @see Condition
      */
     @Override
     protected void validateTarget(T target) {
-        if (this.targetFilter != null && !this.targetFilter.compare(target))
+        if (this.targetFilter != null && !this.targetFilter.evaluate(target))
             throw new InvalidTargetException("Target does not match the target filter " +
                                              "requirements.");
     }

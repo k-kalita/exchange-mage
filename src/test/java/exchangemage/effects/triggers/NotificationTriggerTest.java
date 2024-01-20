@@ -1,9 +1,9 @@
-package exchangemage.effects.triggers.conditions;
+package exchangemage.effects.triggers;
 
-import exchangemage.actors.Player;
 import exchangemage.base.GameState;
 import exchangemage.base.GameStateLocator;
 import exchangemage.actors.Actor;
+import exchangemage.actors.Player;
 import exchangemage.effects.NotificationEffect;
 import exchangemage.effects.value.DamageEffect;
 
@@ -13,16 +13,16 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NotificationConditionTest {
-    private static GameState mockGameState;
-    private static Player mockPlayer;
-    private static NotificationCondition condition;
+class NotificationTriggerTest {
+    private static GameState           mockGameState;
+    private static Player              mockPlayer;
+    private static NotificationTrigger trigger;
 
     @BeforeAll
     static void setUp() {
         mockGameState = Mockito.mock(GameState.class);
         mockPlayer = Mockito.mock(Player.class);
-        condition = new NotificationCondition(Actor.ActorEvent.DAMAGE_RECEIVED);
+        trigger = new NotificationTrigger(Actor.ActorEvent.DAMAGE_RECEIVED);
         GameStateLocator.init(mockGameState);
     }
 
@@ -31,19 +31,19 @@ class NotificationConditionTest {
         NotificationEffect effect = new NotificationEffect(Actor.ActorEvent.DAMAGE_RECEIVED,
                                                            mockPlayer);
         Mockito.when(mockGameState.getEffectInResolution()).thenAnswer(invocation -> effect);
-        assertTrue(condition.isFulfilled());
+        assertTrue(trigger.isActivated());
     }
 
     @Test
     void testIsNotFulfilled() {
-        NotificationEffect effect = new NotificationEffect(Actor.ActorEvent.DEATH, mockPlayer);
-        DamageEffect<?> mockDamageEffect = Mockito.mock(DamageEffect.class);
+        NotificationEffect effect           = new NotificationEffect(Actor.ActorEvent.DEATH, mockPlayer);
+        DamageEffect<?>    mockDamageEffect = Mockito.mock(DamageEffect.class);
         Mockito.when(mockGameState.getEffectInResolution()).thenAnswer(invocation -> effect);
-        assertFalse(condition.isFulfilled());
+        assertFalse(trigger.isActivated());
         Mockito.when(mockGameState.getEffectInResolution())
                .thenAnswer(invocation -> mockDamageEffect);
-        assertFalse(condition.isFulfilled());
+        assertFalse(trigger.isActivated());
         Mockito.when(mockGameState.getEffectInResolution()).thenAnswer(invocation -> null);
-        assertFalse(condition.isFulfilled());
+        assertFalse(trigger.isActivated());
     }
 }

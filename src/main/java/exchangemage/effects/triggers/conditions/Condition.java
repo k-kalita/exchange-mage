@@ -1,28 +1,24 @@
 package exchangemage.effects.triggers.conditions;
 
-import exchangemage.base.GameState;
-import exchangemage.effects.Effect;
-import exchangemage.effects.deployers.PersistentEffect;
-import exchangemage.actors.Player;
-import exchangemage.actors.Actor;
 import exchangemage.effects.triggers.ConditionalTrigger;
+import exchangemage.effects.triggers.getters.SubjectGetter;
+
 
 /**
- * Base class for all conditions. Conditions represent statements about the current game state
- * which can be evaluated to a boolean value. As part of {@link ConditionalTrigger}s they can be
- * used to determine whether a given {@link Effect} should be triggered based on criteria such as
- * the {@link Player}'s health, the statuses affecting the targeted {@link Actor}, the type of the
- * effect currently in resolution (in case of {@link PersistentEffect}s' activation), etc.
+ * Base interface for all classes which represent the requirements of a {@link ConditionalTrigger}.
+ * Activation of conditional triggers is based on the evaluation of the subject retrieved by a
+ * {@link SubjectGetter} against their conditions.
  *
+ * @param <T> the type of the subject accepted by this condition
  * @see ConditionalTrigger
- * @see GameState
- * @see Effect
  */
-public interface Condition {
+@FunctionalInterface
+public interface Condition<T> {
     /**
-     * Evaluates the statement represented by this condition to a boolean value.
+     * Evaluates whether the given subject fulfills the requirements represented by this condition.
      *
+     * @param subject the subject to be compared
      * @return <code>true</code> if the condition is fulfilled, <code>false</code> otherwise
      */
-    public boolean isFulfilled();
+    boolean evaluate(T subject);
 }
