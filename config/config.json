@@ -1,0 +1,9 @@
+{
+    "resourcePaths": {
+        "root": "resources/",
+        "cards": "resources/cards/",
+        "effects": "resources/effects/",
+        "targetSelectors": "resources/effects/target_selectors/",
+        "triggers": "resources/effects/triggers/"
+    }
+}
