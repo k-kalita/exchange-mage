@@ -26,14 +26,25 @@ public class TypeCondition implements Condition {
      * @param subject the subject to be evaluated
      * @return <code>true</code> if the subject is an instance of the target type,
      * <code>false</code> otherwise
-     * @throws SubjectMismatchException if the subject's type is not assignable from the target type
+     * @throws SubjectMismatchException if the subject's type does not share a common superclass
+     *                                  with the target type
      */
     @Override
     public boolean evaluate(Object subject) {
         if (subject == null)
             return false;
-        if(!subject.getClass().isAssignableFrom(targetType))
+        if (!commonSuperclass(subject.getClass(), targetType))
             throw new SubjectMismatchException();
         return targetType.isInstance(subject);
+    }
+
+    private boolean commonSuperclass(Class<?> a, Class<?> b) {
+        if (a == null || b == null)
+            return false;
+        if (a.isAssignableFrom(b))
+            return true;
+        if (b.isAssignableFrom(a))
+            return true;
+        return commonSuperclass(a.getSuperclass(), b.getSuperclass());
     }
 }

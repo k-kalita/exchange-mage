@@ -1,10 +1,15 @@
 package exchangemage.effects.triggers.conditions;
 
+import exchangemage.base.Notification;
+import exchangemage.actors.Actor;
 import exchangemage.effects.Effect;
+import exchangemage.effects.EffectSource;
 import exchangemage.effects.NotificationEffect;
 import exchangemage.effects.value.DamageEffect;
+import exchangemage.effects.value.HealEffect;
 import exchangemage.effects.value.ValueEffect;
 import exchangemage.effects.triggers.getters.SubjectGetter;
+import exchangemage.effects.targeting.selectors.TargetSelector;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,13 +66,19 @@ class ConditionTest {
 
     @Test
     void testTypeComparator() {
-        Effect<?>          mockEffect             = Mockito.mock(Effect.class);
-        DamageEffect<?>    mockDamageEffect       = Mockito.mock(DamageEffect.class);
-        NotificationEffect mockNotificationEffect = Mockito.mock(NotificationEffect.class);
-        TypeCondition      condition              = new TypeCondition(ValueEffect.class);
-        assertFalse(condition.evaluate(mockEffect));
-        assertTrue(condition.evaluate(mockDamageEffect));
-        assertFalse(condition.evaluate(mockNotificationEffect));
+        TargetSelector<Actor> selector         = Mockito.mock();
+        Notification          mockNotification = Mockito.mock(Notification.class);
+        EffectSource          mockSource       = Mockito.mock(EffectSource.class);
+        TypeCondition         condition        = new TypeCondition(ValueEffect.class);
+        Effect<?> healingEffect = new HealEffect<>("Heal 1", 1, selector,
+                                                   Effect.ResolutionMode.IMMEDIATE);
+        Effect<?> damageEffect = new DamageEffect<>("Deal 1 damage", 1, selector,
+                                                    Effect.ResolutionMode.IMMEDIATE);
+        Effect<?> notificationEffect = new NotificationEffect(mockNotification, mockSource);
+
+        assertTrue(condition.evaluate(healingEffect));
+        assertTrue(condition.evaluate(damageEffect));
+        assertFalse(condition.evaluate(notificationEffect));
         assertFalse(condition.evaluate(null));
     }
 }
