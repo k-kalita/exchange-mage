@@ -10,14 +10,14 @@ import exchangemage.effects.triggers.conditions.NumericValueCondition;
  *
  * @see ValueEffect
  */
-public class EffectValueTrigger extends ConditionalTrigger<Integer> {
+public class EffectValueTrigger extends ConditionalTrigger {
     /**
      * @param comparator the {@link NumericValueCondition} against which the value carried by the
      *                   {@link ValueEffect} currently in resolution is evaluated
      * @param state      the {@link ValueEffect.ValueState} in which to retrieve the value from the
      *                   effect
      */
-    public EffectValueTrigger(NumericValueCondition<Integer> comparator,
+    public EffectValueTrigger(NumericValueCondition comparator,
                               ValueEffect.ValueState state) {
         super(new EffectValueGetter(state), comparator);
     }

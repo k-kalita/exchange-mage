@@ -3,15 +3,15 @@ package exchangemage.effects.triggers.conditions;
 import java.util.Objects;
 
 import exchangemage.effects.triggers.ConditionalTrigger;
+import exchangemage.effects.triggers.getters.SubjectGetter;
 
 /**
  * A {@link Condition} used to compare the value of a numeric subject against a target value
  * using the given {@link Operator}.
  *
- * @param <T> the type of subject being compared. Must be a subclass of {@link Number}.
  * @see ConditionalTrigger
  */
-public class NumericValueCondition<T extends Number> implements Condition<T> {
+public class NumericValueCondition implements Condition {
     /** An enum of operators used to compare the subject to the target value. */
     public enum Operator {
         /** Equal to operator. */
@@ -104,8 +104,8 @@ public class NumericValueCondition<T extends Number> implements Condition<T> {
         public abstract boolean compare(Number subject, Number targetValue);
     }
 
-    /** The value the subject is compared to. */
-    private final T targetValue;
+    /** The {@link SubjectGetter} used to retrieve the value the subject value is compared to. */
+    private final SubjectGetter<Number> targetValueGetter;
 
     /** The operator used to compare the subject to the target value. */
     private final Operator operator;
@@ -116,24 +116,41 @@ public class NumericValueCondition<T extends Number> implements Condition<T> {
      * @throws NullPointerException if either the target value or the operator is
      *                              <code>null</code>.
      */
-    public NumericValueCondition(T targetValue, Operator operator) {
-        Objects.requireNonNull(targetValue,
-                               "Target value of NumericValueCondition cannot be null.");
-        Objects.requireNonNull(operator,
-                               "Operator of NumericValueCondition cannot be null.");
-        this.targetValue = targetValue;
-        this.operator = operator;
+    public NumericValueCondition(Number targetValue,
+                                 Operator operator) {
+        Objects.requireNonNull(targetValue, "Target value cannot be null.");
+        Objects.requireNonNull(operator, "Operator cannot be null.");
+        this.targetValueGetter = () -> targetValue;
+        this.operator          = operator;
+    }
+
+    /**
+     * @param targetValueGetter the {@link SubjectGetter} used to retrieve the value the subject
+     *                          value is compared to
+     * @param operator          the {@link Operator} used to compare the subject to the target value
+     * @throws NullPointerException if either the target value getter or the operator is
+     *                             <code>null</code>.
+     */
+    public NumericValueCondition(SubjectGetter<Number> targetValueGetter,
+                                 Operator operator) {
+        Objects.requireNonNull(targetValueGetter, "Target value getter cannot be null.");
+        Objects.requireNonNull(operator, "Operator of cannot be null.");
+        this.targetValueGetter = targetValueGetter;
+        this.operator          = operator;
     }
 
     /**
      * @param subject the subject to be compared
      * @return <code>true</code> if the statement represented by the comparison is fulfilled,
      * <code>false</code> otherwise.
+     * @throws SubjectMismatchException if the subject is not a number
      */
     @Override
-    public boolean evaluate(T subject) {
+    public boolean evaluate(Object subject) {
         if (subject == null)
             return false;
-        return operator.compare(subject, targetValue);
+        if (!(subject instanceof Number))
+            throw new SubjectMismatchException();
+        return operator.compare((Number) subject, targetValueGetter.getSubject());
     }
 }

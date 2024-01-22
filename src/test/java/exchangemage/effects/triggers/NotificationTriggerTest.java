@@ -21,8 +21,8 @@ class NotificationTriggerTest {
     @BeforeAll
     static void setUp() {
         mockGameState = Mockito.mock(GameState.class);
-        mockPlayer = Mockito.mock(Player.class);
-        trigger = new NotificationTrigger(Actor.ActorEvent.DAMAGE_RECEIVED);
+        mockPlayer    = Mockito.mock(Player.class);
+        trigger       = new NotificationTrigger(Actor.ActorEvent.DAMAGE_RECEIVED);
         GameStateLocator.init(mockGameState);
     }
 

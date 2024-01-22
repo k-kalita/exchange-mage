@@ -59,9 +59,9 @@ class DamageEffectTest {
                 new EffectInResolutionGetter(),
                 DamageEffect.class
         );
-        Trigger playerIsSource = new ConditionalTrigger<>(
+        Trigger playerIsSource = new ConditionalTrigger(
                 new EffectSourceGetter<>(Player.class, new EffectInResolutionGetter()),
-                new NonNullCondition<>()
+                new NonNullCondition()
         );
         trigger = new ConditionStatement(ConditionStatement.Operator.AND,
                                          List.of(damageEffectInResolution, playerIsSource));
@@ -93,7 +93,7 @@ class DamageEffectTest {
         );
         GameStateLocator.getGameState().getPlayer().addPersistentEffect(
                 triggeredModifierEffect
-        );
+                                                                       );
         simpleEffect.setSource(player);
         GameStateLocator.getGameState().getEffectPlayer().evaluateEffect(simpleEffect);
         assertEquals(98, enemy.getCurrentHealth());

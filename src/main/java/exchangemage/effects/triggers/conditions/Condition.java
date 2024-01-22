@@ -9,16 +9,25 @@ import exchangemage.effects.triggers.getters.SubjectGetter;
  * Activation of conditional triggers is based on the evaluation of the subject retrieved by a
  * {@link SubjectGetter} against their conditions.
  *
- * @param <T> the type of the subject accepted by this condition
  * @see ConditionalTrigger
  */
 @FunctionalInterface
-public interface Condition<T> {
+public interface Condition {
+    /**
+     * An exception thrown when the class of subject provided for evaluation does not match the
+     * class of subject expected by the condition.
+     */
+    class SubjectMismatchException extends IllegalArgumentException {
+        public SubjectMismatchException() {
+            super("The subject type does not match the type of subject expected by the condition.");
+        }
+    }
+
     /**
      * Evaluates whether the given subject fulfills the requirements represented by this condition.
      *
-     * @param subject the subject to be compared
+     * @param subject the subject to be evaluated
      * @return <code>true</code> if the condition is fulfilled, <code>false</code> otherwise
      */
-    boolean evaluate(T subject);
+    boolean evaluate(Object subject);
 }

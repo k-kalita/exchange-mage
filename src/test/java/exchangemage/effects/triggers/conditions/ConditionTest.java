@@ -17,10 +17,10 @@ class ConditionTest {
     @Test
     @SuppressWarnings("StringOperationCanBeSimplified")
     void testInstanceComparator() {
-        String                    test1     = new String("test");
-        String                    test2     = new String("test");
-        SubjectGetter<String>     getter    = () -> test1;
-        InstanceCondition<String> condition = new InstanceCondition<>(getter);
+        String                test1     = new String("test");
+        String                test2     = new String("test");
+        SubjectGetter<String> getter    = () -> test1;
+        InstanceCondition     condition = new InstanceCondition(getter);
         assertTrue(condition.evaluate(test1));
         assertFalse(condition.evaluate(test2));
         assertFalse(condition.evaluate(null));
@@ -29,9 +29,9 @@ class ConditionTest {
     @Test
     @SuppressWarnings("StringOperationCanBeSimplified")
     void testValueComparator() {
-        String                 test1     = new String("test");
-        String                 test2     = new String("test");
-        ValueCondition<String> condition = new ValueCondition<>(test1);
+        String         test1     = new String("test");
+        String         test2     = new String("test");
+        ValueCondition condition = new ValueCondition(test1);
         assertTrue(condition.evaluate(test1));
         assertTrue(condition.evaluate(test2));
         assertFalse(condition.evaluate("not test"));
@@ -48,24 +48,23 @@ class ConditionTest {
                                     int value,
                                     int comparedValue,
                                     boolean result) {
-        NumericValueCondition<Integer> condition = new NumericValueCondition<>(value, operator);
+        NumericValueCondition condition = new NumericValueCondition(value, operator);
         assertEquals(condition.evaluate(comparedValue), result);
     }
 
     @Test
     void testNonNullComparator() {
-        NonNullCondition<String> condition = new NonNullCondition<>();
+        NonNullCondition condition = new NonNullCondition();
         assertTrue(condition.evaluate("test"));
         assertFalse(condition.evaluate(null));
     }
 
     @Test
-    @SuppressWarnings("rawtypes")
     void testTypeComparator() {
-        Effect<?>             mockEffect             = Mockito.mock(Effect.class);
-        DamageEffect<?>       mockDamageEffect       = Mockito.mock(DamageEffect.class);
-        NotificationEffect    mockNotificationEffect = Mockito.mock(NotificationEffect.class);
-        TypeCondition<Effect> condition              = new TypeCondition<>(ValueEffect.class);
+        Effect<?>          mockEffect             = Mockito.mock(Effect.class);
+        DamageEffect<?>    mockDamageEffect       = Mockito.mock(DamageEffect.class);
+        NotificationEffect mockNotificationEffect = Mockito.mock(NotificationEffect.class);
+        TypeCondition      condition              = new TypeCondition(ValueEffect.class);
         assertFalse(condition.evaluate(mockEffect));
         assertTrue(condition.evaluate(mockDamageEffect));
         assertFalse(condition.evaluate(mockNotificationEffect));

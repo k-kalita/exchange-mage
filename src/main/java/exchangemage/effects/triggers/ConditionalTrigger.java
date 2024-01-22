@@ -6,6 +6,7 @@ import exchangemage.actors.Player;
 import exchangemage.actors.Actor;
 import exchangemage.effects.Effect;
 import exchangemage.effects.triggers.conditions.Condition;
+import exchangemage.effects.triggers.conditions.NonNullCondition;
 import exchangemage.effects.triggers.getters.SubjectGetter;
 
 /**
@@ -21,39 +22,45 @@ import exchangemage.effects.triggers.getters.SubjectGetter;
  *     <li>whether the {@link Effect} currently in resolution is of a certain type</li>
  * </ul>
  *
- * @param <T> the type of subject retrieved by the subject getter and expected by the condition
  * @see SubjectGetter
  * @see Condition
  */
-public class ConditionalTrigger<T> implements Trigger {
+public class ConditionalTrigger implements Trigger {
     /** The {@link SubjectGetter} used to retrieve the subject of the condition. */
-    private final SubjectGetter<T> subjectGetter;
+    private final SubjectGetter<?> subjectGetter;
 
     /** The {@link Condition} representing the requirement imposed on the subject. */
-    private final Condition<T> condition;
+    private final Condition condition;
 
     /**
      * @param subjectGetter the {@link SubjectGetter} used to retrieve the subject of the
      *                      condition
      * @param condition     the {@link Condition} representing the requirement imposed on the
-     *                      subject
-     * @throws NullPointerException if either the subject getter or the condition is
-     *                              <code>null</code>
+     *                      subject, if not provided the trigger will activate if the subject is
+     *                      not <code>null</code>
+     * @throws NullPointerException if the {@link SubjectGetter} is <code>null</code>
      */
-    public ConditionalTrigger(SubjectGetter<T> subjectGetter,
-                              Condition<T> condition) {
+    public ConditionalTrigger(SubjectGetter<?> subjectGetter,
+                              Condition condition) {
         Objects.requireNonNull(subjectGetter, "SubjectGetter cannot be null.");
-        Objects.requireNonNull(condition, "Condition cannot be null.");
         this.subjectGetter = subjectGetter;
-        this.condition = condition;
+        this.condition     = condition;
     }
 
     /**
      * @return <code>true</code> if the subject retrieved by the {@link #subjectGetter} fulfills
-     * the requirement represented by the {@link #condition}, <code>false</code> otherwise
+     * the requirement represented by the {@link #condition} (or if the trigger does not have a
+     * condition, if the subject is not <code>null</code>), <code>false</code> otherwise
      */
     @Override
     public boolean isActivated() {
-        return this.condition.evaluate(this.subjectGetter.getSubject());
+        Object subject = this.subjectGetter.getSubject();
+
+        if (subject == null)
+            return false;
+        if (this.condition == null)
+            return true;
+
+        return this.condition.evaluate(subject);
     }
 }

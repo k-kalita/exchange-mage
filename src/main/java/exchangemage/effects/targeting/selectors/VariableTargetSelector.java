@@ -123,7 +123,7 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
      * A {@link Condition} used to filter the set of active targetables. Only {@link Targetable}s
      * which match the requirements of the comparator will be considered for selection.
      */
-    private final Condition<T> targetFilter;
+    private final Condition targetFilter;
 
     /** The {@link TargetingMode} used by this {@link VariableTargetSelector} to select a target. */
     private final TargetingMode targetingMode;
@@ -136,7 +136,7 @@ public class VariableTargetSelector<T extends Targetable> extends TargetSelector
      * @throws NullPointerException if the given target class or targeting mode is <code>null</code>
      */
     public VariableTargetSelector(Class<T> targetClass,
-                                  Condition<T> targetFilter,
+                                  Condition targetFilter,
                                   TargetingMode targetingMode) {
         super(targetClass);
         Objects.requireNonNull(targetingMode, "Targeting mode cannot be null.");

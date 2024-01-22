@@ -11,13 +11,13 @@ import exchangemage.effects.triggers.conditions.ValueCondition;
  *
  * @see Notification
  */
-public class NotificationTrigger extends ConditionalTrigger<Notification> {
+public class NotificationTrigger extends ConditionalTrigger {
     /**
      * @param notification the target {@link Notification} whose equality with the notification
      *                     carried by the {@link NotificationEffect} currently in resolution
      *                     fulfills this condition
      */
     public NotificationTrigger(Notification notification) {
-        super(new NotificationGetter(), new ValueCondition<>(notification));
+        super(new NotificationGetter(), new ValueCondition(notification));
     }
 }

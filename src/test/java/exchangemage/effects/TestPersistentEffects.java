@@ -25,14 +25,14 @@ public enum TestPersistentEffects {
                     new EffectInResolutionGetter(),
                     DamageEffect.class
             );
-            var effectTargetCondition = new ConditionalTrigger<>(
+            var effectTargetCondition = new ConditionalTrigger(
                     new EffectTargetGetter<>(Enemy.class, new EffectInResolutionGetter()),
-                    new NonNullCondition<>()
+                    new NonNullCondition()
             );
-            var effectValueCondition = new ConditionalTrigger<>(
+            var effectValueCondition = new ConditionalTrigger(
                     new EffectValueGetter(ValueEffect.ValueState.MODIFIED),
-                    new NumericValueCondition<>(0,
-                                                NumericValueCondition.Operator.GT
+                    new NumericValueCondition(0,
+                                              NumericValueCondition.Operator.GT
                     )
             );
             var conditionStatement = new ConditionStatement(Operator.AND, List.of(

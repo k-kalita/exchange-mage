@@ -50,7 +50,7 @@ public class HoldersTurnTrigger extends ConditionStatement {
      * resolution has as its source the same {@link PersistentEffectsHolder} as the effect being
      * evaluated
      */
-    private static ConditionalTrigger<?> getHolderComparisonTrigger() {
+    private static ConditionalTrigger getHolderComparisonTrigger() {
         var sourceInResolutionGetter = new EffectSourceGetter<>(
                 PersistentEffectsHolder.class,
                 new EffectInResolutionGetter()
@@ -60,7 +60,7 @@ public class HoldersTurnTrigger extends ConditionStatement {
                 new EffectInEvaluationGetter()
         );
 
-        return new ConditionalTrigger<>(sourceInResolutionGetter,
-                                        new InstanceCondition<>(sourceInEvaluationGetter));
+        return new ConditionalTrigger(sourceInResolutionGetter,
+                                      new InstanceCondition(sourceInEvaluationGetter));
     }
 }

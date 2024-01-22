@@ -70,7 +70,7 @@ class VariableTargetSelectorTest {
     void testSelectRandomEnemyWithFilter() {
         VariableTargetSelector<Enemy> selector = new VariableTargetSelector<>(
                 Enemy.class,
-                enemy -> enemy.getCurrentHealth() > 50,
+                subject -> ((Enemy) subject).getCurrentHealth() > 50,
                 VariableTargetSelector.TargetingMode.RANDOM
         );
         DamageEffect<Enemy> effect = new DamageEffect<>(
@@ -88,9 +88,10 @@ class VariableTargetSelectorTest {
 
     @Test
     void testSelectRandomEnemyWithFilterFailedSelection() {
+
         VariableTargetSelector<Enemy> selector = new VariableTargetSelector<>(
                 Enemy.class,
-                enemy -> enemy.getCurrentHealth() > 99,
+                subject -> ((Enemy) subject).getCurrentHealth() > 99,
                 VariableTargetSelector.TargetingMode.RANDOM
         );
         DamageEffect<Enemy> effect = new DamageEffect<>(
@@ -129,7 +130,7 @@ class VariableTargetSelectorTest {
     void testSelectRandomActorWithFilter() {
         VariableTargetSelector<DeckHolderActor> selector = new VariableTargetSelector<>(
                 DeckHolderActor.class,
-                actor -> actor.getCurrentHealth() > 75,
+                subject -> ((DeckHolderActor) subject).getCurrentHealth() > 75,
                 VariableTargetSelector.TargetingMode.RANDOM
         );
         DamageEffect<DeckHolderActor> effect = new DamageEffect<>(

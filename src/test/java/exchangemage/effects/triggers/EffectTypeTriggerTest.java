@@ -20,11 +20,11 @@ class EffectTypeTriggerTest {
 
     @BeforeAll
     static void setUp() {
-        mockGameState = Mockito.mock(GameState.class);
+        mockGameState    = Mockito.mock(GameState.class);
         mockDamageEffect = Mockito.mock(DamageEffect.class);
-        mockHealEffect = Mockito.mock(HealEffect.class);
-        trigger = new EffectTypeTrigger(new EffectInResolutionGetter(),
-                                        HealEffect.class);
+        mockHealEffect   = Mockito.mock(HealEffect.class);
+        trigger          = new EffectTypeTrigger(new EffectInResolutionGetter(),
+                                                 HealEffect.class);
         GameStateLocator.init(mockGameState);
     }
 
