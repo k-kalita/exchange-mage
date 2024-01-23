@@ -1,0 +1,14 @@
+{
+    "type": "conditional",
+    "subjectType": "type",
+    "subject": {
+        "type": "effect",
+        "origin": "self"
+    },
+    "condition": {
+        "type": "value",
+        "value": {
+
+        }
+    }
+}
