@@ -26,6 +26,11 @@ class NotificationTriggerTest {
         GameStateLocator.init(mockGameState);
     }
 
+    /**
+     * Tests if the {@link NotificationTrigger} checking for effect a <code>DAMAGE_RECEIVED</code>
+     * notification is fulfilled if the {@link NotificationEffect} in resolution contains that
+     * notification.
+     */
     @Test
     void testIsFulfilled() {
         NotificationEffect effect = new NotificationEffect(Actor.ActorEvent.DAMAGE_RECEIVED,
@@ -34,14 +39,20 @@ class NotificationTriggerTest {
         assertTrue(trigger.isActivated());
     }
 
+    /**
+     * Tests if the {@link NotificationTrigger} checking for effect a <code>DAMAGE_RECEIVED</code>
+     * notification is not fulfilled if the {@link NotificationEffect} in resolution contains a
+     * different notification, if the effect in resolution is not a {@link NotificationEffect}, or
+     * if there is no effect in resolution.
+     */
     @Test
     void testIsNotFulfilled() {
-        NotificationEffect effect           = new NotificationEffect(Actor.ActorEvent.DEATH, mockPlayer);
-        DamageEffect<?>    mockDamageEffect = Mockito.mock(DamageEffect.class);
+        NotificationEffect effect       = new NotificationEffect(Actor.ActorEvent.DEATH, mockPlayer);
+        DamageEffect<?>    damageEffect = Mockito.mock(DamageEffect.class);
         Mockito.when(mockGameState.getEffectInResolution()).thenAnswer(invocation -> effect);
         assertFalse(trigger.isActivated());
         Mockito.when(mockGameState.getEffectInResolution())
-               .thenAnswer(invocation -> mockDamageEffect);
+               .thenAnswer(invocation -> damageEffect);
         assertFalse(trigger.isActivated());
         Mockito.when(mockGameState.getEffectInResolution()).thenAnswer(invocation -> null);
         assertFalse(trigger.isActivated());
