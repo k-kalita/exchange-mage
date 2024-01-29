@@ -1,15 +1,15 @@
-package exchangemage.base;
+package exchangemage.base.factory;
 
 import java.util.Objects;
 
 import exchangemage.effects.triggers.Trigger;
-import exchangemage.effects.triggers.conditions.Condition;
 import exchangemage.effects.triggers.getters.SubjectGetter;
+import exchangemage.effects.triggers.conditions.Condition;
 
 public class FactoryLocator {
-    private static Factory<Trigger> triggerFactory;
+    private static Factory<Trigger>          triggerFactory;
     private static Factory<SubjectGetter<?>> getterFactory;
-    private static Factory<Condition> conditionFactory;
+    private static Factory<Condition>        conditionFactory;
 
     public static void init(Factory<Trigger> triggerFactory,
                             Factory<SubjectGetter<?>> getterFactory,

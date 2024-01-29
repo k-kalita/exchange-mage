@@ -6,8 +6,8 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import exchangemage.base.Factory;
-import exchangemage.base.FactoryLocator;
+import exchangemage.base.factory.Factory;
+import exchangemage.base.factory.FactoryLocator;
 
 public class TriggerFactory implements Factory<Trigger> {
     private enum TriggerType implements FactoryNode<Trigger> {

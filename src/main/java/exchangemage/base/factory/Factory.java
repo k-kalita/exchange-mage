@@ -1,4 +1,4 @@
-package exchangemage.base;
+package exchangemage.base.factory;
 
 import java.io.File;
 import java.io.IOException;

@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import exchangemage.base.Factory;
-import exchangemage.base.FactoryLocator;
-import exchangemage.effects.triggers.conditions.NumericValueCondition.Operator;
+import exchangemage.base.factory.Factory;
+import exchangemage.base.factory.FactoryLocator;
 import exchangemage.effects.triggers.getters.SubjectGetter;
+import exchangemage.effects.triggers.conditions.NumericValueCondition.Operator;
 
 public class ConditionFactory implements Factory<Condition> {
     private enum ConditionType implements FactoryNode<Condition> {

@@ -38,6 +38,12 @@ public class TypeCondition implements Condition {
         return targetType.isInstance(subject);
     }
 
+    /**
+     * @param a the first class to be compared
+     * @param b the second class to be compared
+     * @return <code>true</code> if the two classes share a common superclass, <code>false</code>
+     * otherwise
+     */
     private boolean commonSuperclass(Class<?> a, Class<?> b) {
         if (a == null || b == null)
             return false;

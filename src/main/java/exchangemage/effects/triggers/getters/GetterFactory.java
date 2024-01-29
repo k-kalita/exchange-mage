@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import exchangemage.actors.Actor;
 import exchangemage.actors.Enemy;
 import exchangemage.actors.Player;
-import exchangemage.base.Factory;
+import exchangemage.base.factory.Factory;
 import exchangemage.effects.Effect;
 import exchangemage.effects.EffectSource;
 import exchangemage.effects.targeting.Targetable;

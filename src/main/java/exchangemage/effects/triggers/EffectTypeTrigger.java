@@ -46,7 +46,5 @@ public class EffectTypeTrigger implements Trigger {
      * {@link SubjectGetter} is an instance of the specified type, <code>false</code> otherwise
      */
     @Override
-    public boolean isActivated() {
-        return this.type.isInstance(this.effectGetter.getSubject());
-    }
+    public boolean isActivated() {return this.type.isInstance(this.effectGetter.getSubject());}
 }
